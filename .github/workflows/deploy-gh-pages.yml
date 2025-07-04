@@ -33,6 +33,9 @@ jobs:
         run: |
           export GITHUB_PAGES=1
           pnpm build
+
+      - name: Copy 200.html to 404.html
+        run: cp build/200.html build/404.html
       
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
