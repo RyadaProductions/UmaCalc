@@ -53,9 +53,9 @@ export interface InputData {
         late: Aptitude;
         end: Aptitude;
     };
-    Mood: Mood;
-    Strategy: Strategy;
-    Surface: Surface;
-    Condition: Condition;
-    Distance: string;
+    mood: Mood;
+    strategy: Strategy;
+    surface: Surface;
+    condition: Condition;
+    distance: string;
 }

@@ -37,101 +37,85 @@
         getSurfaceAptitudeModifier, 
         startingDashInitialSpeed 
     } from '$lib/startingDashCalculator';
+	import type { InputData } from '$lib/modifierTypes';
 
-    let stats: {
-        speed: number;
-        stamina: number;
-        power: number;
-        guts: number;
-        wit: number;
-    } = {
-        speed: 1200,
-        stamina: 800,
-        power: 1000,
-        guts: 400,
-        wit: 1000
-    };
-    let surfaceAptitudes: {
-        turf: Aptitude;
-        dirt: Aptitude
-    } = { 
-        turf: 'A',
-        dirt: 'A' 
-    };
-    let distanceAptitudes: {
-        sprint: Aptitude;
-        mile: Aptitude;
-        medium: Aptitude;
-        long: Aptitude;
-    } = {
-        sprint: 'S',
-        mile: 'A',
-        medium: 'A',
-        long: 'A'
-    };
-    let strategyAptitudes: {
-        front: Aptitude;
-        pace: Aptitude;
-        late: Aptitude;
-        end: Aptitude;
-    } = {
-        front: 'A',
-        pace: 'A',
-        late: 'A',
-        end: 'A'
-    };
-    let selectedMood: Mood = 'Great';
-    let selectedStrategy: Strategy = 'Front';
-    let selectedSurface: Surface = 'Turf';
-    let selectedCondition: Condition = 'Firm';
-    let selectedDistance: string = '2000';
+    let inputData: InputData = {
+        stats: {
+            speed: 1200,
+            stamina: 800,
+            power: 1000,
+            guts: 400,
+            wit: 1000
+        },
+        surfaceAptitudes: {
+            turf: 'A',
+            dirt: 'A'
+        },
+        distanceAptitudes: {
+            sprint: 'S',
+            mile: 'A',
+            medium: 'A',
+            long: 'A'
+        },
+        strategyAptitudes: {
+            front: 'A',
+            pace: 'A',
+            late: 'A',
+            end: 'A'
+        },
+        mood: 'Great',
+        strategy: 'Front',
+        surface: 'Turf',
+        condition: 'Firm',
+        distance: '2000'
+    }
 
     function getTrackLength() {
-        return distances[parseInt(selectedDistance)];
+        return distances[parseInt(inputData.distance)];
     };
 
     function getRealSpeed(): number {
         return calculateRealSpeed(
-            stats.speed, 
-            getMoodModifier(selectedMood), 
-            getWeatherModifier(selectedSurface, selectedCondition), 
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes)
+            inputData.stats.speed, 
+            getMoodModifier(inputData.mood), 
+            getWeatherModifier(inputData.surface, inputData.condition), 
+            getDistanceAptitudeModifiers(getTrackLength(), inputData.distanceAptitudes)
         );
     }
 
     function getRealStamina(): number {
         return calculateRealStamina(
-            stats.stamina, 
-            getMoodModifier(selectedMood)
+            inputData.stats.stamina, 
+            getMoodModifier(inputData.mood)
         );
     }
 
     function getRealPower(): number {
         return calculateRealPower(
-            stats.power, 
-            getMoodModifier(selectedMood), 
-            getWeatherModifier(selectedSurface, selectedCondition), 
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes)
+            inputData.stats.power, 
+            getMoodModifier(inputData.mood), 
+            getWeatherModifier(inputData.surface, inputData.condition), 
+            getDistanceAptitudeModifiers(getTrackLength(), inputData.distanceAptitudes)
         );
     }
 
     function getRealGuts(): number {
         return calculateRealGuts(
-            stats.guts,
-            getMoodModifier(selectedMood)
+            inputData.stats.guts,
+            getMoodModifier(inputData.mood)
         );
     }
 
     function getRealWit(): number {
         return calculateRealWit(
-            stats.wit,
-            getMoodModifier(selectedMood),
-            getStrategyAptitudeModifiers(selectedStrategy, strategyAptitudes).acceleration
+            inputData.stats.wit,
+            getMoodModifier(inputData.mood),
+            getStrategyAptitudeModifiers(inputData.strategy, inputData.strategyAptitudes).acceleration
         );
     }
 
     function getBaseSpeed(): number {
-        return calculateBaseSpeed(parseInt(selectedDistance));
+        return calculateBaseSpeed(parseInt(inputData.distance));
     }
 
     function getTargetSpeed(): number {
@@ -139,22 +123,22 @@
     }
 
     function getStartingDashAcceleration(): number {
-        const stageModifiers = getStageModifiers(selectedStrategy);
+        const stageModifiers = getStageModifiers(inputData.strategy);
         return calculateAcceleration(
             getRealPower(),
             stageModifiers.accelerationCorrection.early,
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes).acceleration,
-            getSurfaceAptitudeModifier(selectedSurface, surfaceAptitudes)
+            getDistanceAptitudeModifiers(getTrackLength(), inputData.distanceAptitudes).acceleration,
+            getSurfaceAptitudeModifier(inputData.surface, inputData.surfaceAptitudes)
         );
     }
 
     function getStartingDashTimeInSeconds() : number {
         return calculateStartingDashDuration(
             getRealPower(), 
-            parseInt(selectedDistance),
-            getStageModifiers(selectedStrategy).accelerationCorrection.early,
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes).acceleration,
-            getSurfaceAptitudeModifier(selectedSurface, surfaceAptitudes)
+            parseInt(inputData.distance),
+            getStageModifiers(inputData.strategy).accelerationCorrection.early,
+            getDistanceAptitudeModifiers(getTrackLength(), inputData.distanceAptitudes).acceleration,
+            getSurfaceAptitudeModifier(inputData.surface, inputData.surfaceAptitudes)
         );
     }
 
@@ -168,8 +152,8 @@
     function getStartingdashHitPointsConsumption(): number {
         return calculateStartingDashHitPointsConsumption(
             getStartingDashTimeInSeconds(),
-            selectedSurface,
-            selectedCondition
+            inputData.surface,
+            inputData.condition
         );
     }
 </script>
@@ -193,19 +177,19 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ stats.speed } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ inputData.stats.speed } />
                 </td>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="stamina" min=0 max=1200 bind:value={ stats.stamina } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="stamina" min=0 max=1200 bind:value={ inputData.stats.stamina } />
                 </td>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="power" min=0 max=1200 bind:value={ stats.power } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="power" min=0 max=1200 bind:value={ inputData.stats.power } />
                 </td>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="guts" min=0 max=1200 bind:value={ stats.guts } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="guts" min=0 max=1200 bind:value={ inputData.stats.guts } />
                 </td>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="wit" min=0 max=1200 bind:value={ stats.wit } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="wit" min=0 max=1200 bind:value={ inputData.stats.wit } />
                 </td>
             </tr>
          </tbody>
@@ -218,10 +202,10 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ surfaceAptitudes.turf }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.turf }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ surfaceAptitudes.dirt }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.dirt }/>
                 </td>
             </tr>
         </tbody>
@@ -236,16 +220,16 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ distanceAptitudes.sprint }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.sprint }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ distanceAptitudes.mile }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.mile }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ distanceAptitudes.medium }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.medium }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ distanceAptitudes.long }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.long }/>
                 </td>
             </tr>
         </tbody>
@@ -260,16 +244,16 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.front }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.front }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.pace }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.pace }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.late }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.late }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.end }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.end }/>
                 </td>
             </tr>
         </tbody>
@@ -281,10 +265,10 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ moods } bind:value={ selectedMood }/>
+                    <Dropdown options={ moods } bind:value={ inputData.mood }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ strategies } bind:value={ selectedStrategy }/>
+                    <Dropdown options={ strategies } bind:value={ inputData.strategy }/>
                 </td>
             </tr>
         </tbody>
@@ -298,13 +282,13 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ surfaces } bind:value={ selectedSurface }/>
+                    <Dropdown options={ surfaces } bind:value={ inputData.surface }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ conditions } bind:value={ selectedCondition }/>
+                    <Dropdown options={ conditions } bind:value={ inputData.condition }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ Object.keys(distances) } bind:value={ selectedDistance }/>
+                    <Dropdown options={ Object.keys(distances) } bind:value={ inputData.distance }/>
                 </td>
                 <td class="px-4 pb-2 text-center">
                     { getTrackLength() }
@@ -348,7 +332,7 @@
                 <th class="px-4 pt-2 text-center">HP with Recovery</th>
             </tr>
             <tr>
-                <td class="px-4 pb-2 text-center">{ calculateBaseSpeed(parseInt(selectedDistance)) }</td>
+                <td class="px-4 pb-2 text-center">{ calculateBaseSpeed(parseInt(inputData.distance)) }</td>
                 <td class="px-4 pb-2 text-center"></td>
                 <td class="px-4 pb-2 text-center"></td>
             </tr>
