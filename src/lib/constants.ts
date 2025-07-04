@@ -1,6 +1,7 @@
 import { 
     type SurfaceAndWeatherModifiers,
-    type DistanceAptitudeModifiers
+    type DistanceAptitudeModifiers,
+    type StrategyModifiers,
 } from "./modifierTypes";
 
 export const aptitudes = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
@@ -54,4 +55,70 @@ export const distanceAptitudeModifiers: Record<string, DistanceAptitudeModifiers
     e: { speed: 0.4, acceleration: 0.6 },
     f: { speed: 0.2, acceleration: 0.5 },
     g: { speed: 0.1, acceleration: 0.4 }
+};
+
+export const trackAptitudeModifiers: Record<Aptitude, number> = {
+    S: 1.05,
+    A: 1,
+    B: 0.9,
+    C: 0.8,
+    D: 0.6,
+    E: 0.4,
+    F: 0.2,
+    G: 0.1
+}
+
+export const strategyModifiers: Record<string, StrategyModifiers> = {
+    front: {
+        hpCorrection: 0.95,
+        speedCorrection: {
+            early: 1,
+            middle: 0.98,
+            late: 0.962
+        },
+        accelerationCorrection: {
+            early: 1,
+            middle: 1,
+            late: 0.996
+        }
+    },
+    pace: {
+        hpCorrection: 0.89,
+        speedCorrection: {
+            early: 0.978,
+            middle: 0.991,
+            late: 0.975
+        },
+        accelerationCorrection: {
+            early: 0.985,
+            middle: 1,
+            late: 0.996
+        }
+    },
+    late: {
+        hpCorrection: 1,
+        speedCorrection: {
+            early: 0.938,
+            middle: 0.998,
+            late: 0.994
+        },
+        accelerationCorrection: {
+            early: 0.975,
+            middle: 1,
+            late: 1
+        }
+    },
+    end: {
+        hpCorrection: 0.995,
+        speedCorrection: {
+            early: 0.931,
+            middle: 1,
+            late: 1
+        },
+        accelerationCorrection: {
+            early: 0.945,
+            middle: 1,
+            late: 0.997
+        }
+    },
 };

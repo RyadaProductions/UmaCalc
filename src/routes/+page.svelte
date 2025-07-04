@@ -4,11 +4,11 @@
         getWeatherModifier, 
         getDistanceAptitudeModifiers,
         getStrategyAptitudeModifiers,
-        calculateFinalSpeed,
-		calculateFinalStamina,
-        calculateFinalPower,
-		calculateFinalGuts,
-		calculateFinalWit
+        calculateRealSpeed,
+		calculateRealStamina,
+        calculateRealPower,
+		calculateRealGuts,
+		calculateRealWit
     } from '$lib/statsCalculator';
     import {
         moods,
@@ -23,8 +23,20 @@
 		type Surface,
 		type Condition
     } from '$lib/constants';
+    import { round } from '$lib/utils';
 
     import Dropdown from '$lib/dropdown.svelte';
+	import { 
+        calculateAcceleration, 
+        calculateBaseSpeed, 
+        calculateDistanceInMeters, 
+        calculateStartingDashDuration, 
+        calculateStartingDashHitPointsConsumption, 
+        calculateTargetSpeed, 
+        getStageModifiers, 
+        getSurfaceAptitudeModifier, 
+        startingDashInitialSpeed 
+    } from '$lib/startingDashCalculator';
 
     let stats: {
         speed: number;
@@ -78,8 +90,8 @@
         return distances[parseInt(selectedDistance)];
     };
 
-    function getFinalSpeed(): number {
-        return calculateFinalSpeed(
+    function getRealSpeed(): number {
+        return calculateRealSpeed(
             stats.speed, 
             getMoodModifier(selectedMood), 
             getWeatherModifier(selectedSurface, selectedCondition), 
@@ -87,15 +99,15 @@
         );
     }
 
-    function getFinalStamina(): number {
-        return calculateFinalStamina(
+    function getRealStamina(): number {
+        return calculateRealStamina(
             stats.stamina, 
             getMoodModifier(selectedMood)
         );
     }
 
-    function getFinalPower(): number {
-        return calculateFinalPower(
+    function getRealPower(): number {
+        return calculateRealPower(
             stats.power, 
             getMoodModifier(selectedMood), 
             getWeatherModifier(selectedSurface, selectedCondition), 
@@ -103,18 +115,61 @@
         );
     }
 
-    function getFinalGuts(): number {
-        return calculateFinalGuts(
+    function getRealGuts(): number {
+        return calculateRealGuts(
             stats.guts,
             getMoodModifier(selectedMood)
         );
     }
 
-    function getFinalWit(): number {
-        return calculateFinalWit(
+    function getRealWit(): number {
+        return calculateRealWit(
             stats.wit,
             getMoodModifier(selectedMood),
             getStrategyAptitudeModifiers(selectedStrategy, strategyAptitudes).acceleration
+        );
+    }
+
+    function getBaseSpeed(): number {
+        return calculateBaseSpeed(parseInt(selectedDistance));
+    }
+
+    function getTargetSpeed(): number {
+        return calculateTargetSpeed(getBaseSpeed())
+    }
+
+    function getStartingDashAcceleration(): number {
+        const stageModifiers = getStageModifiers(selectedStrategy);
+        return calculateAcceleration(
+            getRealPower(),
+            stageModifiers.accelerationCorrection.early,
+            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes).acceleration,
+            getSurfaceAptitudeModifier(selectedSurface, surfaceAptitudes)
+        );
+    }
+
+    function getStartingDashTimeInSeconds() : number {
+        return calculateStartingDashDuration(
+            getRealPower(), 
+            parseInt(selectedDistance),
+            getStageModifiers(selectedStrategy).accelerationCorrection.early,
+            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes).acceleration,
+            getSurfaceAptitudeModifier(selectedSurface, surfaceAptitudes)
+        );
+    }
+
+    function getStartingDashDistanceInMeters(): number {
+        return calculateDistanceInMeters(
+            getTargetSpeed(),
+            getStartingDashTimeInSeconds()
+        );
+    }
+
+    function getStartingdashHitPointsConsumption(): number {
+        return calculateStartingDashHitPointsConsumption(
+            getStartingDashTimeInSeconds(),
+            selectedSurface,
+            selectedCondition
         );
     }
 </script>
@@ -272,11 +327,55 @@
                 <th class="px-4 pt-2 text-center">Wit</th>
             </tr>
             <tr>
-                <td class="px-4 pb-2 text-center">{ getFinalSpeed() }</td>
-                <td class="px-4 pb-2 text-center">{ getFinalStamina() }</td>
-                <td class="px-4 pb-2 text-center">{ getFinalPower() }</td>
-                <td class="px-4 pb-2 text-center">{ getFinalGuts() }</td>
-                <td class="px-4 pb-2 text-center">{ getFinalWit() }</td>
+                <td class="px-4 pb-2 text-center">{ round(getRealSpeed()) }</td>
+                <td class="px-4 pb-2 text-center">{ round(getRealStamina()) }</td>
+                <td class="px-4 pb-2 text-center">{ round(getRealPower()) }</td>
+                <td class="px-4 pb-2 text-center">{ round(getRealGuts()) }</td>
+                <td class="px-4 pb-2 text-center">{ round(getRealWit()) }</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h1 class="text-3xl font-semibold text-center mb-6">DEBUG</h1>
+
+<div class="bg-surface w-4/5 mx-auto">
+    <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
+        <tbody>
+            <tr>
+                <th class="px-4 pt-2 text-center">Base Speed</th>
+                <th class="px-4 pt-2 text-center">Initial HP</th>
+                <th class="px-4 pt-2 text-center">HP with Recovery</th>
+            </tr>
+            <tr>
+                <td class="px-4 pb-2 text-center">{ calculateBaseSpeed(parseInt(selectedDistance)) }</td>
+                <td class="px-4 pb-2 text-center"></td>
+                <td class="px-4 pb-2 text-center"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
+        <tbody>
+            <tr>
+                <th class="p2-4 pt-2 text-center"> </th>
+                <th class="p2-4 pt-2 text-center">Initial Speed [m/s]</th>
+                <th class="p2-4 pt-2 text-center">Base Speed</th>
+                <th class="p2-4 pt-2 text-center">Target Speed [m/s]</th>
+                <th class="p2-4 pt-2 text-center">Acceleration [m/s^2]</th>
+                <th class="p2-4 pt-2 text-center">Time [s]</th>
+                <th class="p2-4 pt-2 text-center">Distance [m]</th>
+                <th class="p2-4 pt-2 text-center">HP Consumption</th>
+            </tr>
+            <tr>
+                <td class="p2-4 pb-2 text-center">Starting Dash</td>
+                <td class="p2-4 pb-2 text-center">{ startingDashInitialSpeed }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getBaseSpeed(), 2) }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getTargetSpeed(), 3) }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getStartingDashAcceleration(), 3) }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getStartingDashTimeInSeconds(), 3) }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getStartingDashDistanceInMeters(), 3) }</td>
+                <td class="p2-4 pb-2 text-center">{ round(getStartingdashHitPointsConsumption(), 2) }</td>
             </tr>
         </tbody>
     </table>

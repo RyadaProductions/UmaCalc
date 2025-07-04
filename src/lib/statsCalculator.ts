@@ -10,7 +10,7 @@ import {
     surfaceModifiers,
     distanceAptitudeModifiers,
     type Strategy
-} from './constants.js'
+} from './constants.js';
 
 export function getMoodModifier(
     selectedMood: string
@@ -56,62 +56,50 @@ export function getStrategyAptitudeModifiers(
 
 // Calculation for actual speed:
 // (SpeedStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier^2
-export function calculateFinalSpeed(
+export function calculateRealSpeed(
     baseSpeed: number,
     moodModifier: number,
     weatherModifier: SurfaceAndWeatherModifiers,
     distanceModifier: DistanceAptitudeModifiers
 ): number {
-    return round((baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2);
+    return (baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2;
 }
 
 // Calculation for actual stamina:
 // StaminaStat * MoodModifier
-export function calculateFinalStamina(
+export function calculateRealStamina(
     baseStamina: number,
     moodModifier: number
 ): number {
-    return round(baseStamina * moodModifier);
+    return baseStamina * moodModifier;
 }
 
 // Calculation for actual power:
 // (PowerStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier
-export function calculateFinalPower(
+export function calculateRealPower(
     basePower: number,
     moodModifier: number,
     weatherModifier: SurfaceAndWeatherModifiers,
     distanceModifier: DistanceAptitudeModifiers
 ): number {
-    return round((basePower * moodModifier + weatherModifier.power) * distanceModifier.acceleration);
+    return (basePower * moodModifier + weatherModifier.power) * distanceModifier.acceleration;
 }
 
 // Calculation for actual guts:
 // GutsStat * MoodModifier
-export function calculateFinalGuts(
+export function calculateRealGuts(
     baseGuts: number,
     moodModifier: number
 ): number {
-    return round(baseGuts * moodModifier);
+    return baseGuts * moodModifier;
 }
 
 // Calculation for actual wit:
 // (WitStat * MoodModifier) * StrategyAptitude
-export function calculateFinalWit(
+export function calculateRealWit(
     baseWit: number,
     moodModifier: number,
     strategyAptitude: number
 ): number {
-    return round((baseWit * moodModifier) * strategyAptitude);
-}
-
-/**
- * Round (halfs go away from zero).
- *
- * @param value    The number to round
- * @param decimals How many places after the decimal point
- * @returns        Rounded value
- */
-export function round(value: number, decimals = 0): number {
-  const factor = 10 ** decimals;
-  return Math.sign(value) * Math.round(Math.abs(value) * factor) / factor;
+    return (baseWit * moodModifier) * strategyAptitude;
 }
