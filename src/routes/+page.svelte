@@ -1,8 +1,12 @@
 <script lang="ts">
-    import { getMoodModifier, 
+    import { 
+        getMoodModifier, 
         getWeatherModifier, 
         getDistanceAptitudeModifiers,
-        calculateFinalSpeed
+        calculateFinalSpeed,
+
+		calculateFinalStamina
+
     } from '$lib/statsCalculator';
     import {
         moods,
@@ -11,7 +15,6 @@
         strategies,
         surfaces, 
         distances,
-        distanceAptitudeModifiers,
         type Aptitude, 
         type Mood, 
 		type Strategy,
@@ -79,6 +82,10 @@
             getMoodModifier(selectedMood), 
             getWeatherModifier(selectedSurface, selectedCondition), 
             getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes));
+    }
+
+    function getFinalStamina(): number {
+        return calculateFinalStamina(stats.stamina, getMoodModifier(selectedMood));
     }
 </script>
 
@@ -236,7 +243,7 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2 text-center">{ getFinalSpeed() }</td>
-                <td class="px-4 pb-2 text-center">{ stats.stamina }</td>
+                <td class="px-4 pb-2 text-center">{ getFinalStamina() }</td>
                 <td class="px-4 pb-2 text-center">{ stats.strength }</td>
                 <td class="px-4 pb-2 text-center">{ stats.guts }</td>
                 <td class="px-4 pb-2 text-center">{ stats.wit }</td>

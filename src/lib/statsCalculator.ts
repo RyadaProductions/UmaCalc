@@ -52,3 +52,12 @@ export function calculateFinalSpeed(
 ): number {
     return (baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2;
 }
+
+// Calculation for actual stamina:
+// Stamina * moodmodifier
+export function calculateFinalStamina(
+    baseStamina: number,
+    moodModifier: number
+): number {
+    return baseStamina * moodModifier;
+}
