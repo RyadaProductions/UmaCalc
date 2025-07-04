@@ -1,25 +1,7 @@
-import { strategyModifiers, trackAptitudeModifiers, type Aptitude } from "./constants";
-import type { StrategyModifiers } from "./modifierTypes";
-import { getWeatherModifier } from "./statsCalculator";
-
-export function getStageModifiers(
-    selectedStrategy: string,
-): StrategyModifiers {
-    const strategyModifier = strategyModifiers[selectedStrategy.toLowerCase()];
-    if (!strategyModifier) throw new Error(`Unknown strategy "${selectedStrategy}"`);
-    return strategyModifier;
-}
-
-export function getSurfaceAptitudeModifier(
-    selectedSurface: string,
-    surfaceAptitudes: Record<string, Aptitude>
-): number {
-    const surfaceAptitude = surfaceAptitudes[selectedSurface.toLowerCase()];
-    if (!surfaceAptitude) throw new Error(`Unknown surface "${selectedSurface}"`);
-    return trackAptitudeModifiers[surfaceAptitude];
-}
-
 // Calculation for base speed:
+
+import { getWeatherModifier } from "./modifierData";
+
 // 20 - (Distance - 2000) / 1000
 export function calculateBaseSpeed(
     distance: number

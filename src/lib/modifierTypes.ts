@@ -58,4 +58,10 @@ export interface InputData {
     surface: Surface;
     condition: Condition;
     distance: string;
+    skills: {
+        goldRecovery: number;
+        whiteRecovery: number;
+        uniqueRecoveryTwoStarsOrBelow: number;
+        uniqueRecoveryThreeStarsOrAbove: number;
+    };
 }
