@@ -1,7 +1,8 @@
-// Calculation for base speed:
-
 import { getWeatherModifier } from "./modifierData";
 
+export const startingDashInitialSpeed = 3;
+
+// Calculation for base speed:
 // 20 - (Distance - 2000) / 1000
 export function calculateBaseSpeed(
     distance: number
@@ -30,7 +31,6 @@ export function calculateAcceleration(
     return starting + multiplyLow * Math.sqrt(500 * realPower) * earlyStageAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier;
 }
 
-export const startingDashInitialSpeed = 3;
 // (TargetSpeed - startinDashInitialSpeed) / StartingDashAcceleration
 export function calculateStartingDashDuration(
     realPower: number,

@@ -1,5 +1,10 @@
 import { distances } from "./constants";
-import { calculateHitPointsWithRecovery, calculateInitialHitPoints, calculateRecoverySkillHitPoints, calculateUniqueRecoverySkillHitPoints } from "./hitPointsCalculator";
+import { 
+    calculateHitPointsWithRecovery, 
+    calculateInitialHitPoints, 
+    calculateRecoverySkillHitPoints, 
+    calculateUniqueRecoverySkillHitPoints 
+} from "./hitPointsCalculator";
 import { 
     getDistanceAptitudeModifiers,
     getMoodModifier, 
@@ -8,7 +13,17 @@ import {
     getSurfaceAptitudeModifier, 
     getWeatherModifier 
 } from "./modifierData";
-import type { InputData } from "./modifierTypes";
+import {
+    calculatePhaseZeroAccelerationAcceleration,
+    calculatePhaseZeroAccelerationDistanceInMeters,
+    calculatePhaseZeroAccelerationHitPointsConsumption,
+    calculatePhaseZeroAccelerationInitialSpeed,
+    calculatePhaseZeroAccelerationTargetSpeed,
+    calculatePhaseZeroAccelerationTimeInSeconds,
+    calculatePhaseZeroSteadyDistanceInMeters,
+    calculatePhaseZeroSteadyHitPointsConsumption,
+    calculatePhaseZeroSteadyTime
+} from "./phaseZeroCalculator";
 import { 
     calculateAcceleration, 
     calculateBaseSpeed, 
@@ -24,6 +39,7 @@ import {
     calculateRealGuts, 
     calculateRealWit,
 } from "./statsCalculator";
+import type { InputData } from "./modifierTypes";
 
 export interface Result {
     realStats: {
@@ -44,13 +60,45 @@ export interface Result {
             timeInSeconds: number;
             distance: number;
             hpConsumption: number;
-        }
+        },
+        phaseZeroAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseZeroSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseOneAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseOneSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
     }
 }
 
 export function getTrackLength(distance: number) {
     return distances[distance];
-};
+}
 
 export function calculate(
     input: InputData
@@ -65,7 +113,7 @@ export function calculate(
     const stageModifiers = getStageModifiers(input.strategy);
     const surfaceAptitudeModifier = getSurfaceAptitudeModifier(input.surface, input.surfaceAptitudes);
 
-    const distanceAsNumber = parseInt(input.distance);
+    const raceDistanceAsNumber = parseInt(input.distance);
 
     // calculate basic data:
     // - stats
@@ -96,9 +144,9 @@ export function calculate(
     );
 
     // - general data
-    const baseSpeed = calculateBaseSpeed(distanceAsNumber);
+    const baseSpeed = calculateBaseSpeed(raceDistanceAsNumber);
     const initialHitPoints = calculateInitialHitPoints(
-        distanceAsNumber,
+        raceDistanceAsNumber,
         realStamina,
         stageModifiers.hpCorrection
     );
@@ -117,6 +165,7 @@ export function calculate(
     );
 
     // - detailed breakdown
+    // - starting dash
     const startingDashTargetSpeed = calculateTargetSpeed(baseSpeed);
     const startingDashAcceleration = calculateAcceleration(
         realPower,
@@ -126,7 +175,7 @@ export function calculate(
     );
     const startingDashTimeInSeconds = calculateStartingDashDuration(
         realPower,
-        distanceAsNumber,
+        raceDistanceAsNumber,
         stageModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
@@ -140,6 +189,62 @@ export function calculate(
         input.surface,
         input.condition
     );
+
+    // - phase zero acceleration
+    const phaseZeroAccelerationInitialSpeed = calculatePhaseZeroAccelerationInitialSpeed(baseSpeed);
+    const phaseZeroAccelerationTargetSpeed = calculatePhaseZeroAccelerationTargetSpeed(
+        baseSpeed, 
+        realWit, 
+        stageModifiers.speedCorrection.early
+    );
+    const phaseZeroAccelerationAcceleration = calculatePhaseZeroAccelerationAcceleration(
+        realPower,
+        stageModifiers.accelerationCorrection.early,
+        distanceAptitudeModifiers.acceleration,
+        surfaceAptitudeModifier
+    );
+    const phaseZeroAccelerationTimeInSeconds = calculatePhaseZeroAccelerationTimeInSeconds(
+        phaseZeroAccelerationInitialSpeed,
+        phaseZeroAccelerationTargetSpeed,
+        phaseZeroAccelerationAcceleration,
+        raceDistanceAsNumber,
+        startingDashDistanceInMeters
+    );
+    const phaseZeroAccelerationDistanceInMeters = calculatePhaseZeroAccelerationDistanceInMeters(
+        phaseZeroAccelerationInitialSpeed,
+        phaseZeroAccelerationAcceleration,
+        phaseZeroAccelerationTimeInSeconds
+    );
+    const phaseZeroAccelerationHitPointsConsumption = calculatePhaseZeroAccelerationHitPointsConsumption(
+        phaseZeroAccelerationInitialSpeed,
+        phaseZeroAccelerationAcceleration,
+        phaseZeroAccelerationTimeInSeconds,
+        baseSpeed,
+        weatherModifier.hpConsumptionCoefficient
+    );
+
+    // - phase zero steady
+    const phaseZeroSteadyInitialSpeed = phaseZeroAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
+    const phaseZeroSteadyTargetSpeed = phaseZeroAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
+    const phaseZeroSteadyAcceleration = 0; // No acceleration in steady state
+
+    const phaseZeroSteadyDistanceInMeters = calculatePhaseZeroSteadyDistanceInMeters(
+        raceDistanceAsNumber,
+        startingDashDistanceInMeters,
+        phaseZeroAccelerationDistanceInMeters
+    );
+    const phaseZeroSteadyTimeInSeconds = calculatePhaseZeroSteadyTime(
+        phaseZeroSteadyDistanceInMeters,
+        phaseZeroSteadyInitialSpeed
+    ); 
+    const phaseZeroSteadyHitPointsConsumption = calculatePhaseZeroSteadyHitPointsConsumption(
+        phaseZeroSteadyInitialSpeed,
+        baseSpeed,
+        weatherModifier.hpConsumptionCoefficient,
+        phaseZeroSteadyTimeInSeconds
+    ); 
+
+    
 
     return {
         realStats: {
@@ -160,6 +265,38 @@ export function calculate(
                 timeInSeconds: startingDashTimeInSeconds,
                 distance: startingDashDistanceInMeters,
                 hpConsumption: startingDashHitPointsConsumption
+            },
+            phaseZeroAcceleration: {
+                initialSpeed: phaseZeroAccelerationInitialSpeed,
+                targetSpeed: phaseZeroAccelerationTargetSpeed,
+                acceleration: phaseZeroAccelerationAcceleration,
+                timeInSeconds: phaseZeroAccelerationTimeInSeconds,
+                distance: phaseZeroAccelerationDistanceInMeters,
+                hpConsumption: phaseZeroAccelerationHitPointsConsumption
+            },
+            phaseZeroSteady: {
+                initialSpeed: phaseZeroSteadyInitialSpeed,
+                targetSpeed: phaseZeroSteadyTargetSpeed,
+                acceleration: phaseZeroSteadyAcceleration,
+                timeInSeconds: phaseZeroSteadyTimeInSeconds,
+                distance: phaseZeroSteadyDistanceInMeters,
+                hpConsumption: phaseZeroSteadyHitPointsConsumption
+            },
+            phaseOneAcceleration: {
+                initialSpeed: phaseZeroAccelerationInitialSpeed,
+                targetSpeed: phaseZeroAccelerationTargetSpeed,
+                acceleration: phaseZeroAccelerationAcceleration,
+                timeInSeconds: phaseZeroAccelerationTimeInSeconds,
+                distance: phaseZeroAccelerationDistanceInMeters,
+                hpConsumption: phaseZeroAccelerationHitPointsConsumption
+            },
+            phaseOneSteady: {
+                initialSpeed: phaseZeroSteadyInitialSpeed,
+                targetSpeed: phaseZeroSteadyTargetSpeed,
+                acceleration: phaseZeroSteadyAcceleration,
+                timeInSeconds: phaseZeroSteadyTimeInSeconds,
+                distance: phaseZeroSteadyDistanceInMeters,
+                hpConsumption: phaseZeroSteadyHitPointsConsumption
             }
         }
     };
