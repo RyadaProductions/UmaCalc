@@ -8,7 +8,8 @@ import type {
 import {
     moodModifiers,
     surfaceModifiers,
-    distanceAptitudeModifiers
+    distanceAptitudeModifiers,
+    type Strategy
 } from './constants.js'
 
 export function getMoodModifier(
@@ -42,6 +43,17 @@ export function getDistanceAptitudeModifiers(
     return modifiers;
 }
 
+export function getStrategyAptitudeModifiers(
+    strategy: Strategy,
+    strategyAptitudes: Record<string, string>
+): DistanceAptitudeModifiers {
+    const aptitude = strategyAptitudes[strategy.toLowerCase()];
+    if (!aptitude) throw new Error(`No aptitude for strategy "${strategy}"`);
+    const modifiers = distanceAptitudeModifiers[aptitude.toLowerCase()];
+    if (!modifiers) throw new Error(`No modifiers for aptitude "${aptitude}"`);
+    return modifiers;
+}
+
 // Calculation for actual speed:
 // (SpeedStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier^2
 export function calculateFinalSpeed(
@@ -50,14 +62,56 @@ export function calculateFinalSpeed(
     weatherModifier: SurfaceAndWeatherModifiers,
     distanceModifier: DistanceAptitudeModifiers
 ): number {
-    return (baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2;
+    return round((baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2);
 }
 
 // Calculation for actual stamina:
-// Stamina * moodmodifier
+// StaminaStat * MoodModifier
 export function calculateFinalStamina(
     baseStamina: number,
     moodModifier: number
 ): number {
-    return baseStamina * moodModifier;
+    return round(baseStamina * moodModifier);
+}
+
+// Calculation for actual power:
+// (PowerStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier
+export function calculateFinalPower(
+    basePower: number,
+    moodModifier: number,
+    weatherModifier: SurfaceAndWeatherModifiers,
+    distanceModifier: DistanceAptitudeModifiers
+): number {
+    return round((basePower * moodModifier + weatherModifier.power) * distanceModifier.acceleration);
+}
+
+// Calculation for actual guts:
+// GutsStat * MoodModifier
+export function calculateFinalGuts(
+    baseGuts: number,
+    moodModifier: number
+): number {
+    return round(baseGuts * moodModifier);
+}
+
+// Calculation for actual wit:
+// (WitStat * MoodModifier) * StrategyAptitude
+export function calculateFinalWit(
+    baseWit: number,
+    moodModifier: number,
+    strategyAptitude: number
+): number {
+    return round((baseWit * moodModifier) * strategyAptitude);
+}
+
+/**
+ * Round (halfs go away from zero).
+ *
+ * @param value    The number to round
+ * @param decimals How many places after the decimal point
+ * @returns        Rounded value
+ */
+export function round(value: number, decimals = 0): number {
+  const factor = 10 ** decimals;
+  return Math.sign(value) * Math.round(Math.abs(value) * factor) / factor;
 }

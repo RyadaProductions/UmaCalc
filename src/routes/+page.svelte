@@ -3,10 +3,12 @@
         getMoodModifier, 
         getWeatherModifier, 
         getDistanceAptitudeModifiers,
+        getStrategyAptitudeModifiers,
         calculateFinalSpeed,
-
-		calculateFinalStamina
-
+		calculateFinalStamina,
+        calculateFinalPower,
+		calculateFinalGuts,
+		calculateFinalWit
     } from '$lib/statsCalculator';
     import {
         moods,
@@ -27,13 +29,13 @@
     let stats: {
         speed: number;
         stamina: number;
-        strength: number;
+        power: number;
         guts: number;
         wit: number;
     } = {
         speed: 1200,
         stamina: 800,
-        strength: 1000,
+        power: 1000,
         guts: 400,
         wit: 1000
     };
@@ -55,7 +57,7 @@
         medium: 'A',
         long: 'A'
     };
-    let paceAptitudes: {
+    let strategyAptitudes: {
         front: Aptitude;
         pace: Aptitude;
         late: Aptitude;
@@ -81,11 +83,39 @@
             stats.speed, 
             getMoodModifier(selectedMood), 
             getWeatherModifier(selectedSurface, selectedCondition), 
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes));
+            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes)
+        );
     }
 
     function getFinalStamina(): number {
-        return calculateFinalStamina(stats.stamina, getMoodModifier(selectedMood));
+        return calculateFinalStamina(
+            stats.stamina, 
+            getMoodModifier(selectedMood)
+        );
+    }
+
+    function getFinalPower(): number {
+        return calculateFinalPower(
+            stats.power, 
+            getMoodModifier(selectedMood), 
+            getWeatherModifier(selectedSurface, selectedCondition), 
+            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes)
+        );
+    }
+
+    function getFinalGuts(): number {
+        return calculateFinalGuts(
+            stats.guts,
+            getMoodModifier(selectedMood)
+        );
+    }
+
+    function getFinalWit(): number {
+        return calculateFinalWit(
+            stats.wit,
+            getMoodModifier(selectedMood),
+            getStrategyAptitudeModifiers(selectedStrategy, strategyAptitudes).acceleration
+        );
     }
 </script>
 
@@ -102,7 +132,7 @@
             <tr>
                 <th class="px-4 pt-2 text-center">Speed</th>
                 <th class="px-4 pt-2 text-center">Stamina</th>
-                <th class="px-4 pt-2 text-center">Strength</th>
+                <th class="px-4 pt-2 text-center">Power</th>
                 <th class="px-4 pt-2 text-center">Guts</th>
                 <th class="px-4 pt-2 text-center">Wit</th>
             </tr>
@@ -114,7 +144,7 @@
                     <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="stamina" min=0 max=1200 bind:value={ stats.stamina } />
                 </td>
                 <td class="px-4 pb-2 ">
-                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="strength" min=0 max=1200 bind:value={ stats.strength } />
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="power" min=0 max=1200 bind:value={ stats.power } />
                 </td>
                 <td class="px-4 pb-2 ">
                     <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="guts" min=0 max=1200 bind:value={ stats.guts } />
@@ -175,16 +205,16 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ paceAptitudes.front }/>
+                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.front }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ paceAptitudes.pace }/>
+                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.pace }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ paceAptitudes.late }/>
+                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.late }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ paceAptitudes.end }/>
+                    <Dropdown options={ aptitudes } bind:value={ strategyAptitudes.end }/>
                 </td>
             </tr>
         </tbody>
@@ -237,16 +267,16 @@
             <tr>
                 <th class="px-4 pt-2 text-center">Speed</th>
                 <th class="px-4 pt-2 text-center">Stamina</th>
-                <th class="px-4 pt-2 text-center">Strength</th>
+                <th class="px-4 pt-2 text-center">Power</th>
                 <th class="px-4 pt-2 text-center">Guts</th>
                 <th class="px-4 pt-2 text-center">Wit</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2 text-center">{ getFinalSpeed() }</td>
                 <td class="px-4 pb-2 text-center">{ getFinalStamina() }</td>
-                <td class="px-4 pb-2 text-center">{ stats.strength }</td>
-                <td class="px-4 pb-2 text-center">{ stats.guts }</td>
-                <td class="px-4 pb-2 text-center">{ stats.wit }</td>
+                <td class="px-4 pb-2 text-center">{ getFinalPower() }</td>
+                <td class="px-4 pb-2 text-center">{ getFinalGuts() }</td>
+                <td class="px-4 pb-2 text-center">{ getFinalWit() }</td>
             </tr>
         </tbody>
     </table>
