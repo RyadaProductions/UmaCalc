@@ -39,6 +39,17 @@ import {
     calculateRealGuts, 
     calculateRealWit,
 } from "./statsCalculator";
+import { 
+    calculatePhaseOneAccelerationAcceleration,
+    calculatePhaseOneAccelerationDistanceInMeters,
+    calculatePhaseOneAccelerationHitPointsConsumption,
+    calculatePhaseOneAccelerationInitialSpeed, 
+    calculatePhaseOneAccelerationTargetSpeed, 
+    calculatePhaseOneAccelerationTimeInSeconds,
+    calculatePhaseOneSteadyDistanceInMeters,
+    calculatePhaseOneSteadyHitPointsConsumption,
+    calculatePhaseOneSteadyTimeInSeconds
+} from "./phaseOneCalculator";
 import type { InputData } from "./modifierTypes";
 
 export interface Result {
@@ -86,6 +97,46 @@ export interface Result {
             hpConsumption: number;
         },
         phaseOneSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseTwoAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseTwoAndThreeSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        lastSpurtAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        lastSpurtSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        hitPointsZeroDeceleration: {
             initialSpeed: number;
             targetSpeed: number;
             acceleration: number;
@@ -244,7 +295,63 @@ export function calculate(
         phaseZeroSteadyTimeInSeconds
     ); 
 
-    
+    // - phase one acceleration
+    const phaseOneAccelerationInitialSpeed = calculatePhaseOneAccelerationInitialSpeed(
+        phaseZeroAccelerationInitialSpeed,
+        phaseZeroAccelerationAcceleration,
+        phaseZeroAccelerationTimeInSeconds
+    );
+    const phaseOneAccelerationTargetSpeed = calculatePhaseOneAccelerationTargetSpeed(
+        baseSpeed,
+        realWit,
+        stageModifiers.speedCorrection.middle
+    );
+    const phaseOneAccelerationAcceleration = calculatePhaseOneAccelerationAcceleration(
+        phaseOneAccelerationInitialSpeed,
+        phaseOneAccelerationTargetSpeed,
+        realPower,
+        stageModifiers.accelerationCorrection.middle,
+        distanceAptitudeModifiers.acceleration,
+        surfaceAptitudeModifier
+    );
+    const phaseOneAccelerationTimeInSeconds = calculatePhaseOneAccelerationTimeInSeconds(
+        phaseOneAccelerationInitialSpeed,
+        phaseOneAccelerationTargetSpeed,
+        phaseOneAccelerationAcceleration
+    );
+    const phaseOneAccelerationDistanceInMeters = calculatePhaseOneAccelerationDistanceInMeters(
+        phaseOneAccelerationInitialSpeed,
+        phaseOneAccelerationTargetSpeed,
+        phaseOneAccelerationTimeInSeconds
+    );
+    const phaseOneAccelerationHitPointsConsumption = calculatePhaseOneAccelerationHitPointsConsumption(
+        phaseOneAccelerationInitialSpeed,
+        phaseOneAccelerationTargetSpeed,
+        phaseOneAccelerationAcceleration,
+        baseSpeed,
+        weatherModifier.hpConsumptionCoefficient
+    );
+
+    // - phase one steady
+    const phaseOneSteadyInitialSpeed = phaseOneAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
+    const phaseOneSteadyTargetSpeed = phaseOneAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
+    const phaseOneSteadyAcceleration = 0; // No acceleration in steady state
+
+    const phaseOneSteadyDistanceInMeters = calculatePhaseOneSteadyDistanceInMeters(
+        raceDistanceAsNumber,
+        phaseOneAccelerationDistanceInMeters,
+    );
+
+    const phaseOneSteadyTimeInSeconds = calculatePhaseOneSteadyTimeInSeconds(
+        phaseOneSteadyDistanceInMeters,
+        phaseOneSteadyInitialSpeed
+    );
+    const phaseOneSteadyHitPointsConsumption = calculatePhaseOneSteadyHitPointsConsumption(
+        phaseOneSteadyInitialSpeed,
+        baseSpeed,
+        weatherModifier.hpConsumptionCoefficient,
+        phaseOneSteadyTimeInSeconds
+    );
 
     return {
         realStats: {
@@ -283,20 +390,60 @@ export function calculate(
                 hpConsumption: phaseZeroSteadyHitPointsConsumption
             },
             phaseOneAcceleration: {
-                initialSpeed: phaseZeroAccelerationInitialSpeed,
-                targetSpeed: phaseZeroAccelerationTargetSpeed,
-                acceleration: phaseZeroAccelerationAcceleration,
-                timeInSeconds: phaseZeroAccelerationTimeInSeconds,
-                distance: phaseZeroAccelerationDistanceInMeters,
-                hpConsumption: phaseZeroAccelerationHitPointsConsumption
+                initialSpeed: phaseOneAccelerationInitialSpeed,
+                targetSpeed: phaseOneAccelerationTargetSpeed,
+                acceleration: phaseOneAccelerationAcceleration,
+                timeInSeconds: phaseOneAccelerationTimeInSeconds,
+                distance: phaseOneAccelerationDistanceInMeters,
+                hpConsumption: phaseOneAccelerationHitPointsConsumption
             },
             phaseOneSteady: {
-                initialSpeed: phaseZeroSteadyInitialSpeed,
-                targetSpeed: phaseZeroSteadyTargetSpeed,
-                acceleration: phaseZeroSteadyAcceleration,
-                timeInSeconds: phaseZeroSteadyTimeInSeconds,
-                distance: phaseZeroSteadyDistanceInMeters,
-                hpConsumption: phaseZeroSteadyHitPointsConsumption
+                initialSpeed: phaseOneSteadyInitialSpeed,
+                targetSpeed: phaseOneSteadyTargetSpeed,
+                acceleration: phaseOneSteadyAcceleration,
+                timeInSeconds: phaseOneSteadyTimeInSeconds,
+                distance: phaseOneSteadyDistanceInMeters,
+                hpConsumption: phaseOneSteadyHitPointsConsumption
+            },
+            phaseTwoAcceleration: {
+                initialSpeed: 0,
+                targetSpeed: 0,
+                acceleration: 0,
+                timeInSeconds: 0,
+                distance: 0,
+                hpConsumption: 0
+            },
+            phaseTwoAndThreeSteady: {
+                initialSpeed: 0,
+                targetSpeed: 0,
+                acceleration: 0,
+                timeInSeconds: 0,
+                distance: 0,
+                hpConsumption: 0
+            },
+            lastSpurtAcceleration: {
+                initialSpeed: 0,
+                targetSpeed: 0,
+                acceleration: 0,
+                timeInSeconds: 0,
+                distance: 0,
+                hpConsumption: 0
+            },
+            lastSpurtSteady: {
+                initialSpeed: 0,
+                targetSpeed: 0,
+                acceleration: 0,
+                timeInSeconds: 0,
+                distance: 0,
+                hpConsumption: 0
+            },
+            hitPointsZeroDeceleration: {
+                initialSpeed: 0,
+                targetSpeed: 0,
+                acceleration: 0,
+                timeInSeconds: 0,
+                distance: 0,
+                hpConsumption: 0
             }
         }
     };
