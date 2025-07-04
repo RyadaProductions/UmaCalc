@@ -238,11 +238,15 @@
                 <th class="px-4 text-center">Base Speed</th>
                 <th class="px-4 text-center">Initial HP</th>
                 <th class="px-4 text-center">HP with Recovery</th>
+                <th class="px-4 text-center">Last Spurt Distance</th>
+                <th class="px-4 text-center">Last Spurt HP Coefficient</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2 text-center">{ round(result.baseSpeed, 2) }</td>
                 <td class="px-4 pb-2 text-center">{ round(result.initialHitPoints, 2)}</td>
                 <td class="px-4 pb-2 text-center">{ round(result.hitPointsWithRecovery, 2)}</td>
+                <td class="px-4 pb-2 text-center">{ round(result.lastSpurtDistance, 2)}</td>
+                <td class="px-4 pb-2 text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2)}</td>
             </tr>
         </tbody>
     </table>
