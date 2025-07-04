@@ -36,6 +36,9 @@ jobs:
 
       - name: Copy 200.html to 404.html
         run: cp build/200.html build/404.html
+
+      - name: add .nojekyll
+        run: touch build/.nojekyll
       
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
