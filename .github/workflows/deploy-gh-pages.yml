@@ -28,8 +28,11 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
       - name: Build app
-        run: pnpm build
+        run: |
+          export GITHUB_PAGES=1
+          pnpm build
       
       - name: Deploy to Github Pages
         uses: JamesIves/github-pages-deploy-action@v4
