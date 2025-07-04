@@ -11,9 +11,7 @@
         strategies,
         surfaces, 
         distances,
-        moodModifiers,
         distanceAptitudeModifiers,
-        surfaceModifiers,
         type Aptitude, 
         type Mood, 
 		type Strategy,
@@ -69,18 +67,18 @@
     let selectedStrategy: Strategy = 'Front';
     let selectedSurface: Surface = 'Turf';
     let selectedCondition: Condition = 'Firm';
-    let selectedDistance: number = 2000;
+    let selectedDistance: string = '2000';
 
     function getTrackLength() {
-        return distances[selectedDistance];
+        return distances[parseInt(selectedDistance)];
     };
 
     function getFinalSpeed(): number {
         return calculateFinalSpeed(
             stats.speed, 
-            getMoodModifier(selectedMood, moodModifiers), 
-            getWeatherModifier(selectedSurface, selectedCondition, surfaceModifiers), 
-            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes, distanceAptitudeModifiers));
+            getMoodModifier(selectedMood), 
+            getWeatherModifier(selectedSurface, selectedCondition), 
+            getDistanceAptitudeModifiers(getTrackLength(), distanceAptitudes));
     }
 </script>
 

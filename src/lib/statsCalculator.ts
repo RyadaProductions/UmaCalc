@@ -5,9 +5,14 @@ import type {
     DistanceAptitudeModifiers
 } from './modifierTypes.js';
 
+import {
+    moodModifiers,
+    surfaceModifiers,
+    distanceAptitudeModifiers
+} from './constants.js'
+
 export function getMoodModifier(
-    selectedMood: string,
-    moodModifiers: Record<string, number>
+    selectedMood: string
 ): number {
     const key = selectedMood.toLowerCase();
     const moodModifier = moodModifiers[key];
@@ -18,7 +23,6 @@ export function getMoodModifier(
 export function getWeatherModifier(
     selectedSurface: string,
     selectedCondition: string,
-    surfaceModifiers: Record<string, Record<string, SurfaceAndWeatherModifiers>>
 ): SurfaceAndWeatherModifiers {
     const surfaceMap = surfaceModifiers[selectedSurface.toLowerCase()];
     if (!surfaceMap) throw new Error(`Unknown surface "${selectedSurface}"`);
@@ -30,7 +34,6 @@ export function getWeatherModifier(
 export function getDistanceAptitudeModifiers(
     distance: string,
     distanceAptitudes: Record<string, string>,
-    distanceAptitudeModifiers: Record<string, DistanceAptitudeModifiers>
 ): DistanceAptitudeModifiers {
     const aptitude = distanceAptitudes[distance.toLowerCase()];
     if (!aptitude) throw new Error(`No aptitude for distance "${distance}"`);
