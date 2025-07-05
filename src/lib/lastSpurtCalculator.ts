@@ -61,3 +61,77 @@ export function calculateLastSpurtAccelerationAcceleration(
 ) {
     return 0.0006 * Math.sqrt(500 * realPower) * strategyLateAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier;
 }
+
+// (lastSpurtAccelerationTargetSpeed - lastSpurtAccelerationInitialSpeed) / lastSpurtAccelerationAcceleration
+export function calculateLastSpurtAccelerationTimeInSeconds(
+    lastSpurtAccelerationTargetSpeed: number,
+    lastSpurtAccelerationInitialSpeed: number,
+    lastSpurtAccelerationAcceleration: number
+): number {
+    return (lastSpurtAccelerationTargetSpeed - lastSpurtAccelerationInitialSpeed) / lastSpurtAccelerationAcceleration;
+}
+
+// (lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationTargetSpeed) / 2 * lastSpurtAccelerationTimeInSeconds
+export function calculateLastSpurtAccelerationDistanceInMeters(
+    lastSpurtAccelerationInitialSpeed: number,
+    lastSpurtAccelerationTargetSpeed: number,
+    lastSpurtAccelerationTimeInSeconds: number
+): number {
+    return (lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationTargetSpeed) / 2 * lastSpurtAccelerationTimeInSeconds;
+}
+
+// 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * ((lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationAcceleration * lastSpurtAccelerationTimeInSeconds - baseSpeed + 12) ** 3 - (lastSpurtAccelerationInitialSpeed - baseSpeed + 12) ** 3) / (3 * lastSpurtAccelerationAcceleration) / 144
+export function calculateLastSpurtAccelerationHitPointsConsumption(
+    lastSpurtAccelerationInitialSpeed: number,
+    lastSpurtAccelerationAcceleration: number,
+    baseSpeed: number,
+    fieldConditionHPConsumptionCoefficient: number,
+    lastSpurtHitPointsConsumptionCoefficient: number,
+    lastSpurtAccelerationTimeInSeconds: number
+): number {
+    return 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * ((lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationAcceleration * lastSpurtAccelerationTimeInSeconds - baseSpeed + 12) ** 3 - (lastSpurtAccelerationInitialSpeed - baseSpeed + 12) ** 3) / (3 * lastSpurtAccelerationAcceleration) / 144;
+}
+
+// lastSpurtSteadyHitPointsConsumption / (20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144)
+export function calculateLastSpurtSteadyTimeInSeconds(
+    lastSpurtSteadyHitPointsConsumption: number,
+    fieldConditionHPConsumptionCoefficient: number,
+    lastSpurtHitPointsConsumptionCoefficient: number,
+    lastSpurtSteadyInitialSpeed: number,
+    baseSpeed: number
+): number {
+    return lastSpurtSteadyHitPointsConsumption / (20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144);
+}
+
+// min(20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed, hitPointsWithSkills - (startingDashHitPointsConsumption + phaseZeroAccelerationHitPointsConsumption + phaseZeroSteadyHitPointsConsumption + phaseOneAccelerationHitPointsConsumption + phaseOneSteadyHitPointsConsumption + phaseTwoAccelerationHitPointsConsumption + phaseTwoAndThreeSteadyHitPointsConsumption + lastSpurtAccelerationHitPointsConsumption))
+export function calculateLastSpurtSteadyHitPointsConsumption(
+    fieldConditionHPConsumptionCoefficient: number,
+    lastSpurtHitPointsConsumptionCoefficient: number,
+    lastSpurtSteadyInitialSpeed: number,
+    baseSpeed: number,
+    raceLengthInMeters: number,
+    phaseTwoAccelerationDistanceInMeters: number,
+    phaseTwoAndTheeSteadyDistanceInMeters: number,
+    LastSpurtAccelerationDistanceInMeters: number,
+    hitPointsWithSkills: number,
+    startingDashHitPointsConsumption: number,
+    phaseZeroAccelerationHitPointsConsumption: number,
+    phaseZeroSteadyHitPointsConsumption: number,
+    phaseOneAccelerationHitPointsConsumption: number,
+    phaseOneSteadyHitPointsConsumption: number,
+    phaseTwoAccelerationHitPointsConsumption: number,
+    phaseTwoAndThreeSteadyHitPointsConsumption: number,
+    lastSpurtAccelerationHitPointsConsumption: number
+): number {
+    const leftHand = 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed;
+    const rightHand = hitPointsWithSkills - (startingDashHitPointsConsumption + phaseZeroAccelerationHitPointsConsumption + phaseZeroSteadyHitPointsConsumption + phaseOneAccelerationHitPointsConsumption + phaseOneSteadyHitPointsConsumption + phaseTwoAccelerationHitPointsConsumption + phaseTwoAndThreeSteadyHitPointsConsumption + lastSpurtAccelerationHitPointsConsumption);
+    return Math.min(leftHand, rightHand);
+}
+
+// lastSpurtSteadyInitialSpeed * lastSpurtSteadyTimeInSeconds
+export function calculateLastSpurtSteadyDistanceInMeters(
+    lastSpurtSteadyInitialSpeed: number,
+    lastSpurtSteadyTimeInSeconds: number
+): number {
+    return lastSpurtSteadyInitialSpeed * lastSpurtSteadyTimeInSeconds;
+}

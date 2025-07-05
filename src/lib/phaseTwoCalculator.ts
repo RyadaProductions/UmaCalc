@@ -70,3 +70,34 @@ export function calculatePhaseTwoAccelerationHitPointsConsumption(
     const onehundredAndFortyFour = 144;
     return twenty * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * ((phaseTwoAccelerationInitialSpeed + phaseTwoAccelerationAcceleration * phaseTwoAccelerationTimeInSeconds - baseSpeed + twelve) ** 3 - (phaseTwoAccelerationInitialSpeed - baseSpeed + twelve) ** 3) / (3 * phaseTwoAccelerationAcceleration) / onehundredAndFortyFour;
 }
+
+// max(raceDistanceInMeters / 3 - lastSpurtDistance - phaseTwoAccelerationDistanceInMeters, 0)
+export function calculatePhaseTwoAndThreeSteadyDistanceInMeters(
+    raceDistanceInMeters: number,
+    lastSpurtDistance: number,
+    phaseTwoAccelerationDistanceInMeters: number
+): number {
+    return Math.max(raceDistanceInMeters / 3 - lastSpurtDistance - phaseTwoAccelerationDistanceInMeters, 0);
+}
+
+// phaseTwoAndThreeSteadyDistanceInMeters / phaseTwoAndThreeSteadyTargetSpeed
+export function calculatePhaseTwoAndThreeSteadyTimeInSeconds(
+    phaseTwoAndThreeSteadyDistanceInMeters: number,
+    phaseTwoAndThreeSteadyTargetSpeed: number
+): number {
+    return phaseTwoAndThreeSteadyDistanceInMeters / phaseTwoAndThreeSteadyTargetSpeed;
+}
+
+// 20 * fieldconditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (phaseTwoAndThreeSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * phaseTwoAndThreeSteadyTimeInSeconds
+export function calculatePhaseTwoAndThreeSteadyHitPointsConsumption(
+    phaseTwoAndThreeSteadyInitialSpeed: number,
+    baseSpeed: number,
+    fieldConditionHPConsumptionCoefficient: number,
+    lastSpurtHitPointsConsumptionCoefficient: number,
+    phaseTwoAndThreeSteadyTimeInSeconds: number
+): number {
+    const twenty = 20;
+    const twelve = 12;
+    const onehundredAndFortyFour = 144;
+    return twenty * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (phaseTwoAndThreeSteadyInitialSpeed - baseSpeed + twelve) ** 2 / onehundredAndFortyFour * phaseTwoAndThreeSteadyTimeInSeconds;
+}
