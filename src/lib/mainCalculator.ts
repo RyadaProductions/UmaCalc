@@ -1,4 +1,5 @@
 import { distances } from "./constants";
+import type { InputData } from "./modifierTypes";
 import { 
     calculateHitPointsWithRecovery, 
     calculateInitialHitPoints, 
@@ -50,9 +51,34 @@ import {
     calculatePhaseOneSteadyHitPointsConsumption,
     calculatePhaseOneSteadyTimeInSeconds
 } from "./phaseOneCalculator";
-import type { InputData } from "./modifierTypes";
-import { calculatePhaseTwoAccelerationAcceleration, calculatePhaseTwoAccelerationDistanceInMeters, calculatePhaseTwoAccelerationHitPointsConsumption, calculatePhaseTwoAccelerationTargetSpeed, calculatePhaseTwoAccelerationTimeInSeconds, calculatePhaseTwoAndThreeSteadyDistanceInMeters, calculatePhaseTwoAndThreeSteadyHitPointsConsumption, calculatePhaseTwoAndThreeSteadyTimeInSeconds } from "./phaseTwoCalculator";
-import { calculateLastSpurtAccelerationAcceleration, calculateLastSpurtAccelerationDistanceInMeters, calculateLastSpurtAccelerationHitPointsConsumption, calculateLastSpurtAccelerationInitialSpeed, calculateLastSpurtAccelerationTargetSpeed, calculateLastSpurtAccelerationTimeInSeconds, calculateLastSpurtDistance, calculateLastSpurtHitPointsConsumptionCoefficient, calculateLastSpurtSteadyDistanceInMeters, calculateLastSpurtSteadyHitPointsConsumption, calculateLastSpurtSteadyTimeInSeconds } from "./lastSpurtCalculator";
+import { 
+    calculatePhaseTwoAccelerationAcceleration, 
+    calculatePhaseTwoAccelerationDistanceInMeters, 
+    calculatePhaseTwoAccelerationHitPointsConsumption, 
+    calculatePhaseTwoAccelerationTargetSpeed, 
+    calculatePhaseTwoAccelerationTimeInSeconds, 
+    calculatePhaseTwoAndThreeSteadyDistanceInMeters, 
+    calculatePhaseTwoAndThreeSteadyHitPointsConsumption, 
+    calculatePhaseTwoAndThreeSteadyTimeInSeconds 
+} from "./phaseTwoCalculator";
+import { 
+    calculateLastSpurtAccelerationAcceleration, 
+    calculateLastSpurtAccelerationDistanceInMeters, 
+    calculateLastSpurtAccelerationHitPointsConsumption, 
+    calculateLastSpurtAccelerationInitialSpeed, 
+    calculateLastSpurtAccelerationTargetSpeed, 
+    calculateLastSpurtAccelerationTimeInSeconds, 
+    calculateLastSpurtDistance, 
+    calculateLastSpurtHitPointsConsumptionCoefficient, 
+    calculateLastSpurtSteadyDistanceInMeters, 
+    calculateLastSpurtSteadyHitPointsConsumption, 
+    calculateLastSpurtSteadyTimeInSeconds 
+} from "./lastSpurtCalculator";
+import { 
+    calculateHitPointsZeroDecelerationDistanceInMeters, 
+    calculateHitPointsZeroDecelerationTimeInSeconds,
+} from "./hitPointsZeroCalculator";
+import { calculateRequiredStamina, calculateTargetHitPointsForLastSpurt } from "./staminaTargetCalculator";
 
 export interface Result {
     realStats: {
@@ -67,6 +93,10 @@ export interface Result {
     hitPointsWithRecovery: number;
     lastSpurtDistance: number;
     lastSpurtHitPointsConsumptionCoefficient: number;
+    targetHitPointsForLastSpurt: number;
+    requiredStamina: number;
+    skillProcRate: number;
+    rushedRate: number;
     detailedBreakdown: {
         startingDash: {
             initialSpeed: number;
@@ -521,9 +551,37 @@ export function calculate(
     const hitPointsZeroDecelerationTargetSpeed = 0; // No formula exists for this.
     const hitPointsZeroDecelerationAcceleration = -1.2; // CONSTANT
 
-    const hitPointsZeroDecelerationTimeInSeconds = 0;//calculateHitPointsZeroDecelerationTimeInSeconds();
-    const hitPointsZeroDecelerationDistanceInMeters = 0;//calculateHitPointsZeroDecelerationDistanceInMeters();
+    const hitPointsZeroDecelerationDistanceInMeters = calculateHitPointsZeroDecelerationDistanceInMeters(
+        raceDistanceInMeters,
+        phaseTwoAccelerationDistanceInMeters,
+        phaseTwoAndThreeSteadyDistanceInMeters,
+        lastSpurtAccelerationDistanceInMeters,
+        lastSpurtSteadyDistanceInMeters
+    );
+    const hitPointsZeroDecelerationTimeInSeconds = calculateHitPointsZeroDecelerationTimeInSeconds(
+        hitPointsZeroDecelerationInitialSpeed,
+        hitPointsZeroDecelerationAcceleration,
+        hitPointsZeroDecelerationDistanceInMeters
+    );
     const hitPointsZeroDecelerationHitPointsConsumption = 0; // No hitpoints can be consumed as we have ran out
+
+    const targetHitPointsForLastSpurt = calculateTargetHitPointsForLastSpurt(
+        startingDashHitPointsConsumption,
+        phaseZeroAccelerationHitPointsConsumption,
+        phaseZeroSteadyHitPointsConsumption,
+        phaseOneAccelerationHitPointsConsumption,
+        phaseOneSteadyHitPointsConsumption,
+        lastSpurtAccelerationHitPointsConsumption,
+        lastSpurtSteadyHitPointsConsumption
+    );
+    const requiredStamina = calculateRequiredStamina(
+        realStamina,
+        targetHitPointsForLastSpurt,
+        hitPointsWithRecovery,
+        stageModifiers.hpCorrection,
+        recoveryHitPoints,
+        uniqueRecoveryHitPoints
+    );
 
     return {
         realStats: {
@@ -538,6 +596,10 @@ export function calculate(
         hitPointsWithRecovery: hitPointsWithRecovery,
         lastSpurtDistance: lastSpurtDistance,
         lastSpurtHitPointsConsumptionCoefficient: lastSpurtHitPointsConsumptionCoefficient,
+        targetHitPointsForLastSpurt: targetHitPointsForLastSpurt,
+        requiredStamina: requiredStamina,
+        skillProcRate: 0,
+        rushedRate: 0,
         detailedBreakdown: {
             startingDash: {
                 initialSpeed: startingDashInitialSpeed,

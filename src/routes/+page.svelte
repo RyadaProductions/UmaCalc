@@ -58,6 +58,18 @@
     function onCalculateClicked() {
         result = calculate(inputData);
     }
+
+    function hasEnoughStamina() {
+        if (result.realStats.stamina + 1 < result.requiredStamina) {
+            return 'Not enough stamina/guts';
+        }
+
+        if (result.realStats.stamina / result.requiredStamina < 1.1 && result.requiredStamina >= 0) {
+            return 'Borderline';
+        }
+
+        return 'You have enough';
+    }
 </script>
 
 <svelte:head>
@@ -197,6 +209,29 @@
                 </td>
             </tr>
         </tbody>
+        
+        <tbody>
+            <tr>
+                <th class="px-4 text-center">Gold Skills</th>
+                <th class="px-4 text-center">White Skills</th>
+                <th class="px-4 text-center">2* or below Uniques</th>
+                <th class="px-4 text-center">3* or above Uniques</th>
+            </tr>
+            <tr>
+                <td class="px-4 pb-2">
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ inputData.skills.goldRecovery } />
+                </td>
+                <td class="px-4 pb-2">
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ inputData.skills.whiteRecovery } />
+                </td>
+                <td class="px-4 pb-2">
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ inputData.skills.uniqueRecoveryTwoStarsOrBelow } />
+                </td>
+                <td class="px-4 pb-2 text-center">
+                    <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="speed" min=0 max=1200 bind:value={ inputData.skills.uniqueRecoveryThreeStarsOrAbove } />
+                </td>
+            </tr>
+        </tbody>
     </table>
 </div>
 
@@ -226,6 +261,20 @@
                 <td class="px-4 pb-2 text-center">{ round(result.realStats.wit) }</td>
             </tr>
         </tbody>
+        <tbody>
+            <tr>
+                <th class="px-4 text-center">Stamina Needed</th>
+                <th class="px-4 text-center"></th>
+                <th class="px-4 text-center">Skill proc rate</th>
+                <th class="px-4 text-center">Rushed rate</th>
+            </tr>
+            <tr>
+                <td class="px-4 pb-2 text-center">{ round(result.requiredStamina) }</td>
+                <td class="px-4 pb-2 text-center">{ hasEnoughStamina() }</td>
+                <td class="px-4 pb-2 text-center">{ result.skillProcRate }</td>
+                <td class="px-4 pb-2 text-center">{ result.rushedRate }</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 
@@ -247,6 +296,16 @@
                 <td class="px-4 pb-2 text-center">{ round(result.hitPointsWithRecovery, 2)}</td>
                 <td class="px-4 pb-2 text-center">{ round(result.lastSpurtDistance, 2)}</td>
                 <td class="px-4 pb-2 text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2)}</td>
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <th class="px-4 text-center">Target hitpoints for Last Spurt</th>
+                <th class="px-4 text-center">Required Stamina</th>
+            </tr>
+            <tr>
+                <td class="px-4 pb-2 text-center">{ round(result.targetHitPointsForLastSpurt, 2)}</td>
+                <td class="px-4 pb-2 text-center">{ result.requiredStamina }</td>
             </tr>
         </tbody>
     </table>
