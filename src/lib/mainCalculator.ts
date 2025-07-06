@@ -25,13 +25,7 @@ import {
     calculatePhaseZeroSteadyHitPointsConsumption,
     calculatePhaseZeroSteadyTime
 } from "./calculators/phaseZeroCalculator";
-import { 
-    calculateStartingDashAcceleration,
-    calculateDistanceInMeters, 
-    calculateStartingDashDuration, 
-    calculateStartingDashHitPointsConsumption, 
-    calculateStartingDashTargetSpeed 
-} from "./calculators/startingDashCalculator";
+import { calculateStartingDashData } from "./calculators/startingDashCalculator";
 import { calculateRealStats } from "./calculators/statsCalculator";
 import { 
     calculatePhaseOneAccelerationAcceleration,
@@ -89,8 +83,6 @@ export function getTrackLength(distance: number) {
 export function calculate(
     input: InputData
 ): Result {
-    const startingDashInitialSpeed = 3; // CONSTANT
-
     const raceDistanceInMeters = parseInt(input.distance);
     // GetModifiers
     const moodModifier = getMoodModifier(input.mood);
@@ -135,29 +127,15 @@ export function calculate(
 
     // - detailed breakdown
     // - starting dash
-    const startingDashTargetSpeed = calculateStartingDashTargetSpeed(baseSpeed);
-    const startingDashAcceleration = calculateStartingDashAcceleration(
-        realStats.power,
-        strategyModifiers.accelerationCorrection.early,
-        distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
-    );
-    const startingDashTimeInSeconds = calculateStartingDashDuration(
-        realStats.power,
+    const startingDashData = calculateStartingDashData(
         baseSpeed,
+        realStats.power,
         strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
+        surfaceAptitudeModifier,
+        conditionModifiers
     );
-    const startingDashDistanceInMeters = calculateDistanceInMeters(
-        startingDashTargetSpeed,
-        startingDashTimeInSeconds
-    );
-    const startingDashHitPointsConsumption = calculateStartingDashHitPointsConsumption(
-        startingDashTimeInSeconds,
-        conditionModifiers.hpConsumptionCoefficient
-    );
-
+    
     // - phase zero acceleration
     const phaseZeroAccelerationInitialSpeed = calculatePhaseZeroAccelerationInitialSpeed(baseSpeed);
     const phaseZeroAccelerationTargetSpeed = calculatePhaseZeroAccelerationTargetSpeed(
@@ -176,7 +154,7 @@ export function calculate(
         phaseZeroAccelerationTargetSpeed,
         phaseZeroAccelerationAcceleration,
         raceDistanceInMeters,
-        startingDashDistanceInMeters
+        startingDashData.distance
     );
     const phaseZeroAccelerationDistanceInMeters = calculatePhaseZeroAccelerationDistanceInMeters(
         phaseZeroAccelerationInitialSpeed,
@@ -198,7 +176,7 @@ export function calculate(
 
     const phaseZeroSteadyDistanceInMeters = calculatePhaseZeroSteadyDistanceInMeters(
         raceDistanceInMeters,
-        startingDashDistanceInMeters,
+        startingDashData.distance,
         phaseZeroAccelerationDistanceInMeters
     );
     const phaseZeroSteadyTimeInSeconds = calculatePhaseZeroSteadyTime(
@@ -312,7 +290,7 @@ export function calculate(
     const lastSpurtDistance = calculateLastSpurtDistance(
         raceDistanceInMeters,
         hitPointsWithRecovery,
-        startingDashHitPointsConsumption,
+        startingDashData.hpConsumption,
         phaseZeroAccelerationHitPointsConsumption,
         phaseZeroSteadyHitPointsConsumption,
         phaseOneAccelerationHitPointsConsumption,
@@ -399,7 +377,7 @@ export function calculate(
     // - last spurt steady continued
     const remainingHitPointsBeforeLastSpurt = calculateRemainingHitPointsBeforeLastSpurt(
         hitPointsWithRecovery,
-        startingDashHitPointsConsumption,
+        startingDashData.hpConsumption,
         phaseZeroAccelerationHitPointsConsumption,
         phaseZeroSteadyHitPointsConsumption,
         phaseOneAccelerationHitPointsConsumption,
@@ -463,7 +441,6 @@ export function calculate(
 
     // -- We need to calculate the ideal last spurt values
     // This recalculation is based of starting the last spurt directly from the phase two acceleration phase
-
     const idealLastSpurtAccelerationInitialSpeed = phaseOneSteadyInitialSpeed; // ideally we want to start directly from phase 1 steady state
     const idealLastSpurtAccelerationTargetSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
     const idealLastSpurtAccelerationAcceleration = lastSpurtAccelerationAcceleration; // We can reuse the calculation from the current last spurt
@@ -493,7 +470,7 @@ export function calculate(
     const idealLastSpurtSteadyHitPointsConsumption = 20 * conditionModifiers.hpConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (idealLastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * idealLastSpurtSteadyTimeInSeconds;
 
     const targetHitPointsForLastSpurt = calculateTargetHitPointsForLastSpurt(
-        startingDashHitPointsConsumption,
+        startingDashData.hpConsumption,
         phaseZeroAccelerationHitPointsConsumption,
         phaseZeroSteadyHitPointsConsumption,
         phaseOneAccelerationHitPointsConsumption,
@@ -522,14 +499,7 @@ export function calculate(
         skillProcRate: skillProcRate,
         rushedRate: rushedRate,
         detailedBreakdown: {
-            startingDash: {
-                initialSpeed: startingDashInitialSpeed,
-                targetSpeed: startingDashTargetSpeed,
-                acceleration: startingDashAcceleration,
-                timeInSeconds: startingDashTimeInSeconds,
-                distance: startingDashDistanceInMeters,
-                hpConsumption: startingDashHitPointsConsumption
-            },
+            startingDash: startingDashData,
             phaseZeroAcceleration: {
                 initialSpeed: phaseZeroAccelerationInitialSpeed,
                 targetSpeed: phaseZeroAccelerationTargetSpeed,
