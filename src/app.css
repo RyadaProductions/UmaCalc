@@ -1,6 +1,28 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-:root {
+@font-face {
+  font-family: 'Rubik';
+  src: url(/fonts/Rubik-Bold.woff2) format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DynamicSplash';
+  src: url(/fonts/Dynamic01_Splash.woff2) format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Uma-Small';
+  src: url(/fonts/UMAE_UDKakugo_SmallPr6-E.woff2) format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
     --color-bg: #0F0B14;
     --color-surface: #2A1F3A;
     --color-border: #3B274F;
@@ -9,15 +31,7 @@
     --color-accent-amber: #C17B1E;
     --color-accent-rose: #A84576;
     --color-accent-magenta: #693A7B;
-}
-
-@layer utilities {
-  .bg-bg { background-color: var(--color-bg); }
-  .bg-surface { background-color: var(--color-surface); }
-  .border-border { border-color: var(--color-border); }
-  .text-text { color: var(--color-text); }
-  .text-text-muted { color: var(--color-text-muted); }
-  .bg-accent-amber { background-color: var(--color-accent-amber); }
-  .bg-accent-rose { background-color: var(--color-accent-rose); }
-  .bg-accent-magenta { background-color: var(--color-accent-magenta); }
+    --font-rubik: "Rubik", "sans-serif";
+    --font-dynamic-splash: "DynamicSplash", "sans-serif";
+    --font-uma-small: "Uma-Small", "sans-serif";
 }

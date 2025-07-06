@@ -13,6 +13,7 @@
 	import type { InputData, Result } from '$lib/modifierTypes';
 	import { calculate } from '$lib/mainCalculator';
     let result: Result;
+    let showDebugData = false;
 
     let inputData: InputData = {
         stats: {
@@ -76,10 +77,10 @@
     <title>UmaCalc</title> 
 </svelte:head>
 
-<h1 class="text-3xl font-semibold text-center mb-6">UmaCalc</h1>
+<h1 class="font-dynamic-splash text-3xl font-semibold text-center mb-6">UmaCalc</h1>
 
-<div class="bg-surface w-4/5 mx-auto">
-    <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
+<div class="bg-surface w-4/5 mx-auto py-6">
+    <table class="table-auto w-4/5 mx-auto border-separate">
         <!-- ——— Stats group ——— -->
          <tbody>
             <tr>
@@ -243,8 +244,8 @@
 
 <h1 class="text-3xl font-semibold text-center mb-6">Results</h1>
 
-<div class="bg-surface w-4/5 mx-auto">
-    <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
+<div class="bg-surface w-4/5 mx-auto py-6">
+    <table class="table-auto w-4/5 mx-auto border-separate">
         <tbody>
             <tr>
                 <th class="px-4 text-center">Speed</th>
@@ -276,12 +277,18 @@
             </tr>
         </tbody>
     </table>
+
+    <label>
+        <input type="checkbox" bind:checked={ showDebugData }/>
+        Show debug data
+    </label>
 </div>
 
+{#if showDebugData}
 <h1 class="text-3xl font-semibold text-center mb-6">DEBUG</h1>
 
-<div class="bg-surface w-4/5 mx-auto">
-    <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
+<div class="bg-surface w-4/5 mx-auto py-6">
+    <table class="table-auto w-4/5 mx-auto border-separate">
         <tbody>
             <tr>
                 <th class="px-4 text-center">Base Speed [m/s]</th>
@@ -432,6 +439,7 @@
         </tbody>
     </table>
 </div>
+{/if}
 
 {/if}
 
