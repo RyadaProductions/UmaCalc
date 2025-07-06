@@ -75,8 +75,6 @@
                 <th class="px-4 text-center">Speed</th>
                 <th class="px-4 text-center">Stamina</th>
                 <th class="px-4 text-center">Power</th>
-                <th class="px-4 text-center">Guts</th>
-                <th class="px-4 text-center">Wit</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2 ">
@@ -88,13 +86,22 @@
                 <td class="px-4 pb-2 ">
                     <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="power" min=0 max=1200 bind:value={ inputData.stats.power } />
                 </td>
-                <td class="px-4 pb-2 ">
+            </tr>
+         </tbody>
+         <tbody>
+            <tr>
+                <th class="px-4 text-center">Guts</th>
+                <th class="px-4 text-center">Wit</th>
+            </tr>
+            <tr>
+               <td class="px-4 pb-2 ">
                     <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="guts" min=0 max=1200 bind:value={ inputData.stats.guts } />
                 </td>
                 <td class="px-4 pb-2 ">
                     <input class="w-full border border-border rounded px-3 py-2 bg-surface text-text-primary" type="number" name="wit" min=0 max=1200 bind:value={ inputData.stats.wit } />
                 </td>
             </tr>
+
          </tbody>
 
         <!-- ——— Surface group ——— -->
