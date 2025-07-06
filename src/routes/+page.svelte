@@ -125,6 +125,7 @@
             <tr>
                 <th class="px-4 text-center">Distance</th>
                 <th class="px-4 text-center">Aptitude</th>
+                <th class="px-4 text-center">Length</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
@@ -133,9 +134,12 @@
                 <td class="px-4 pb-2">
                     <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitude }/>
                 </td>
+                <td class="px-4 pb-2 text-center">
+                    { getTrackLength() }
+                </td>
             </tr>
         </tbody>
-
+        
         <!-- ——— Pace group ——— -->
         <tbody>
             <tr>
@@ -163,21 +167,6 @@
                 </td>
                 <td class="px-4 pb-2">
                     <Dropdown options={ conditions } bind:value={ inputData.condition }/>
-                </td>
-            </tr>
-        </tbody>
-        
-        <tbody>
-            <tr>
-                <th class="px-4 text-center">Distance</th>
-                <th class="px-4 text-center">Length</th>
-            </tr>
-            <tr>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ surfaces } bind:value={ inputData.surface }/>
-                </td>
-                <td class="px-4 pb-2 text-center">
-                    { getTrackLength() }
                 </td>
             </tr>
         </tbody>
