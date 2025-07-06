@@ -1,5 +1,5 @@
 import { distanceMap } from "./constants";
-import type { InputData, Result } from "./modifierTypes";
+import type { InputData, Result } from "./types";
 import { 
     calculateHitPointsWithRecovery, 
     calculateInitialHitPoints, 

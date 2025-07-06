@@ -11,7 +11,7 @@
     import { round } from '$lib/utils';
 
     import Dropdown from '$lib/dropdown.svelte';
-	import type { InputData, Result } from '$lib/modifierTypes';
+	import type { InputData, Result } from '$lib/types';
 	import { calculate } from '$lib/mainCalculator';
     let result: Result;
     let showDebugData = false;

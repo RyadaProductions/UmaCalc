@@ -4,7 +4,7 @@ import type {
     TrackConditionModifiers,
     DistanceAptitudeModifiers,
     Stats
-} from '../modifierTypes.js';
+} from '../types.js';
 
 // Calculation for actual speed:
 // (SpeedStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier^2

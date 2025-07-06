@@ -16,7 +16,7 @@ import type {
     TrackConditionModifiers,
     DistanceAptitudeModifiers,
     StrategyModifiers
-} from './modifierTypes.js';
+} from './types.js';
 
 export function getMoodModifier(
     selectedMood: Mood

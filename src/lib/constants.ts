@@ -2,7 +2,7 @@ import {
     type TrackConditionModifiers,
     type DistanceAptitudeModifiers,
     type StrategyModifiers,
-} from "./modifierTypes";
+} from "./types";
 
 export const aptitudes = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
 export const moods = ['Great', 'Good', 'Normal', 'Bad', 'Terrible'] as const;
