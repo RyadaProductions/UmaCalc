@@ -6,6 +6,7 @@
         strategies,
         surfaces, 
         distanceMap,
+		distances,
     } from '$lib/constants';
     import { round } from '$lib/utils';
 
@@ -23,27 +24,14 @@
             guts: 400,
             wit: 1000
         },
-        surfaceAptitudes: {
-            Turf: 'A',
-            Dirt: 'A'
-        },
-        distanceAptitudes: {
-            Sprint: 'S',
-            Mile: 'A',
-            Medium: 'A',
-            Long: 'A'
-        },
-        strategyAptitudes: {
-            Front: 'A',
-            Pace: 'A',
-            Late: 'A',
-            End: 'A'
-        },
-        mood: 'Great',
-        strategy: 'Front',
         surface: 'Turf',
-        condition: 'Firm',
+        surfaceAptitude: 'A',
         distance: '2000',
+        distanceAptitude: 'A',
+        strategy: 'Front',
+        strategyAptitude: 'A',
+        mood: 'Great',
+        condition: 'Firm',
         skills: {
             goldRecovery: 0,
             whiteRecovery: 0,
@@ -112,15 +100,15 @@
         <!-- ——— Surface group ——— -->
         <tbody>
             <tr>
-                <th class="px-4 text-center">Turf</th>
-                <th class="px-4 text-center">Dirt</th>
+                <th class="px-4 text-center">Surface</th>
+                <th class="px-4 text-center">Aptitude</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.Turf }/>
+                    <Dropdown options={ surfaces } bind:value={ inputData.surface }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.Dirt }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitude }/>
                 </td>
             </tr>
         </tbody>
@@ -128,23 +116,15 @@
         <!-- ——— Distance group ——— -->
         <tbody>
             <tr>
-                <th class="px-4 text-center">Sprint</th>
-                <th class="px-4 text-center">Mile</th>
-                <th class="px-4 text-center">Medium</th>
-                <th class="px-4 text-center">Long</th>
+                <th class="px-4 text-center">Distance</th>
+                <th class="px-4 text-center">Aptitude</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Sprint }/>
+                    <Dropdown options={ Object.keys(distanceMap) } bind:value={ inputData.distance }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Mile }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Medium }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Long }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitude }/>
                 </td>
             </tr>
         </tbody>
@@ -152,23 +132,15 @@
         <!-- ——— Pace group ——— -->
         <tbody>
             <tr>
-                <th class="px-4 text-center">Front</th>
-                <th class="px-4 text-center">Pace</th>
-                <th class="px-4 text-center">Late</th>
-                <th class="px-4 text-center">End</th>
+                <th class="px-4 text-center">Strategy</th>
+                <th class="px-4 text-center">Aptitude</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Front }/>
+                    <Dropdown options={ strategies } bind:value={ inputData.strategy }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Pace }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Late }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.End }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitude }/>
                 </td>
             </tr>
         </tbody>
@@ -176,34 +148,26 @@
         <tbody>
             <tr>
                 <th class="px-4 text-center">Mood</th>
-                <th class="px-4 text-center">Strategy</th>
+                <th class="px-4 text-center">Condition</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
                     <Dropdown options={ moods } bind:value={ inputData.mood }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ strategies } bind:value={ inputData.strategy }/>
+                    <Dropdown options={ conditions } bind:value={ inputData.condition }/>
                 </td>
             </tr>
         </tbody>
         
         <tbody>
             <tr>
-                <th class="px-4 text-center">Surface</th>
-                <th class="px-4 text-center">Condition</th>
                 <th class="px-4 text-center">Distance</th>
                 <th class="px-4 text-center">Length</th>
             </tr>
             <tr>
                 <td class="px-4 pb-2">
                     <Dropdown options={ surfaces } bind:value={ inputData.surface }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ conditions } bind:value={ inputData.condition }/>
-                </td>
-                <td class="px-4 pb-2">
-                    <Dropdown options={ Object.keys(distanceMap) } bind:value={ inputData.distance }/>
                 </td>
                 <td class="px-4 pb-2 text-center">
                     { getTrackLength() }

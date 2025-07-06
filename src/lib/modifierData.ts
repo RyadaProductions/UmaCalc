@@ -6,14 +6,14 @@ import {
     trackAptitudeModifiers,
     type Strategy,
     type Aptitude,
-    type Distance,
     type Surface,
     type Condition,
-    type Mood
+    type Mood,
+    strategyAptitudeModifiers
 } from './constants.js';
 
 import type {
-    SurfaceAndWeatherModifiers,
+    TrackConditionModifiers,
     DistanceAptitudeModifiers,
     StrategyModifiers
 } from './modifierTypes.js';
@@ -30,7 +30,7 @@ export function getMoodModifier(
 export function getWeatherModifier(
     selectedSurface: Surface,
     selectedCondition: Condition,
-): SurfaceAndWeatherModifiers {
+): TrackConditionModifiers {
     const surfaceMap = surfaceModifiers[selectedSurface];
     if (!surfaceMap) throw new Error(`Unknown surface "${selectedSurface}"`);
     const surfaceModifier = surfaceMap[selectedCondition];
@@ -39,24 +39,10 @@ export function getWeatherModifier(
 }
 
 export function getDistanceAptitudeModifiers(
-    distance: Distance,
-    distanceAptitudes: Record<Distance, Aptitude>,
+    distanceAptitudes: Aptitude,
 ): DistanceAptitudeModifiers {
-    const aptitude = distanceAptitudes[distance];
-    if (!aptitude) throw new Error(`No aptitude for distance "${distance}"`);
-    const modifiers = distanceAptitudeModifiers[aptitude];
-    if (!modifiers) throw new Error(`No modifiers for aptitude "${aptitude}"`);
-    return modifiers;
-}
-
-export function getStrategyAptitudeModifiers(
-    strategy: Strategy,
-    strategyAptitudes: Record<Strategy, Aptitude>
-): DistanceAptitudeModifiers {
-    const aptitude = strategyAptitudes[strategy];
-    if (!aptitude) throw new Error(`No aptitude for strategy "${strategy}"`);
-    const modifiers = distanceAptitudeModifiers[aptitude];
-    if (!modifiers) throw new Error(`No modifiers for aptitude "${aptitude}"`);
+    const modifiers = distanceAptitudeModifiers[distanceAptitudes];
+    if (!modifiers) throw new Error(`No modifiers for aptitude "${distanceAptitudes}"`);
     return modifiers;
 }
 
@@ -68,11 +54,16 @@ export function getStageModifiers(
     return strategyModifier;
 }
 
-export function getSurfaceAptitudeModifier(
-    selectedSurface: Surface,
-    surfaceAptitudes: Record<Surface, Aptitude>
+export function getStrategyAptitudeModifiers(
+    strategyAptitude: Aptitude
 ): number {
-    const surfaceAptitude = surfaceAptitudes[selectedSurface];
-    if (!surfaceAptitude) throw new Error(`Unknown surface "${selectedSurface}"`);
+    const modifiers = strategyAptitudeModifiers[strategyAptitude];
+    if (!modifiers) throw new Error(`No modifiers for aptitude "${strategyAptitude}"`);
+    return modifiers;
+}
+
+export function getSurfaceAptitudeModifier(
+    surfaceAptitude: Aptitude
+): number {
     return trackAptitudeModifiers[surfaceAptitude];
 }

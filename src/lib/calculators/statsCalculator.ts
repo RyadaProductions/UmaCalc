@@ -1,7 +1,7 @@
 
 
 import type {
-    SurfaceAndWeatherModifiers,
+    TrackConditionModifiers,
     DistanceAptitudeModifiers
 } from '../modifierTypes.js';
 
@@ -10,10 +10,10 @@ import type {
 export function calculateRealSpeed(
     baseSpeed: number,
     moodModifier: number,
-    weatherModifier: SurfaceAndWeatherModifiers,
+    conditionModifiers: TrackConditionModifiers,
     distanceModifier: DistanceAptitudeModifiers
 ): number {
-    return (baseSpeed * moodModifier + weatherModifier.speed) * distanceModifier.speed ** 2;
+    return (baseSpeed * moodModifier + conditionModifiers.speed) * distanceModifier.speed ** 2;
 }
 
 // Calculation for actual stamina:
@@ -30,10 +30,10 @@ export function calculateRealStamina(
 export function calculateRealPower(
     basePower: number,
     moodModifier: number,
-    weatherModifier: SurfaceAndWeatherModifiers,
+    conditionModifiers: TrackConditionModifiers,
     distanceModifier: DistanceAptitudeModifiers
 ): number {
-    return (basePower * moodModifier + weatherModifier.power) * distanceModifier.acceleration;
+    return (basePower * moodModifier + conditionModifiers.power) * distanceModifier.acceleration;
 }
 
 // Calculation for actual guts:

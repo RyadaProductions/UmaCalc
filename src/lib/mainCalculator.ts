@@ -101,10 +101,10 @@ export function calculate(
     // GetModifiers
     const moodModifier = getMoodModifier(input.mood);
     const weatherModifier = getWeatherModifier(input.surface, input.condition);
-    const distanceAptitudeModifiers = getDistanceAptitudeModifiers(getTrackLength(raceDistanceInMeters), input.distanceAptitudes)
-    const strategyAptitudeModifiers = getStrategyAptitudeModifiers(input.strategy, input.strategyAptitudes);
+    const distanceAptitudeModifiers = getDistanceAptitudeModifiers(input.distanceAptitude)
+    const strategyAptitudeModifier = getStrategyAptitudeModifiers(input.strategyAptitude);
     const stageModifiers = getStageModifiers(input.strategy);
-    const surfaceAptitudeModifier = getSurfaceAptitudeModifier(input.surface, input.surfaceAptitudes);
+    const surfaceAptitudeModifier = getSurfaceAptitudeModifier(input.surfaceAptitude);
 
     // calculate basic data:
     // - stats
@@ -131,7 +131,7 @@ export function calculate(
     const realWit = calculateRealWit(
         input.stats.wit,
         moodModifier,
-        strategyAptitudeModifiers.acceleration
+        strategyAptitudeModifier
     );
 
     // - general data

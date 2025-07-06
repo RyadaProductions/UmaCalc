@@ -1,5 +1,5 @@
 import { 
-    type SurfaceAndWeatherModifiers,
+    type TrackConditionModifiers,
     type DistanceAptitudeModifiers,
     type StrategyModifiers,
 } from "./modifierTypes";
@@ -33,7 +33,7 @@ export const moodModifiers: Record<string, number> = {
     terrible: 0.96
 };
 
-export const surfaceModifiers: Record<Surface, Record<Condition, SurfaceAndWeatherModifiers>> = {
+export const surfaceModifiers: Record<Surface, Record<Condition, TrackConditionModifiers>> = {
     Turf: {
         Heavy: { speed: 0, power: -50, hpConsumptionCoefficient: 1.02 },
         Wet: { speed: -50, power: -50, hpConsumptionCoefficient: 1.02 },
@@ -58,6 +58,17 @@ export const distanceAptitudeModifiers: Record<Aptitude, DistanceAptitudeModifie
     F: { speed: 0.2, acceleration: 0.5 },
     G: { speed: 0.1, acceleration: 0.4 }
 };
+
+export const strategyAptitudeModifiers: Record<Aptitude, number> = {
+    S: 1.1,
+    A: 1,
+    B: 0.85,
+    C: 0.75,
+    D: 0.6,
+    E: 0.4,
+    F: 0.2,
+    G: 0.1,
+}
 
 export const trackAptitudeModifiers: Record<Aptitude, number> = {
     S: 1.05,

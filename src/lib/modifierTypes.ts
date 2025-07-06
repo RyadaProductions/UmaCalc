@@ -6,7 +6,7 @@ import type {
     Surface 
 } from "./constants";
 
-export interface SurfaceAndWeatherModifiers {
+export interface TrackConditionModifiers {
     speed: number;
     power: number;
     hpConsumptionCoefficient: number;
@@ -37,27 +37,14 @@ export interface InputData {
         guts: number;
         wit: number;
     };
-    surfaceAptitudes: {
-        Turf: Aptitude;
-        Dirt: Aptitude;
-    };
-    distanceAptitudes: {
-        Sprint: Aptitude;
-        Mile: Aptitude;
-        Medium: Aptitude;
-        Long: Aptitude;
-    };
-    strategyAptitudes: {
-        Front: Aptitude;
-        Pace: Aptitude;
-        Late: Aptitude;
-        End: Aptitude;
-    };
-    mood: Mood;
-    strategy: Strategy;
     surface: Surface;
-    condition: Condition;
+    surfaceAptitude: Aptitude;
     distance: string;
+    distanceAptitude: Aptitude;
+    strategy: Strategy;
+    strategyAptitude: Aptitude;
+    mood: Mood;
+    condition: Condition;
     skills: {
         goldRecovery: number;
         whiteRecovery: number;
