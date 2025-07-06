@@ -103,16 +103,8 @@ export function calculateLastSpurtSteadyTimeInSeconds(
     return lastSpurtSteadyHitPointsConsumption / (20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144);
 }
 
-// min(20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed, hitPointsWithSkills - (startingDashHitPointsConsumption + phaseZeroAccelerationHitPointsConsumption + phaseZeroSteadyHitPointsConsumption + phaseOneAccelerationHitPointsConsumption + phaseOneSteadyHitPointsConsumption + phaseTwoAccelerationHitPointsConsumption + phaseTwoAndThreeSteadyHitPointsConsumption + lastSpurtAccelerationHitPointsConsumption))
-export function calculateLastSpurtSteadyHitPointsConsumption(
-    fieldConditionHPConsumptionCoefficient: number,
-    lastSpurtHitPointsConsumptionCoefficient: number,
-    lastSpurtSteadyInitialSpeed: number,
-    baseSpeed: number,
-    raceLengthInMeters: number,
-    phaseTwoAccelerationDistanceInMeters: number,
-    phaseTwoAndTheeSteadyDistanceInMeters: number,
-    LastSpurtAccelerationDistanceInMeters: number,
+
+export function calculateRemainingHitPointsBeforeLastSpurt(
     hitPointsWithSkills: number,
     startingDashHitPointsConsumption: number,
     phaseZeroAccelerationHitPointsConsumption: number,
@@ -123,9 +115,25 @@ export function calculateLastSpurtSteadyHitPointsConsumption(
     phaseTwoAndThreeSteadyHitPointsConsumption: number,
     lastSpurtAccelerationHitPointsConsumption: number
 ): number {
-    const leftHand = 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed;
-    const rightHand = hitPointsWithSkills - (startingDashHitPointsConsumption + phaseZeroAccelerationHitPointsConsumption + phaseZeroSteadyHitPointsConsumption + phaseOneAccelerationHitPointsConsumption + phaseOneSteadyHitPointsConsumption + phaseTwoAccelerationHitPointsConsumption + phaseTwoAndThreeSteadyHitPointsConsumption + lastSpurtAccelerationHitPointsConsumption);
-    return Math.min(leftHand, rightHand);
+    return hitPointsWithSkills - (startingDashHitPointsConsumption + phaseZeroAccelerationHitPointsConsumption + phaseZeroSteadyHitPointsConsumption + phaseOneAccelerationHitPointsConsumption + phaseOneSteadyHitPointsConsumption + phaseTwoAccelerationHitPointsConsumption + phaseTwoAndThreeSteadyHitPointsConsumption + lastSpurtAccelerationHitPointsConsumption);
+}
+
+// We've split this out in the main calculator
+// min(
+//  20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed,
+//  remainingHitPointsBeforeLastSpurt
+// )
+export function calculateLastSpurtSteadyHitPointsConsumption(
+    fieldConditionHPConsumptionCoefficient: number,
+    lastSpurtHitPointsConsumptionCoefficient: number,
+    lastSpurtSteadyInitialSpeed: number,
+    baseSpeed: number,
+    raceLengthInMeters: number,
+    phaseTwoAccelerationDistanceInMeters: number,
+    phaseTwoAndTheeSteadyDistanceInMeters: number,
+    LastSpurtAccelerationDistanceInMeters: number,
+): number {
+    return 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed;
 }
 
 // lastSpurtSteadyInitialSpeed * lastSpurtSteadyTimeInSeconds

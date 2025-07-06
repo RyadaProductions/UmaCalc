@@ -10,8 +10,8 @@
     import { round } from '$lib/utils';
 
     import Dropdown from '$lib/dropdown.svelte';
-	import type { InputData } from '$lib/modifierTypes';
-	import { calculate, type Result } from '$lib/mainCalculator';
+	import type { InputData, Result } from '$lib/modifierTypes';
+	import { calculate } from '$lib/mainCalculator';
     let result: Result;
 
     let inputData: InputData = {
@@ -271,8 +271,8 @@
             <tr>
                 <td class="px-4 pb-2 text-center">{ round(result.requiredStamina) }</td>
                 <td class="px-4 pb-2 text-center">{ hasEnoughStamina() }</td>
-                <td class="px-4 pb-2 text-center">{ result.skillProcRate }</td>
-                <td class="px-4 pb-2 text-center">{ result.rushedRate }</td>
+                <td class="px-4 pb-2 text-center">{ round(result.skillProcRate, 2) }%</td>
+                <td class="px-4 pb-2 text-center">{ round(result.rushedRate, 2) }%</td>
             </tr>
         </tbody>
     </table>
@@ -284,7 +284,7 @@
     <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
         <tbody>
             <tr>
-                <th class="px-4 text-center">Base Speed</th>
+                <th class="px-4 text-center">Base Speed [m/s]</th>
                 <th class="px-4 text-center">Initial HP</th>
                 <th class="px-4 text-center">HP with Recovery</th>
                 <th class="px-4 text-center">Last Spurt Distance</th>
@@ -313,7 +313,7 @@
     <table class="table-auto w-4/5 mx-auto border-separate border-spacing-y-4">
         <tbody>
             <tr>
-                <th class="p2-4 text-center"> </th>
+                <th class="p2-4 text-center "> </th>
                 <th class="p2-4 text-center">Initial Speed [m/s]</th>
                 <th class="p2-4 text-center">Target Speed [m/s]</th>
                 <th class="p2-4 text-center">Acceleration [m/s^2]</th>
@@ -322,94 +322,112 @@
                 <th class="p2-4 text-center">HP Consumption</th>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">Starting Dash</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.startingDash.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">Starting Dash</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.startingDash.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 0 Acceleration</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroAcceleration.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 0 Acceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroAcceleration.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 0 Steady</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseZeroSteady.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 0 Steady</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseZeroSteady.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 1 Acceleration</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneAcceleration.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 1 Acceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneAcceleration.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 1 Steady</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseOneSteady.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 1 Steady</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseOneSteady.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 2 Acceleration</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAcceleration.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 2 Acceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAcceleration.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">phase 2, 3 Steady</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">phase 2, 3 Steady</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.phaseTwoAndThreeSteady.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">Last Spurt Acceleration</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtAcceleration.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">Last Spurt Acceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtAcceleration.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">Last Spurt Steady</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.lastSpurtSteady.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">Last Spurt Steady</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.lastSpurtSteady.hpConsumption, 2) }</td>
             </tr>
             <tr>
-                <td class="p2-4 pb-2 text-center">HP0 / Deceleration</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.initialSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.targetSpeed, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.acceleration, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.timeInSeconds, 3) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.distance, 2) }</td>
-                <td class="p2-4 pb-2 text-center">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.hpConsumption, 2) }</td>
+                <td class="p2-4 pb-2 text-left">HP0 / Deceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.hitPointsZeroDeceleration.hpConsumption, 2) }</td>
+            </tr>
+            <tr>
+                <td class="p2-4 pb-2 text-left">Ideal Last Spurt Acceleration</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtAcceleration.hpConsumption, 2) }</td>
+            </tr>
+            <tr>
+                <td class="p2-4 pb-2 text-left">Ideal Last Spurt Steady</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.initialSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.targetSpeed, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.acceleration, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.timeInSeconds, 3) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.distance, 2) }</td>
+                <td class="p2-4 pb-2 text-right">{ round(result.detailedBreakdown.idealLastSpurtSteady.hpConsumption, 2) }</td>
             </tr>
         </tbody>
     </table>

@@ -1,11 +1,11 @@
 import { distances } from "./constants";
-import type { InputData } from "./modifierTypes";
+import type { InputData, Result } from "./modifierTypes";
 import { 
     calculateHitPointsWithRecovery, 
     calculateInitialHitPoints, 
     calculateRecoverySkillHitPoints, 
     calculateUniqueRecoverySkillHitPoints 
-} from "./hitPointsCalculator";
+} from "./calculators/hitPointsCalculator";
 import { 
     getDistanceAptitudeModifiers,
     getMoodModifier, 
@@ -24,7 +24,7 @@ import {
     calculatePhaseZeroSteadyDistanceInMeters,
     calculatePhaseZeroSteadyHitPointsConsumption,
     calculatePhaseZeroSteadyTime
-} from "./phaseZeroCalculator";
+} from "./calculators/phaseZeroCalculator";
 import { 
     calculateAcceleration, 
     calculateBaseSpeed, 
@@ -32,14 +32,14 @@ import {
     calculateStartingDashDuration, 
     calculateStartingDashHitPointsConsumption, 
     calculateTargetSpeed 
-} from "./startingDashCalculator";
+} from "./calculators/startingDashCalculator";
 import { 
     calculateRealSpeed,
     calculateRealStamina,
     calculateRealPower,
     calculateRealGuts, 
     calculateRealWit,
-} from "./statsCalculator";
+} from "./calculators/statsCalculator";
 import { 
     calculatePhaseOneAccelerationAcceleration,
     calculatePhaseOneAccelerationDistanceInMeters,
@@ -50,7 +50,7 @@ import {
     calculatePhaseOneSteadyDistanceInMeters,
     calculatePhaseOneSteadyHitPointsConsumption,
     calculatePhaseOneSteadyTimeInSeconds
-} from "./phaseOneCalculator";
+} from "./calculators/phaseOneCalculator";
 import { 
     calculatePhaseTwoAccelerationAcceleration, 
     calculatePhaseTwoAccelerationDistanceInMeters, 
@@ -60,7 +60,7 @@ import {
     calculatePhaseTwoAndThreeSteadyDistanceInMeters, 
     calculatePhaseTwoAndThreeSteadyHitPointsConsumption, 
     calculatePhaseTwoAndThreeSteadyTimeInSeconds 
-} from "./phaseTwoCalculator";
+} from "./calculators/phaseTwoCalculator";
 import { 
     calculateLastSpurtAccelerationAcceleration, 
     calculateLastSpurtAccelerationDistanceInMeters, 
@@ -72,114 +72,21 @@ import {
     calculateLastSpurtHitPointsConsumptionCoefficient, 
     calculateLastSpurtSteadyDistanceInMeters, 
     calculateLastSpurtSteadyHitPointsConsumption, 
-    calculateLastSpurtSteadyTimeInSeconds 
-} from "./lastSpurtCalculator";
+    calculateLastSpurtSteadyTimeInSeconds, 
+    calculateRemainingHitPointsBeforeLastSpurt
+} from "./calculators/lastSpurtCalculator";
 import { 
     calculateHitPointsZeroDecelerationDistanceInMeters, 
     calculateHitPointsZeroDecelerationTimeInSeconds,
-} from "./hitPointsZeroCalculator";
-import { calculateRequiredStamina, calculateTargetHitPointsForLastSpurt } from "./staminaTargetCalculator";
-
-export interface Result {
-    realStats: {
-        speed: number;
-        stamina: number;
-        power: number;
-        guts: number;
-        wit: number;
-    }
-    baseSpeed: number;
-    initialHitPoints: number;
-    hitPointsWithRecovery: number;
-    lastSpurtDistance: number;
-    lastSpurtHitPointsConsumptionCoefficient: number;
-    targetHitPointsForLastSpurt: number;
-    requiredStamina: number;
-    skillProcRate: number;
-    rushedRate: number;
-    detailedBreakdown: {
-        startingDash: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseZeroAcceleration: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseZeroSteady: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseOneAcceleration: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseOneSteady: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseTwoAcceleration: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        phaseTwoAndThreeSteady: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        lastSpurtAcceleration: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        lastSpurtSteady: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-        hitPointsZeroDeceleration: {
-            initialSpeed: number;
-            targetSpeed: number;
-            acceleration: number;
-            timeInSeconds: number;
-            distance: number;
-            hpConsumption: number;
-        },
-    }
-}
+} from "./calculators/hitPointsZeroCalculator";
+import { 
+    calculateRequiredStamina, 
+    calculateTargetHitPointsForLastSpurt 
+} from "./calculators/staminaTargetCalculator";
+import { 
+    calculateRushedRate, 
+    calculateSkillProcRate 
+} from "./calculators/miscCalculator";
 
 export function getTrackLength(distance: number) {
     return distances[distance];
@@ -248,6 +155,8 @@ export function calculate(
         recoveryHitPoints,
         uniqueRecoveryHitPoints 
     );
+    const skillProcRate = calculateSkillProcRate(realWit);
+    const rushedRate = calculateRushedRate(realWit);
 
     // - detailed breakdown
     // - starting dash
@@ -514,15 +423,7 @@ export function calculate(
     );
 
     // - last spurt steady continued
-    const lastSpurtSteadyHitPointsConsumption = calculateLastSpurtSteadyHitPointsConsumption( // Something is wrong with this formula
-        weatherModifier.hpConsumptionCoefficient,
-        lastSpurtHitPointsConsumptionCoefficient,
-        lastSpurtSteadyInitialSpeed,
-        baseSpeed,
-        raceDistanceInMeters,
-        phaseTwoAccelerationDistanceInMeters,
-        phaseTwoAndThreeSteadyDistanceInMeters,
-        lastSpurtAccelerationDistanceInMeters,
+    const remainingHitPointsBeforeLastSpurt = calculateRemainingHitPointsBeforeLastSpurt(
         hitPointsWithRecovery,
         startingDashHitPointsConsumption,
         phaseZeroAccelerationHitPointsConsumption,
@@ -533,6 +434,27 @@ export function calculate(
         phaseTwoAndThreeSteadyHitPointsConsumption,
         lastSpurtAccelerationHitPointsConsumption
     );
+
+    const targetLastSpurtSteadyHitPointsConsumption = calculateLastSpurtSteadyHitPointsConsumption(
+        weatherModifier.hpConsumptionCoefficient,
+        lastSpurtHitPointsConsumptionCoefficient,
+        lastSpurtSteadyInitialSpeed,
+        baseSpeed,
+        raceDistanceInMeters,
+        phaseTwoAccelerationDistanceInMeters,
+        phaseTwoAndThreeSteadyDistanceInMeters,
+        lastSpurtAccelerationDistanceInMeters
+    );
+
+    // min(
+    //  20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed,
+    //  remainingHitPointsBeforeLastSpurt
+    // )
+    const lastSpurtSteadyHitPointsConsumption = Math.min(
+        targetLastSpurtSteadyHitPointsConsumption, 
+        remainingHitPointsBeforeLastSpurt
+    );
+
     // This requires the hitpointsconsumption
     const lastSpurtSteadyTimeInSeconds = calculateLastSpurtSteadyTimeInSeconds(
         lastSpurtSteadyHitPointsConsumption,
@@ -565,14 +487,45 @@ export function calculate(
     );
     const hitPointsZeroDecelerationHitPointsConsumption = 0; // No hitpoints can be consumed as we have ran out
 
+    // -- We need to calculate the ideal last spurt values
+    // This recalculation is based of starting the last spurt directly from the phase two acceleration phase
+
+    const idealLastSpurtAccelerationInitialSpeed = phaseOneSteadyInitialSpeed; // ideally we want to start directly from phase 1 steady state
+    const idealLastSpurtAccelerationTargetSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
+    const idealLastSpurtAccelerationAcceleration = lastSpurtAccelerationAcceleration; // We can reuse the calculation from the current last spurt
+    const idealLastSpurtSteadyInitialSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
+    const idealLastSpurtSteadyTargetSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
+    const idealLastSpurtSteadyAcceleration = 0; // Steady state so no acceleration
+
+
+    const idealLastSpurtAccelerationTimeInSeconds = calculateLastSpurtAccelerationTimeInSeconds(
+        idealLastSpurtAccelerationTargetSpeed,
+        idealLastSpurtAccelerationInitialSpeed,
+        idealLastSpurtAccelerationAcceleration
+    );
+
+    const idealLastSpurtAccelerationHitPointsConsumption = calculateLastSpurtAccelerationHitPointsConsumption(
+        phaseTwoAccelerationInitialSpeed,
+        lastSpurtAccelerationAcceleration,
+        baseSpeed,
+        weatherModifier.hpConsumptionCoefficient,
+        lastSpurtHitPointsConsumptionCoefficient,
+        idealLastSpurtAccelerationTimeInSeconds
+    );
+    // Need new methods to calculate this as cleanup
+    const idealLastSpurtAccelerationDistanceInMeters = (idealLastSpurtAccelerationInitialSpeed + idealLastSpurtAccelerationTargetSpeed) / 2 * idealLastSpurtAccelerationTimeInSeconds;
+    const idealLastSpurtSteadyDistanceInMeters = raceDistanceInMeters / 3 - idealLastSpurtAccelerationDistanceInMeters;
+    const idealLastSpurtSteadyTimeInSeconds = idealLastSpurtSteadyDistanceInMeters / idealLastSpurtSteadyInitialSpeed;
+    const idealLastSpurtSteadyHitPointsConsumption = 20 * weatherModifier.hpConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (idealLastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * idealLastSpurtSteadyTimeInSeconds;
+
     const targetHitPointsForLastSpurt = calculateTargetHitPointsForLastSpurt(
         startingDashHitPointsConsumption,
         phaseZeroAccelerationHitPointsConsumption,
         phaseZeroSteadyHitPointsConsumption,
         phaseOneAccelerationHitPointsConsumption,
         phaseOneSteadyHitPointsConsumption,
-        lastSpurtAccelerationHitPointsConsumption,
-        lastSpurtSteadyHitPointsConsumption
+        idealLastSpurtAccelerationHitPointsConsumption,
+        idealLastSpurtSteadyHitPointsConsumption
     );
     const requiredStamina = calculateRequiredStamina(
         realStamina,
@@ -598,8 +551,8 @@ export function calculate(
         lastSpurtHitPointsConsumptionCoefficient: lastSpurtHitPointsConsumptionCoefficient,
         targetHitPointsForLastSpurt: targetHitPointsForLastSpurt,
         requiredStamina: requiredStamina,
-        skillProcRate: 0,
-        rushedRate: 0,
+        skillProcRate: skillProcRate,
+        rushedRate: rushedRate,
         detailedBreakdown: {
             startingDash: {
                 initialSpeed: startingDashInitialSpeed,
@@ -680,6 +633,22 @@ export function calculate(
                 timeInSeconds: hitPointsZeroDecelerationTimeInSeconds,
                 distance: hitPointsZeroDecelerationDistanceInMeters,
                 hpConsumption: hitPointsZeroDecelerationHitPointsConsumption
+            },
+            idealLastSpurtAcceleration: {
+                initialSpeed: idealLastSpurtAccelerationInitialSpeed,
+                targetSpeed: idealLastSpurtAccelerationTargetSpeed,
+                acceleration: idealLastSpurtAccelerationAcceleration,
+                timeInSeconds: idealLastSpurtAccelerationTimeInSeconds,
+                distance: idealLastSpurtAccelerationDistanceInMeters,
+                hpConsumption: idealLastSpurtAccelerationHitPointsConsumption
+            },
+            idealLastSpurtSteady: {
+                initialSpeed: idealLastSpurtSteadyInitialSpeed,
+                targetSpeed: idealLastSpurtSteadyTargetSpeed,
+                acceleration: idealLastSpurtSteadyAcceleration,
+                timeInSeconds: idealLastSpurtSteadyTimeInSeconds,
+                distance: idealLastSpurtSteadyDistanceInMeters,
+                hpConsumption: idealLastSpurtSteadyHitPointsConsumption
             }
         }
     };

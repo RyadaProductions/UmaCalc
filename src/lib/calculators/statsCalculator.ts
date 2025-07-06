@@ -3,7 +3,7 @@
 import type {
     SurfaceAndWeatherModifiers,
     DistanceAptitudeModifiers
-} from './modifierTypes.js';
+} from '../modifierTypes.js';
 
 // Calculation for actual speed:
 // (SpeedStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier^2

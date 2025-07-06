@@ -1,4 +1,4 @@
-import { getWeatherModifier } from "./modifierData";
+import { getWeatherModifier } from "../modifierData";
 
 export const startingDashInitialSpeed = 3;
 

@@ -65,3 +65,120 @@ export interface InputData {
         uniqueRecoveryThreeStarsOrAbove: number;
     };
 }
+
+export interface Result {
+    realStats: {
+        speed: number;
+        stamina: number;
+        power: number;
+        guts: number;
+        wit: number;
+    }
+    baseSpeed: number;
+    initialHitPoints: number;
+    hitPointsWithRecovery: number;
+    lastSpurtDistance: number;
+    lastSpurtHitPointsConsumptionCoefficient: number;
+    targetHitPointsForLastSpurt: number;
+    requiredStamina: number;
+    skillProcRate: number;
+    rushedRate: number;
+    detailedBreakdown: {
+        startingDash: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseZeroAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseZeroSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseOneAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseOneSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseTwoAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        phaseTwoAndThreeSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        lastSpurtAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        lastSpurtSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        hitPointsZeroDeceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        idealLastSpurtAcceleration: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+        idealLastSpurtSteady: {
+            initialSpeed: number;
+            targetSpeed: number;
+            acceleration: number;
+            timeInSeconds: number;
+            distance: number;
+            hpConsumption: number;
+        },
+    }
+}
