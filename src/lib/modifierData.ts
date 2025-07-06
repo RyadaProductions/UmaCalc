@@ -3,7 +3,7 @@ import {
     surfaceModifiers,
     distanceAptitudeModifiers,
     strategyModifiers,
-    trackAptitudeModifiers,
+    trackAptitudeModifiers as surfaceAptitudeModifiers,
     type Strategy,
     type Aptitude,
     type Surface,
@@ -21,10 +21,7 @@ import type {
 export function getMoodModifier(
     selectedMood: Mood
 ): number {
-    const key = selectedMood.toLowerCase();
-    const moodModifier = moodModifiers[key];
-    if (moodModifier == null) throw new Error(`Unknown mood "${selectedMood}"`);
-    return moodModifier;
+    return moodModifiers[selectedMood];
 }
 
 export function getWeatherModifier(
@@ -32,38 +29,29 @@ export function getWeatherModifier(
     selectedCondition: Condition,
 ): TrackConditionModifiers {
     const surfaceMap = surfaceModifiers[selectedSurface];
-    if (!surfaceMap) throw new Error(`Unknown surface "${selectedSurface}"`);
-    const surfaceModifier = surfaceMap[selectedCondition];
-    if (!surfaceModifier) throw new Error(`Unknown condition "${selectedCondition}"`);
-    return surfaceModifier;
+    return surfaceMap[selectedCondition];
 }
 
 export function getDistanceAptitudeModifiers(
     distanceAptitudes: Aptitude,
 ): DistanceAptitudeModifiers {
-    const modifiers = distanceAptitudeModifiers[distanceAptitudes];
-    if (!modifiers) throw new Error(`No modifiers for aptitude "${distanceAptitudes}"`);
-    return modifiers;
+    return distanceAptitudeModifiers[distanceAptitudes];
 }
 
 export function getStageModifiers(
     selectedStrategy: Strategy,
 ): StrategyModifiers {
-    const strategyModifier = strategyModifiers[selectedStrategy];
-    if (!strategyModifier) throw new Error(`Unknown strategy "${selectedStrategy}"`);
-    return strategyModifier;
+    return strategyModifiers[selectedStrategy];
 }
 
 export function getStrategyAptitudeModifiers(
     strategyAptitude: Aptitude
 ): number {
-    const modifiers = strategyAptitudeModifiers[strategyAptitude];
-    if (!modifiers) throw new Error(`No modifiers for aptitude "${strategyAptitude}"`);
-    return modifiers;
+    return strategyAptitudeModifiers[strategyAptitude];
 }
 
 export function getSurfaceAptitudeModifier(
     surfaceAptitude: Aptitude
 ): number {
-    return trackAptitudeModifiers[surfaceAptitude];
+    return surfaceAptitudeModifiers[surfaceAptitude];
 }

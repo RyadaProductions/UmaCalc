@@ -25,12 +25,12 @@ export const distanceMap: Record<number, Distance> = {
   2500: 'Long', 2600: 'Long', 3000: 'Long', 3200: 'Long', 3400: 'Long', 3600: 'Long'
 };
 
-export const moodModifiers: Record<string, number> = {
-    great: 1.04,
-    good: 1.02,
-    normal: 1.00,
-    bad: 0.98,
-    terrible: 0.96
+export const moodModifiers: Record<Mood, number> = {
+    Great: 1.04,
+    Good: 1.02,
+    Normal: 1.00,
+    Bad: 0.98,
+    Terrible: 0.96
 };
 
 export const surfaceModifiers: Record<Surface, Record<Condition, TrackConditionModifiers>> = {
