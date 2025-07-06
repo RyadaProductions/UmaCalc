@@ -434,3 +434,7 @@
 </div>
 
 {/if}
+
+<p class="w-full text-center">
+    UmaCalc is not affiliated with the developers of Uma Musume. All the materials from the Uma Musume game are copyrights of Cygames, Inc.
+</p>
