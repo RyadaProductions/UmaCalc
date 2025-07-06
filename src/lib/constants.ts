@@ -33,18 +33,18 @@ export const moodModifiers: Record<string, number> = {
     terrible: 0.96
 };
 
-export const surfaceModifiers: Record<string, Record<string, SurfaceAndWeatherModifiers>> = {
-    turf: {
-        heavy: { speed: 0, power: -50, hpConsumptionCoefficient: 1.02 },
-        wet: { speed: -50, power: -50, hpConsumptionCoefficient: 1.02 },
-        firm: { speed: 0, power: 0, hpConsumptionCoefficient: 1 },
-        soft: { speed: 0, power: -50, hpConsumptionCoefficient: 1 },
+export const surfaceModifiers: Record<Surface, Record<Condition, SurfaceAndWeatherModifiers>> = {
+    Turf: {
+        Heavy: { speed: 0, power: -50, hpConsumptionCoefficient: 1.02 },
+        Wet: { speed: -50, power: -50, hpConsumptionCoefficient: 1.02 },
+        Firm: { speed: 0, power: 0, hpConsumptionCoefficient: 1 },
+        Soft: { speed: 0, power: -50, hpConsumptionCoefficient: 1 },
     },
-    dirt: {
-        heavy: { speed: 0, power: -100, hpConsumptionCoefficient: 1.01 },
-        wet: { speed: -50, power: -100, hpConsumptionCoefficient: 1.02 },
-        firm: { speed: 0, power: -100, hpConsumptionCoefficient: 1 },
-        soft: { speed: 0, power: -50, hpConsumptionCoefficient: 1 },
+    Dirt: {
+        Heavy: { speed: 0, power: -100, hpConsumptionCoefficient: 1.01 },
+        Wet: { speed: -50, power: -100, hpConsumptionCoefficient: 1.02 },
+        Firm: { speed: 0, power: -100, hpConsumptionCoefficient: 1 },
+        Soft: { speed: 0, power: -50, hpConsumptionCoefficient: 1 },
     }
 };
 
@@ -70,8 +70,8 @@ export const trackAptitudeModifiers: Record<Aptitude, number> = {
     G: 0.1
 }
 
-export const strategyModifiers: Record<string, StrategyModifiers> = {
-    front: {
+export const strategyModifiers: Record<Strategy, StrategyModifiers> = {
+    Front: {
         hpCorrection: 0.95,
         speedCorrection: {
             early: 1,
@@ -84,7 +84,7 @@ export const strategyModifiers: Record<string, StrategyModifiers> = {
             late: 0.996
         }
     },
-    pace: {
+    Pace: {
         hpCorrection: 0.89,
         speedCorrection: {
             early: 0.978,
@@ -97,7 +97,7 @@ export const strategyModifiers: Record<string, StrategyModifiers> = {
             late: 0.996
         }
     },
-    late: {
+    Late: {
         hpCorrection: 1,
         speedCorrection: {
             early: 0.938,
@@ -110,7 +110,7 @@ export const strategyModifiers: Record<string, StrategyModifiers> = {
             late: 1
         }
     },
-    end: {
+    End: {
         hpCorrection: 0.995,
         speedCorrection: {
             early: 0.931,
