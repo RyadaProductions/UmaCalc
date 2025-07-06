@@ -33,12 +33,8 @@ import {
     calculateStartingDashHitPointsConsumption, 
     calculateTargetSpeed 
 } from "./calculators/startingDashCalculator";
-import { 
-    calculateRealSpeed,
-    calculateRealStamina,
-    calculateRealPower,
-    calculateRealGuts, 
-    calculateRealWit,
+import {
+    calculateRealStats,
 } from "./calculators/statsCalculator";
 import { 
     calculatePhaseOneAccelerationAcceleration,
@@ -108,37 +104,19 @@ export function calculate(
 
     // calculate basic data:
     // - stats
-    const realSpeed = calculateRealSpeed(
-        input.stats.speed,
+    const realStats = calculateRealStats(
+        input.stats,
         moodModifier,
         conditionModifier,
-        distanceAptitudeModifiers
-    );
-    const realStamina = calculateRealStamina(
-        input.stats.stamina,
-        moodModifier
-    );
-    const realPower = calculateRealPower(
-        input.stats.power,
-        moodModifier,
-        conditionModifier,
-        distanceAptitudeModifiers
-    );
-    const realGuts = calculateRealGuts(
-        input.stats.guts,
-        moodModifier
-    );
-    const realWit = calculateRealWit(
-        input.stats.wit,
-        moodModifier,
+        distanceAptitudeModifiers,
         strategyAptitudeModifier
-    );
+    )
 
     // - general data
     const baseSpeed = calculateBaseSpeed(raceDistanceInMeters);
     const initialHitPoints = calculateInitialHitPoints(
         raceDistanceInMeters,
-        realStamina,
+        realStats.stamina,
         stageModifiers.hpCorrection
     );
     const recoveryHitPoints = calculateRecoverySkillHitPoints(
@@ -154,20 +132,20 @@ export function calculate(
         recoveryHitPoints,
         uniqueRecoveryHitPoints 
     );
-    const skillProcRate = calculateSkillProcRate(realWit);
-    const rushedRate = calculateRushedRate(realWit);
+    const skillProcRate = calculateSkillProcRate(realStats.wit);
+    const rushedRate = calculateRushedRate(realStats.wit);
 
     // - detailed breakdown
     // - starting dash
     const startingDashTargetSpeed = calculateTargetSpeed(baseSpeed);
     const startingDashAcceleration = calculateAcceleration(
-        realPower,
+        realStats.power,
         stageModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
     const startingDashTimeInSeconds = calculateStartingDashDuration(
-        realPower,
+        realStats.power,
         raceDistanceInMeters,
         stageModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
@@ -186,11 +164,11 @@ export function calculate(
     const phaseZeroAccelerationInitialSpeed = calculatePhaseZeroAccelerationInitialSpeed(baseSpeed);
     const phaseZeroAccelerationTargetSpeed = calculatePhaseZeroAccelerationTargetSpeed(
         baseSpeed, 
-        realWit, 
+        realStats.wit, 
         stageModifiers.speedCorrection.early
     );
     const phaseZeroAccelerationAcceleration = calculatePhaseZeroAccelerationAcceleration(
-        realPower,
+        realStats.power,
         stageModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
@@ -244,13 +222,13 @@ export function calculate(
     );
     const phaseOneAccelerationTargetSpeed = calculatePhaseOneAccelerationTargetSpeed(
         baseSpeed,
-        realWit,
+        realStats.wit,
         stageModifiers.speedCorrection.middle
     );
     const phaseOneAccelerationAcceleration = calculatePhaseOneAccelerationAcceleration(
         phaseOneAccelerationInitialSpeed,
         phaseOneAccelerationTargetSpeed,
-        realPower,
+        realStats.power,
         stageModifiers.accelerationCorrection.middle,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
@@ -298,15 +276,15 @@ export function calculate(
     const phaseTwoAccelerationInitialSpeed = phaseOneSteadyTargetSpeed; // The same as phase one steady target speed
     const phaseTwoAccelerationTargetSpeed = calculatePhaseTwoAccelerationTargetSpeed(
         baseSpeed,
-        realSpeed,
-        realWit,
+        realStats.speed,
+        realStats.wit,
         stageModifiers.speedCorrection.late,
         distanceAptitudeModifiers.speed
     );
     const phaseTwoAccelerationAcceleration = calculatePhaseTwoAccelerationAcceleration(
         phaseTwoAccelerationInitialSpeed,
         phaseTwoAccelerationTargetSpeed,
-        realPower,
+        realStats.power,
         stageModifiers.accelerationCorrection.late,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
@@ -318,15 +296,15 @@ export function calculate(
     const phaseTwoAndThreeSteadyAcceleration = 0; // No acceleration in steady state
 
     // - last spurt acceleration
-    const lastSpurtHitPointsConsumptionCoefficient = calculateLastSpurtHitPointsConsumptionCoefficient(realGuts);
+    const lastSpurtHitPointsConsumptionCoefficient = calculateLastSpurtHitPointsConsumptionCoefficient(realStats.guts);
     const lastSpurtAccelerationTargetSpeed = calculateLastSpurtAccelerationTargetSpeed(
         baseSpeed,
-        realSpeed,
+        realStats.speed,
         stageModifiers.speedCorrection.late,
         distanceAptitudeModifiers.speed
     );
     const lastSpurtAccelerationAcceleration = calculateLastSpurtAccelerationAcceleration(
-        realPower,
+        realStats.power,
         stageModifiers.accelerationCorrection.late,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
@@ -526,7 +504,7 @@ export function calculate(
         idealLastSpurtSteadyHitPointsConsumption
     );
     const requiredStamina = calculateRequiredStamina(
-        realStamina,
+        realStats.stamina,
         targetHitPointsForLastSpurt,
         hitPointsWithRecovery,
         stageModifiers.hpCorrection,
@@ -535,13 +513,7 @@ export function calculate(
     );
 
     return {
-        realStats: {
-            speed: realSpeed,
-            stamina: realStamina,
-            power: realPower,
-            guts: realGuts,
-            wit: realWit
-        },
+        realStats: realStats,
         baseSpeed: baseSpeed,
         initialHitPoints: initialHitPoints,
         hitPointsWithRecovery: hitPointsWithRecovery,

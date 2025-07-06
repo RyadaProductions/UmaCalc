@@ -2,12 +2,13 @@
 
 import type {
     TrackConditionModifiers,
-    DistanceAptitudeModifiers
+    DistanceAptitudeModifiers,
+    Stats
 } from '../modifierTypes.js';
 
 // Calculation for actual speed:
 // (SpeedStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier^2
-export function calculateRealSpeed(
+function calculateRealSpeed(
     baseSpeed: number,
     moodModifier: number,
     conditionModifiers: TrackConditionModifiers,
@@ -18,7 +19,7 @@ export function calculateRealSpeed(
 
 // Calculation for actual stamina:
 // StaminaStat * MoodModifier
-export function calculateRealStamina(
+function calculateRealStamina(
     baseStamina: number,
     moodModifier: number
 ): number {
@@ -27,7 +28,7 @@ export function calculateRealStamina(
 
 // Calculation for actual power:
 // (PowerStat * MoodModifier + SurfaceAndWeatherModifier) * DistanceAptitudeSpeedModifier
-export function calculateRealPower(
+function calculateRealPower(
     basePower: number,
     moodModifier: number,
     conditionModifiers: TrackConditionModifiers,
@@ -38,7 +39,7 @@ export function calculateRealPower(
 
 // Calculation for actual guts:
 // GutsStat * MoodModifier
-export function calculateRealGuts(
+function calculateRealGuts(
     baseGuts: number,
     moodModifier: number
 ): number {
@@ -47,10 +48,26 @@ export function calculateRealGuts(
 
 // Calculation for actual wit:
 // (WitStat * MoodModifier) * StrategyAptitude
-export function calculateRealWit(
+function calculateRealWit(
     baseWit: number,
     moodModifier: number,
     strategyAptitude: number
 ): number {
     return (baseWit * moodModifier) * strategyAptitude;
+}
+
+export function calculateRealStats(
+    rawStats: Stats,
+    moodModifier: number,
+    conditionModifiers: TrackConditionModifiers,
+    distanceModifier: DistanceAptitudeModifiers,
+    strategyAptitude: number
+): Stats {
+    return {
+        speed: calculateRealSpeed(rawStats.speed, moodModifier, conditionModifiers, distanceModifier),
+        stamina: calculateRealStamina(rawStats.stamina, moodModifier),
+        power: calculateRealPower(rawStats.power, moodModifier, conditionModifiers, distanceModifier),
+        guts: calculateRealGuts(rawStats.guts, moodModifier),
+        wit: calculateRealWit(rawStats.wit, moodModifier, strategyAptitude)
+    }
 }
