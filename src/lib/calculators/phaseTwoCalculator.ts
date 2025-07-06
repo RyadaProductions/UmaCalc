@@ -24,8 +24,6 @@ export function calculatePhaseTwoAccelerationAcceleration(
     if (initialSpeed > targetSpeed) {
         return -0.8;
     }
-    console.log(`initialSpeed: ${initialSpeed}, targetSpeed: ${targetSpeed}, realPower: ${realPower}, strategyLateAccelerationModifier: ${strategyLateAccelerationModifier}, distanceAptitudeAccelerationModifier: ${distanceAptitudeAccelerationModifier}, surfaceAptitudeModifier: ${surfaceAptitudeModifier}`);
-    console.log(`realPower: ${realPower}, strategyLateAccelerationModifier: ${strategyLateAccelerationModifier}, distanceAptitudeAccelerationModifier: ${distanceAptitudeAccelerationModifier}, surfaceAptitudeModifier: ${surfaceAptitudeModifier}`);
     return 0.0006 * Math.sqrt(500 * realPower) * strategyLateAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier;
 }
 

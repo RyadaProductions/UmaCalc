@@ -57,7 +57,6 @@ export function calculatePhaseZeroAccelerationHitPointsConsumption(
     baseSpeed: number,
     fieldConditionHPConsumptionCoefficient: number
 ): number {
-    console.log(`initialSpeed: ${initialSpeed}, acceleration: ${acceleration}, timeInSeconds: ${timeInSeconds}, baseSpeed: ${baseSpeed}, fieldConditionHPConsumptionCoefficient: ${fieldConditionHPConsumptionCoefficient}`);
     const twenty = 20;
     const twelve = 12;
     const onehundredAndFortyFour = 144;
