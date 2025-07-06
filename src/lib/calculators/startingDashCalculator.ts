@@ -1,5 +1,3 @@
-import { getWeatherModifier } from "../modifierData";
-
 export const startingDashInitialSpeed = 3;
 
 // Calculation for base speed:
@@ -54,8 +52,7 @@ export function calculateDistanceInMeters(
 // 20 * FieldConditionHPConsumptionCoefficient * StartingDashDuration
 export function calculateStartingDashHitPointsConsumption(
     startingDashDuration: number,
-    selectedSurface: string,
-    selectedCondition: string
+    fieldConditionHPConsumptionCoefficient: number
 ): number {
-    return 20 * getWeatherModifier(selectedSurface, selectedCondition).hpConsumptionCoefficient * startingDashDuration;
+    return 20 * fieldConditionHPConsumptionCoefficient * startingDashDuration;
 }

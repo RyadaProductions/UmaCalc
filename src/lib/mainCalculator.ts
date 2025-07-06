@@ -1,4 +1,4 @@
-import { distances } from "./constants";
+import { distanceMap } from "./constants";
 import type { InputData, Result } from "./modifierTypes";
 import { 
     calculateHitPointsWithRecovery, 
@@ -89,7 +89,7 @@ import {
 } from "./calculators/miscCalculator";
 
 export function getTrackLength(distance: number) {
-    return distances[distance];
+    return distanceMap[distance];
 }
 
 export function calculate(
@@ -97,15 +97,14 @@ export function calculate(
 ): Result {
     const startingDashInitialSpeed = 3; // CONSTANT
 
+    const raceDistanceInMeters = parseInt(input.distance);
     // GetModifiers
     const moodModifier = getMoodModifier(input.mood);
     const weatherModifier = getWeatherModifier(input.surface, input.condition);
-    const distanceAptitudeModifiers = getDistanceAptitudeModifiers(getTrackLength(parseInt(input.distance)), input.distanceAptitudes)
+    const distanceAptitudeModifiers = getDistanceAptitudeModifiers(getTrackLength(raceDistanceInMeters), input.distanceAptitudes)
     const strategyAptitudeModifiers = getStrategyAptitudeModifiers(input.strategy, input.strategyAptitudes);
     const stageModifiers = getStageModifiers(input.strategy);
     const surfaceAptitudeModifier = getSurfaceAptitudeModifier(input.surface, input.surfaceAptitudes);
-
-    const raceDistanceInMeters = parseInt(input.distance);
 
     // calculate basic data:
     // - stats
@@ -180,8 +179,7 @@ export function calculate(
     );
     const startingDashHitPointsConsumption = calculateStartingDashHitPointsConsumption(
         startingDashTimeInSeconds,
-        input.surface,
-        input.condition
+        weatherModifier.hpConsumptionCoefficient
     );
 
     // - phase zero acceleration

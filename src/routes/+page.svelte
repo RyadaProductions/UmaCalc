@@ -5,7 +5,7 @@
         conditions,
         strategies,
         surfaces, 
-        distances,
+        distanceMap,
     } from '$lib/constants';
     import { round } from '$lib/utils';
 
@@ -24,20 +24,20 @@
             wit: 1000
         },
         surfaceAptitudes: {
-            turf: 'A',
-            dirt: 'A'
+            Turf: 'A',
+            Dirt: 'A'
         },
         distanceAptitudes: {
-            sprint: 'S',
-            mile: 'A',
-            medium: 'A',
-            long: 'A'
+            Sprint: 'S',
+            Mile: 'A',
+            Medium: 'A',
+            Long: 'A'
         },
         strategyAptitudes: {
-            front: 'A',
-            pace: 'A',
-            late: 'A',
-            end: 'A'
+            Front: 'A',
+            Pace: 'A',
+            Late: 'A',
+            End: 'A'
         },
         mood: 'Great',
         strategy: 'Front',
@@ -53,7 +53,7 @@
     }
 
     function getTrackLength() {
-        return distances[parseInt(inputData.distance)];
+        return distanceMap[parseInt(inputData.distance)];
     };
 
     function onCalculateClicked() {
@@ -117,10 +117,10 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.turf }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.Turf }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.dirt }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.surfaceAptitudes.Dirt }/>
                 </td>
             </tr>
         </tbody>
@@ -135,16 +135,16 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.sprint }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Sprint }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.mile }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Mile }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.medium }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Medium }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.long }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.distanceAptitudes.Long }/>
                 </td>
             </tr>
         </tbody>
@@ -159,16 +159,16 @@
             </tr>
             <tr>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.front }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Front }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.pace }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Pace }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.late }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.Late }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.end }/>
+                    <Dropdown options={ aptitudes } bind:value={ inputData.strategyAptitudes.End }/>
                 </td>
             </tr>
         </tbody>
@@ -203,7 +203,7 @@
                     <Dropdown options={ conditions } bind:value={ inputData.condition }/>
                 </td>
                 <td class="px-4 pb-2">
-                    <Dropdown options={ Object.keys(distances) } bind:value={ inputData.distance }/>
+                    <Dropdown options={ Object.keys(distanceMap) } bind:value={ inputData.distance }/>
                 </td>
                 <td class="px-4 pb-2 text-center">
                     { getTrackLength() }

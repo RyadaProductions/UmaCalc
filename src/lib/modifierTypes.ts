@@ -38,20 +38,20 @@ export interface InputData {
         wit: number;
     };
     surfaceAptitudes: {
-        turf: Aptitude;
-        dirt: Aptitude;
+        Turf: Aptitude;
+        Dirt: Aptitude;
     };
     distanceAptitudes: {
-        sprint: Aptitude;
-        mile: Aptitude;
-        medium: Aptitude;
-        long: Aptitude;
+        Sprint: Aptitude;
+        Mile: Aptitude;
+        Medium: Aptitude;
+        Long: Aptitude;
     };
     strategyAptitudes: {
-        front: Aptitude;
-        pace: Aptitude;
-        late: Aptitude;
-        end: Aptitude;
+        Front: Aptitude;
+        Pace: Aptitude;
+        Late: Aptitude;
+        End: Aptitude;
     };
     mood: Mood;
     strategy: Strategy;

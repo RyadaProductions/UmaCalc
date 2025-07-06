@@ -9,14 +9,16 @@ export const moods = ['Great', 'Good', 'Normal', 'Bad', 'Terrible'] as const;
 export const strategies = ['Front', 'Pace', 'Late', 'End'] as const;
 export const surfaces = [ 'Turf', 'Dirt' ] as const;
 export const conditions = [ 'Firm', 'Soft', 'Heavy', 'Wet' ] as const;
+export const distances = ['Sprint', 'Mile', 'Medium', 'Long'] as const;
 
 export type Aptitude = typeof aptitudes[number];
 export type Mood = typeof moods[number];
 export type Strategy = typeof strategies[number];
 export type Surface = typeof surfaces[number];
 export type Condition = typeof conditions[number];
+export type Distance = typeof distances[number];
 
-export const distances: Record<number, 'Sprint' | 'Mile' | 'Medium' | 'Long'> = {
+export const distanceMap: Record<number, Distance> = {
   1000: 'Sprint', 1200: 'Sprint', 1400: 'Sprint',
   1500: 'Mile', 1600: 'Mile', 1800: 'Mile',
   2000: 'Medium', 2200: 'Medium', 2300: 'Medium', 2400: 'Medium',
@@ -46,15 +48,15 @@ export const surfaceModifiers: Record<string, Record<string, SurfaceAndWeatherMo
     }
 };
 
-export const distanceAptitudeModifiers: Record<string, DistanceAptitudeModifiers> = {
-    s: { speed: 1.05, acceleration: 1 },
-    a: { speed: 1, acceleration: 1 },
-    b: { speed: 0.9, acceleration: 1 },
-    c: { speed: 0.8, acceleration: 1 },
-    d: { speed: 0.6, acceleration: 1 },
-    e: { speed: 0.4, acceleration: 0.6 },
-    f: { speed: 0.2, acceleration: 0.5 },
-    g: { speed: 0.1, acceleration: 0.4 }
+export const distanceAptitudeModifiers: Record<Aptitude, DistanceAptitudeModifiers> = {
+    S: { speed: 1.05, acceleration: 1 },
+    A: { speed: 1, acceleration: 1 },
+    B: { speed: 0.9, acceleration: 1 },
+    C: { speed: 0.8, acceleration: 1 },
+    D: { speed: 0.6, acceleration: 1 },
+    E: { speed: 0.4, acceleration: 0.6 },
+    F: { speed: 0.2, acceleration: 0.5 },
+    G: { speed: 0.1, acceleration: 0.4 }
 };
 
 export const trackAptitudeModifiers: Record<Aptitude, number> = {
