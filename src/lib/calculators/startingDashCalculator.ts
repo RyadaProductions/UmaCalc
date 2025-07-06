@@ -1,16 +1,8 @@
 export const startingDashInitialSpeed = 3;
 
-// Calculation for base speed:
-// 20 - (Distance - 2000) / 1000
-export function calculateBaseSpeed(
-    distance: number
-): number {
-    return 20 - (distance - 2000) / 1000;
-}
-
 // Calculation for target speed:
 // baseSpeed * 0.85
-export function calculateTargetSpeed(
+export function calculateStartingDashTargetSpeed(
     baseSpeed: number
 ): number {
     return baseSpeed * 0.85;
@@ -18,7 +10,7 @@ export function calculateTargetSpeed(
 
 // Calculation for acceleration starting dash:
 // 24 + 0.0006 * sqrt(500 * realPower) * earlyStageAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
-export function calculateAcceleration(
+export function calculateStartingDashAcceleration(
     realPower: number,
     earlyStageAccelerationModifier: number,
     distanceAptitudeAccelerationModifier: number,
@@ -32,13 +24,12 @@ export function calculateAcceleration(
 // (TargetSpeed - startinDashInitialSpeed) / StartingDashAcceleration
 export function calculateStartingDashDuration(
     realPower: number,
-    distance: number,
+    baseSpeed: number,
     earlyStageAccelerationModifier: number,
     distanceAptitudeAccelerationModifier: number,
     surfaceAptitudeModifier: number
 ): number {
-    const baseSpeed = calculateBaseSpeed(distance);
-    return (calculateTargetSpeed(baseSpeed) - startingDashInitialSpeed) / calculateAcceleration(realPower, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
+    return (calculateStartingDashTargetSpeed(baseSpeed) - startingDashInitialSpeed) / calculateStartingDashAcceleration(realPower, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
 }
 
 // (startingDashInitialSpeed + TargetSpeed) / 2 * StartingDashDuration

@@ -26,12 +26,11 @@ import {
     calculatePhaseZeroSteadyTime
 } from "./calculators/phaseZeroCalculator";
 import { 
-    calculateAcceleration, 
-    calculateBaseSpeed, 
+    calculateStartingDashAcceleration,
     calculateDistanceInMeters, 
     calculateStartingDashDuration, 
     calculateStartingDashHitPointsConsumption, 
-    calculateTargetSpeed 
+    calculateStartingDashTargetSpeed 
 } from "./calculators/startingDashCalculator";
 import { calculateRealStats } from "./calculators/statsCalculator";
 import { 
@@ -79,7 +78,8 @@ import {
 } from "./calculators/staminaTargetCalculator";
 import { 
     calculateRushedRate, 
-    calculateSkillProcRate 
+    calculateSkillProcRate,
+    calculateBaseSpeed
 } from "./calculators/miscCalculator";
 
 export function getTrackLength(distance: number) {
@@ -135,8 +135,8 @@ export function calculate(
 
     // - detailed breakdown
     // - starting dash
-    const startingDashTargetSpeed = calculateTargetSpeed(baseSpeed);
-    const startingDashAcceleration = calculateAcceleration(
+    const startingDashTargetSpeed = calculateStartingDashTargetSpeed(baseSpeed);
+    const startingDashAcceleration = calculateStartingDashAcceleration(
         realStats.power,
         strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
@@ -144,7 +144,7 @@ export function calculate(
     );
     const startingDashTimeInSeconds = calculateStartingDashDuration(
         realStats.power,
-        raceDistanceInMeters,
+        baseSpeed,
         strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier

@@ -11,3 +11,11 @@ export function calculateSkillProcRate(
 ): number {
     return Math.max(100 - 9000 / realWit, 20);
 }
+
+// Calculation for base speed:
+// 20 - (Distance - 2000) / 1000
+export function calculateBaseSpeed(
+    distance: number
+): number {
+    return 20 - (distance - 2000) / 1000;
+}
