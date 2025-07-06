@@ -38,7 +38,7 @@ export function getDistanceAptitudeModifiers(
     return distanceAptitudeModifiers[distanceAptitudes];
 }
 
-export function getStageModifiers(
+export function getStrategyModifiers(
     selectedStrategy: Strategy,
 ): StrategyModifiers {
     return strategyModifiers[selectedStrategy];

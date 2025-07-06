@@ -9,10 +9,10 @@ import {
 import { 
     getDistanceAptitudeModifiers,
     getMoodModifier, 
-    getStageModifiers, 
-    getStrategyAptitudeModifiers, 
+    getStrategyModifiers, 
+    getStrategyAptitudeModifiers as getStrategyAptitudeModifier, 
     getSurfaceAptitudeModifier, 
-    getWeatherModifier as getConditionModifier 
+    getWeatherModifier as getConditionModifiers 
 } from "./modifierData";
 import {
     calculatePhaseZeroAccelerationAcceleration,
@@ -33,9 +33,7 @@ import {
     calculateStartingDashHitPointsConsumption, 
     calculateTargetSpeed 
 } from "./calculators/startingDashCalculator";
-import {
-    calculateRealStats,
-} from "./calculators/statsCalculator";
+import { calculateRealStats } from "./calculators/statsCalculator";
 import { 
     calculatePhaseOneAccelerationAcceleration,
     calculatePhaseOneAccelerationDistanceInMeters,
@@ -96,10 +94,10 @@ export function calculate(
     const raceDistanceInMeters = parseInt(input.distance);
     // GetModifiers
     const moodModifier = getMoodModifier(input.mood);
-    const conditionModifier = getConditionModifier(input.surface, input.condition);
+    const conditionModifiers = getConditionModifiers(input.surface, input.condition);
     const distanceAptitudeModifiers = getDistanceAptitudeModifiers(input.distanceAptitude)
-    const strategyAptitudeModifier = getStrategyAptitudeModifiers(input.strategyAptitude);
-    const stageModifiers = getStageModifiers(input.strategy);
+    const strategyAptitudeModifier = getStrategyAptitudeModifier(input.strategyAptitude);
+    const strategyModifiers = getStrategyModifiers(input.strategy);
     const surfaceAptitudeModifier = getSurfaceAptitudeModifier(input.surfaceAptitude);
 
     // calculate basic data:
@@ -107,17 +105,17 @@ export function calculate(
     const realStats = calculateRealStats(
         input.stats,
         moodModifier,
-        conditionModifier,
+        conditionModifiers,
         distanceAptitudeModifiers,
         strategyAptitudeModifier
-    )
+    );
 
     // - general data
     const baseSpeed = calculateBaseSpeed(raceDistanceInMeters);
     const initialHitPoints = calculateInitialHitPoints(
         raceDistanceInMeters,
         realStats.stamina,
-        stageModifiers.hpCorrection
+        strategyModifiers.hpCorrection
     );
     const recoveryHitPoints = calculateRecoverySkillHitPoints(
         input.skills.goldRecovery,
@@ -140,14 +138,14 @@ export function calculate(
     const startingDashTargetSpeed = calculateTargetSpeed(baseSpeed);
     const startingDashAcceleration = calculateAcceleration(
         realStats.power,
-        stageModifiers.accelerationCorrection.early,
+        strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
     const startingDashTimeInSeconds = calculateStartingDashDuration(
         realStats.power,
         raceDistanceInMeters,
-        stageModifiers.accelerationCorrection.early,
+        strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
@@ -157,7 +155,7 @@ export function calculate(
     );
     const startingDashHitPointsConsumption = calculateStartingDashHitPointsConsumption(
         startingDashTimeInSeconds,
-        conditionModifier.hpConsumptionCoefficient
+        conditionModifiers.hpConsumptionCoefficient
     );
 
     // - phase zero acceleration
@@ -165,11 +163,11 @@ export function calculate(
     const phaseZeroAccelerationTargetSpeed = calculatePhaseZeroAccelerationTargetSpeed(
         baseSpeed, 
         realStats.wit, 
-        stageModifiers.speedCorrection.early
+        strategyModifiers.speedCorrection.early
     );
     const phaseZeroAccelerationAcceleration = calculatePhaseZeroAccelerationAcceleration(
         realStats.power,
-        stageModifiers.accelerationCorrection.early,
+        strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
@@ -190,7 +188,7 @@ export function calculate(
         phaseZeroAccelerationAcceleration,
         phaseZeroAccelerationTimeInSeconds,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient
+        conditionModifiers.hpConsumptionCoefficient
     );
 
     // - phase zero steady
@@ -210,7 +208,7 @@ export function calculate(
     const phaseZeroSteadyHitPointsConsumption = calculatePhaseZeroSteadyHitPointsConsumption(
         phaseZeroSteadyInitialSpeed,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         phaseZeroSteadyTimeInSeconds
     ); 
 
@@ -223,13 +221,13 @@ export function calculate(
     const phaseOneAccelerationTargetSpeed = calculatePhaseOneAccelerationTargetSpeed(
         baseSpeed,
         realStats.wit,
-        stageModifiers.speedCorrection.middle
+        strategyModifiers.speedCorrection.middle
     );
     const phaseOneAccelerationAcceleration = calculatePhaseOneAccelerationAcceleration(
         phaseOneAccelerationInitialSpeed,
         phaseOneAccelerationTargetSpeed,
         realStats.power,
-        stageModifiers.accelerationCorrection.middle,
+        strategyModifiers.accelerationCorrection.middle,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
@@ -248,7 +246,7 @@ export function calculate(
         phaseOneAccelerationTargetSpeed,
         phaseOneAccelerationAcceleration,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient
+        conditionModifiers.hpConsumptionCoefficient
     );
 
     // - phase one steady
@@ -268,7 +266,7 @@ export function calculate(
     const phaseOneSteadyHitPointsConsumption = calculatePhaseOneSteadyHitPointsConsumption(
         phaseOneSteadyInitialSpeed,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         phaseOneSteadyTimeInSeconds
     );
 
@@ -278,14 +276,14 @@ export function calculate(
         baseSpeed,
         realStats.speed,
         realStats.wit,
-        stageModifiers.speedCorrection.late,
+        strategyModifiers.speedCorrection.late,
         distanceAptitudeModifiers.speed
     );
     const phaseTwoAccelerationAcceleration = calculatePhaseTwoAccelerationAcceleration(
         phaseTwoAccelerationInitialSpeed,
         phaseTwoAccelerationTargetSpeed,
         realStats.power,
-        stageModifiers.accelerationCorrection.late,
+        strategyModifiers.accelerationCorrection.late,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
@@ -300,12 +298,12 @@ export function calculate(
     const lastSpurtAccelerationTargetSpeed = calculateLastSpurtAccelerationTargetSpeed(
         baseSpeed,
         realStats.speed,
-        stageModifiers.speedCorrection.late,
+        strategyModifiers.speedCorrection.late,
         distanceAptitudeModifiers.speed
     );
     const lastSpurtAccelerationAcceleration = calculateLastSpurtAccelerationAcceleration(
         realStats.power,
-        stageModifiers.accelerationCorrection.late,
+        strategyModifiers.accelerationCorrection.late,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier
     );
@@ -319,7 +317,7 @@ export function calculate(
         phaseZeroSteadyHitPointsConsumption,
         phaseOneAccelerationHitPointsConsumption,
         phaseOneSteadyHitPointsConsumption,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         phaseTwoAndThreeSteadyInitialSpeed,
         lastSpurtAccelerationTargetSpeed,
@@ -350,7 +348,7 @@ export function calculate(
         phaseTwoAccelerationAcceleration,
         PhaseTwoAccelerationTimeInSeconds,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient
     );
 
@@ -367,7 +365,7 @@ export function calculate(
     const phaseTwoAndThreeSteadyHitPointsConsumption = calculatePhaseTwoAndThreeSteadyHitPointsConsumption(
         phaseTwoAndThreeSteadyInitialSpeed,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         phaseTwoAndThreeSteadyTimeInSeconds
     );
@@ -393,7 +391,7 @@ export function calculate(
         lastSpurtAccelerationInitialspeed,
         lastSpurtAccelerationAcceleration,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         lastSpurtAccelerationTimeInSeconds
     );
@@ -412,7 +410,7 @@ export function calculate(
     );
 
     const targetLastSpurtSteadyHitPointsConsumption = calculateLastSpurtSteadyHitPointsConsumption(
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         lastSpurtSteadyInitialSpeed,
         baseSpeed,
@@ -434,7 +432,7 @@ export function calculate(
     // This requires the hitpointsconsumption
     const lastSpurtSteadyTimeInSeconds = calculateLastSpurtSteadyTimeInSeconds(
         lastSpurtSteadyHitPointsConsumption,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         lastSpurtSteadyInitialSpeed,
         baseSpeed
@@ -484,7 +482,7 @@ export function calculate(
         phaseTwoAccelerationInitialSpeed,
         lastSpurtAccelerationAcceleration,
         baseSpeed,
-        conditionModifier.hpConsumptionCoefficient,
+        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
         idealLastSpurtAccelerationTimeInSeconds
     );
@@ -492,7 +490,7 @@ export function calculate(
     const idealLastSpurtAccelerationDistanceInMeters = (idealLastSpurtAccelerationInitialSpeed + idealLastSpurtAccelerationTargetSpeed) / 2 * idealLastSpurtAccelerationTimeInSeconds;
     const idealLastSpurtSteadyDistanceInMeters = raceDistanceInMeters / 3 - idealLastSpurtAccelerationDistanceInMeters;
     const idealLastSpurtSteadyTimeInSeconds = idealLastSpurtSteadyDistanceInMeters / idealLastSpurtSteadyInitialSpeed;
-    const idealLastSpurtSteadyHitPointsConsumption = 20 * conditionModifier.hpConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (idealLastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * idealLastSpurtSteadyTimeInSeconds;
+    const idealLastSpurtSteadyHitPointsConsumption = 20 * conditionModifiers.hpConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (idealLastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * idealLastSpurtSteadyTimeInSeconds;
 
     const targetHitPointsForLastSpurt = calculateTargetHitPointsForLastSpurt(
         startingDashHitPointsConsumption,
@@ -507,7 +505,7 @@ export function calculate(
         realStats.stamina,
         targetHitPointsForLastSpurt,
         hitPointsWithRecovery,
-        stageModifiers.hpCorrection,
+        strategyModifiers.hpCorrection,
         recoveryHitPoints,
         uniqueRecoveryHitPoints
     );
