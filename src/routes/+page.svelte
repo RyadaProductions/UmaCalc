@@ -121,6 +121,7 @@
                 <p class="text-center">{ round(result.realStats.wit) }</p>
             </div>
         </div>
+
         <h2 class="text-2xl font-semibold text-center my-4">Results</h2>
         <div class="grid grid-cols-4">
             <div>
@@ -148,38 +149,40 @@
 </div>
 
 {#if showDebugData}
-<div class="w-4/5 mx-auto py-6">
-    <div class="grid grid-cols-5 mb-4">
-        <div>
-            <p class="text-center font-bold">Base Speed [m/s]</p>
-            <p class="text-center">{ round(result.baseSpeed, 2) }</p>
+<div class="w-4/5 mx-auto flex flex-col items-center py-6">
+    <div class="w-4/5 flex flex-col">
+        <div class="grid grid-cols-5 mb-4">
+            <div>
+                <p class="text-center font-bold">Base Speed [m/s]</p>
+                <p class="text-center">{ round(result.baseSpeed, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Initial HP</p>
+                <p class="text-center">{ round(result.initialHitPoints, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">HP with Recovery</p>
+                <p class="text-center">{ round(result.hitPointsWithRecovery, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Last Spurt Distance</p>
+                <p class="text-center">{ round(result.lastSpurtDistance, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Last Spurt HP Coefficient</p>
+                <p class="text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2) }</p>
+            </div>
         </div>
-        <div>
-            <p class="text-center font-bold">Initial HP</p>
-            <p class="text-center">{ round(result.initialHitPoints, 2) }</p>
-        </div>
-        <div>
-            <p class="text-center font-bold">HP with Recovery</p>
-            <p class="text-center">{ round(result.hitPointsWithRecovery, 2) }</p>
-        </div>
-        <div>
-            <p class="text-center font-bold">Last Spurt Distance</p>
-            <p class="text-center">{ round(result.lastSpurtDistance, 2) }</p>
-        </div>
-        <div>
-            <p class="text-center font-bold">Last Spurt HP Coefficient</p>
-            <p class="text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2) }</p>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-2 mb-6">
-        <div>
-            <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
-            <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
-        </div>
-        <div>
-            <p class="text-center font-bold">Required Stamina</p>
-            <p class="text-center">{ result.requiredStamina }</p>
+        
+        <div class="grid grid-cols-2 mb-6">
+            <div>
+                <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
+                <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Required Stamina</p>
+                <p class="text-center">{ result.requiredStamina }</p>
+            </div>
         </div>
     </div>
 
