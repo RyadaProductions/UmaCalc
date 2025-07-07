@@ -34,7 +34,7 @@
 
 
 <div class="flex items-center my-1">
-    <div class="p-1 text-xl font-semibold rounded-t text-white w-1/5">{label}</div>
+    <div class="p-1 text-xl font-semibold rounded-t w-1/5">{label}</div>
     <div class="border border-green-500 rounded flex w-2/5">
         <Dropdown options={ option1 } bind:value={ value1 }/>
         <Dropdown options={ option2 } bind:value={ value2 }/>
