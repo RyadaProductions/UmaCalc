@@ -57,7 +57,7 @@
     }
 </script>
 
-<button on:click="{handleClick}" class="cursor-text">
+<button on:click="{handleClick}" tabindex="-1" class="cursor-text">
     <div class="bg-green-50 rounded text-center">
         <div class="p-1 text-xs font-semibold bg-green-500 rounded-t text-white">{label}</div>
         <div class="flex items-baseline justify-center space-x-1 pl-2 md:pl-0">

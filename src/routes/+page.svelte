@@ -112,7 +112,7 @@
 
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
     <h2 class="text-2xl font-semibold text-center my-4">Real Stats</h2>
-    <div class="w-full md:w-4/5 flex flex-col gap-2">
+    <div class="w-full flex flex-col gap-2 md:w-4/5">
         <div class="grid grid-cols-5">
             <LabeledGridCell label="Speed" value={ result.realStats.speed } />
             <LabeledGridCell label="Stamina" value={ result.realStats.stamina } />
@@ -139,9 +139,9 @@
 </div>
 
 {#if showDebugData}
-<div class="w-full mx-auto flex flex-col items-center py-6 lg:w-4/5">
-    <div class="w-full flex flex-col md:w-4/5">
-        <div class="grid grid-cols-5 mb-4">
+<div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
+    <div class="w-full flex flex-col gap-2 md:w-4/5">
+        <div class="grid grid-cols-5">
             <div>
                 <p class="text-center font-bold">Base Speed [m/s]</p>
                 <p class="text-center">{ round(result.baseSpeed, 2) }</p>
@@ -164,7 +164,7 @@
             </div>
         </div>
         
-        <div class="grid grid-cols-2 mb-6">
+        <div class="grid grid-cols-2">
             <div>
                 <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
                 <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
@@ -175,9 +175,12 @@
             </div>
         </div>
     </div>
+</div>
+<div class="w-full mx-auto flex flex-col items-center py-6 lg:w-4/5">
+    <!-- Table -->
     <div class="w-full mx-auto overflow-x-auto lg:w-full">
         <div class="min-w-[800px]">
-            <!-- header  flex border-y border-gray-200 py-2 -->
+            <!-- header -->
             <div class="flex items-center bg-gray-100 font-semibold">
                 <div class="w-1/5 pl-4 font-medium text-gray-700 flex-shrink-0"></div>
                 <div class="flex-1 text-center pr-4">Initial Speed [m/s]</div> 
