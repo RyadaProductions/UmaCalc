@@ -149,7 +149,7 @@
 
 {#if showDebugData}
 <div class="w-4/5 mx-auto py-6">
-    <div class="grid grid-cols-5">
+    <div class="grid grid-cols-5 mb-4">
         <div>
             <p class="text-center font-bold">Base Speed [m/s]</p>
             <p class="text-center">{ round(result.baseSpeed, 2) }</p>
@@ -172,7 +172,7 @@
         </div>
     </div>
     
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-2 mb-6">
         <div>
             <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
             <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
@@ -186,7 +186,7 @@
     <table class="table-auto w-4/5 mx-auto border-collapse">
         <tbody>
             <tr>
-                <th class="p2-4 text-center border-x"> </th>
+                <th class="p2-4 text-center"> </th>
                 <th class="p2-4 text-center border-x">Initial Speed [m/s]</th>
                 <th class="p2-4 text-center border-x">Target Speed [m/s]</th>
                 <th class="p2-4 text-center border-x">Acceleration [m/s^2]</th>
