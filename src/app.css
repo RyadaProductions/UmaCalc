@@ -23,14 +23,6 @@
 }
 
 @theme {
-    --color-bg: #0F0B14;
-    --color-surface: #2A1F3A;
-    --color-border: #3B274F;
-    --color-text: #ECE7F0;
-    --color-text-muted: #B8B0BE;
-    --color-accent-amber: #C17B1E;
-    --color-accent-rose: #A84576;
-    --color-accent-magenta: #693A7B;
     --font-rubik: "Rubik", "sans-serif";
     --font-dynamic-splash: "DynamicSplash", "sans-serif";
     --font-uma-small: "Uma-Small", "sans-serif";
