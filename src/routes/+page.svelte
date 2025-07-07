@@ -124,7 +124,7 @@
 
 {#if showDebugData}
 <div class="w-full mx-auto flex flex-col items-center py-6 md:w-4/5">
-    <div class="w-4/5 flex flex-col">
+    <div class="w-full flex flex-col md:w-4/5">
         <div class="grid grid-cols-5 mb-4">
             <div>
                 <p class="text-center font-bold">Base Speed [m/s]</p>
@@ -160,7 +160,7 @@
         </div>
     </div>
 
-    <table class="table-auto w-4/5 mx-auto border-collapse">
+    <table class="table-auto w-full mx-auto border-collapse md:w-4/5">
         <tbody>
             <tr>
                 <th class="p2-4 text-center"> </th>
