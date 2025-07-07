@@ -63,8 +63,25 @@
         <div class="flex items-baseline justify-center space-x-1 pl-2 md:pl-0">
             {#if showGrade}<span class="{gradeClass} text-xl font-bold">{grade}</span>{/if}
             <input bind:this={ inputElement } 
-                class="w-12 appearance-none bg-transparent text-center text-sm font-semibold focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" 
-                type="number" name="speed" {min} {max} bind:value />
+                class="w-12 appearance-none bg-transparent text-center text-sm font-semibold focus:outline-none no-spinner" 
+                type="number" 
+                name="speed" 
+                {min} 
+                {max} 
+                bind:value
+                on:click|stopPropagation 
+                on:focus={handleClick}/>
         </div>
     </div>
 </button>
+
+<style lang="css">
+  :global(.no-spinner),
+  :global(.no-spinner::-webkit-outer-spin-button),
+  :global(.no-spinner::-webkit-inner-spin-button) {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+    margin: 0;
+  }
+</style>
