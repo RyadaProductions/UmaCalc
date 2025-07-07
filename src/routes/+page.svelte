@@ -89,13 +89,14 @@
         <LabeledInputField label="Guts" bind:value={ inputData.stats.guts } />
         <LabeledInputField label="Wit" bind:value={ inputData.stats.wit } />
     </div>
-    <div class="mx-auto w-full mb-6 md:w-5/6 lg:w-2/3">
+    <div class="mx-auto w-full mb-2 md:w-5/6 lg:w-2/3">
         <LabeledDropdownCombo label="Track" option1={ surfaces } bind:value1={ inputData.surface } option2={ aptitudes } bind:value2={ inputData.surfaceAptitude } />
         <LabeledDropdownCombo label="Distance" extraLabel={ getTrackLength() } option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
         <LabeledDropdownCombo label="Style" option1={ strategies } bind:value1={ inputData.strategy } option2={ aptitudes } bind:value2={ inputData.strategyAptitude } />
         <LabeledDropdownCombo label="Mood/Condition" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
     </div>
-    <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-6 md:w-5/6 lg:w-2/3">
+    <h2 class="text-xl font-semibold text-center">Recovery Skills</h2>
+    <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-2 md:w-5/6 lg:w-2/3">
         <LabeledInputField label="Gold skills" showGrade={false} bind:value={ inputData.skills.goldRecovery } />
         <LabeledInputField label="White skills" showGrade={false} bind:value={ inputData.skills.whiteRecovery } />
         <LabeledInputField label="2* or below uniques" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryTwoStarsOrBelow } />

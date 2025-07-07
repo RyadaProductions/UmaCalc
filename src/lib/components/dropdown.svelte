@@ -9,7 +9,7 @@
 
 <select
   bind:value
-  class="w-full px-3 py-1 bg-white font-semibold"
+  class="w-full px-3 py-1 bg-white font-semibold hover:cursor-pointer"
 >
   {#each options as opt}
     <option value={opt}>{opt}</option>
