@@ -42,15 +42,15 @@
         }
     }
 
-    function getTrackLength() {
+    function getTrackLength(): string {
         return distanceMap[parseInt(inputData.distance)];
     };
 
-    function onCalculateClicked() {
+    function onCalculateClicked(): void {
         result = calculate(inputData);
     }
 
-    function hasEnoughStamina() {
+    function hasEnoughStamina(): string {
         if (result.realStats.stamina + 1 < result.requiredStamina) {
             return 'Not enough stamina/guts';
         }
@@ -59,7 +59,19 @@
             return 'Borderline';
         }
 
-        return 'You have enough';
+        return 'You have enough stamina!';
+    }
+
+    function getResultColor(): string {
+        if (result.realStats.stamina + 1 < result.requiredStamina) {
+            return 'text-red-600';
+        }
+
+        if (result.realStats.stamina / result.requiredStamina < 1.1 && result.requiredStamina >= 0) {
+            return 'text-orange-400';
+        }
+
+        return 'text-green-600';
     }
 </script>
 
@@ -79,9 +91,9 @@
     </div>
     <div class="mx-auto w-full mb-6 md:w-5/6 lg:w-2/3">
         <LabeledDropdownCombo label="Track" option1={ surfaces } bind:value1={ inputData.surface } option2={ aptitudes } bind:value2={ inputData.surfaceAptitude } />
-        <LabeledDropdownCombo label="Distance" extraLabel={getTrackLength()} option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
+        <LabeledDropdownCombo label="Distance" extraLabel={ getTrackLength() } option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
         <LabeledDropdownCombo label="Style" option1={ strategies } bind:value1={ inputData.strategy } option2={ aptitudes } bind:value2={ inputData.strategyAptitude } />
-        <LabeledDropdownCombo label="Misc" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
+        <LabeledDropdownCombo label="Mood/Condition" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
     </div>
     <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-6 md:w-5/6 lg:w-2/3">
         <LabeledInputField label="Gold skills" showGrade={false} bind:value={ inputData.skills.goldRecovery } />
@@ -91,15 +103,15 @@
     </div>
 </div>
 
-<div class="w-4/5 mx-auto mb-6">
-    <input type="button" value="Calculate" on:click={ onCalculateClicked } class="w-full bg-amber-500 font-semibold py-2 px-4 rounded" />
+<div class="w-full mx-auto mb-6 px-2 md:w-4/5">
+    <input type="button" value="Calculate" on:click={ onCalculateClicked } class="block mx-auto w-full bg-amber-400 font-semibold py-2 rounded md:w-5/6 lg:w-2/3 hover:cursor-pointer" />
 </div>
 
 {#if result}
 
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
     <h2 class="text-2xl font-semibold text-center my-4">Real Stats</h2>
-    <div class="w-4/5 flex flex-col">
+    <div class="w-full md:w-4/5 flex flex-col gap-2">
         <div class="grid grid-cols-5">
             <LabeledGridCell label="Speed" value={ result.realStats.speed } />
             <LabeledGridCell label="Stamina" value={ result.realStats.stamina } />
@@ -108,10 +120,12 @@
             <LabeledGridCell label="Wit" value={ result.realStats.wit } />
         </div>
 
-        <h2 class="text-2xl font-semibold text-center my-4">Results</h2>
-        <div class="grid grid-cols-4">
+        <h2 class="text-2xl font-semibold text-center">Results</h2>
+        <div class="grid grid-cols-2">
             <LabeledGridCell label="Stamina Needed" value={ result.requiredStamina } />
-            <p class="text-center font-bold">{hasEnoughStamina()}</p>
+            <p class="{ getResultColor() } text-center text-2xl font-bold self-center">{ hasEnoughStamina() }</p>
+        </div>
+        <div class="grid grid-cols-2">
             <LabeledGridCell label="Skill proc rate" value={ result.skillProcRate } decimals={2} valueSuffix="%" />
             <LabeledGridCell label="Rushed rate" value={ result.rushedRate } decimals={2} valueSuffix="%" />
         </div>
