@@ -64,24 +64,13 @@
             {#if showGrade}<span class="{gradeClass} text-xl font-bold">{grade}</span>{/if}
             <input bind:this={ inputElement } 
                 class="w-12 appearance-none bg-transparent text-center text-sm font-semibold focus:outline-none no-spinner" 
-                type="number" 
-                name="speed" 
-                {min} 
-                {max} 
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                name="speed"
                 bind:value
                 on:click|stopPropagation 
                 on:focus={handleClick}/>
         </div>
     </div>
 </button>
-
-<style lang="css">
-  :global(.no-spinner),
-  :global(.no-spinner::-webkit-outer-spin-button),
-  :global(.no-spinner::-webkit-inner-spin-button) {
-    -webkit-appearance: none;
-    -moz-appearance: textfield;
-    appearance: none;
-    margin: 0;
-  }
-</style>
