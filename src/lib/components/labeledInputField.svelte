@@ -52,7 +52,7 @@
 
 <div class="bg-green-50 rounded text-center">
     <div class="p-1 text-xs font-semibold bg-green-500 rounded-t text-white">{label}</div>
-    <div class="flex items-baseline justify-center space-x-1">
+    <div class="flex items-baseline justify-center space-x-1 pl-2 md:pl-0">
         {#if showGrade}<span class="{gradeClass} text-xl font-bold">{grade}</span>{/if}
         <input class="w-12 bg-transparent text-center text-sm font-semibold focus:outline-none" type="number" name="speed" {min} {max} bind:value />
     </div>

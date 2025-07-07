@@ -9,11 +9,11 @@
     } from '$lib/constants';
     import { round } from '$lib/utils';
 
-    import Dropdown from '$lib/components/dropdown.svelte';
 	import type { InputData, Result } from '$lib/types';
 	import { calculate } from '$lib/mainCalculator';
 	import LabeledInputField from '$lib/components/labeledInputField.svelte';
 	import LabeledDropdownCombo from '$lib/components/labeledDropdownCombo.svelte';
+	import LabeledGridCell from '$lib/components/labeledGridCell.svelte';
     let result: Result;
     let showDebugData = false;
 
@@ -68,21 +68,21 @@
 
 <h1 class="font-dynamic-splash text-3xl font-semibold text-center mb-6">UmaCalc</h1>
 
-<div class="w-4/5 mx-auto py-6">
-    <div class="mx-auto w-2/3 grid grid-cols-5 gap-2 mb-6">
+<div class="w-full mx-auto py-6 p-2 md:w-4/5">
+    <div class="mx-auto w-full grid grid-cols-5 gap-2 mb-6 md:w-5/6 lg:w-2/3">
         <LabeledInputField label="Speed" bind:value={ inputData.stats.speed } />
         <LabeledInputField label="Stamina" bind:value={ inputData.stats.stamina } />
         <LabeledInputField label="Power" bind:value={ inputData.stats.power } />
         <LabeledInputField label="Guts" bind:value={ inputData.stats.guts } />
         <LabeledInputField label="Wit" bind:value={ inputData.stats.wit } />
     </div>
-    <div class="mx-auto w-2/5 mb-6">
+    <div class="mx-auto w-full mb-6 md:w-5/6 lg:w-2/3">
         <LabeledDropdownCombo label="Track" option1={ surfaces } bind:value1={ inputData.surface } option2={ aptitudes } bind:value2={ inputData.surfaceAptitude } />
         <LabeledDropdownCombo label="Distance" extraLabel={getTrackLength()} option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
         <LabeledDropdownCombo label="Style" option1={ strategies } bind:value1={ inputData.strategy } option2={ aptitudes } bind:value2={ inputData.strategyAptitude } />
         <LabeledDropdownCombo label="Misc" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
     </div>
-    <div class="mx-auto w-2/3 grid grid-cols-4 gap-2 mb-6">
+    <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-6 md:w-5/6 lg:w-2/3">
         <LabeledInputField label="Gold skills" showGrade={false} bind:value={ inputData.skills.goldRecovery } />
         <LabeledInputField label="White skills" showGrade={false} bind:value={ inputData.skills.whiteRecovery } />
         <LabeledInputField label="2* or below uniques" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryTwoStarsOrBelow } />
@@ -96,49 +96,23 @@
 
 {#if result}
 
-<div class="w-4/5 mx-auto flex flex-col items-center">
+<div class="w-full mx-auto flex flex-col items-center md:w-4/5">
     <h2 class="text-2xl font-semibold text-center my-4">Real Stats</h2>
     <div class="w-4/5 flex flex-col">
         <div class="grid grid-cols-5">
-            <div>
-                <p class="text-center font-bold">Speed</p>
-                <p class="text-center">{ round(result.realStats.speed) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Stamina</p>
-                <p class="text-center">{ round(result.realStats.stamina) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Power</p>
-                <p class="text-center">{ round(result.realStats.power) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Guts</p>
-                <p class="text-center">{ round(result.realStats.guts) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Wit</p>
-                <p class="text-center">{ round(result.realStats.wit) }</p>
-            </div>
+            <LabeledGridCell label="Speed" value={ result.realStats.speed } />
+            <LabeledGridCell label="Stamina" value={ result.realStats.stamina } />
+            <LabeledGridCell label="Power" value={ result.realStats.power } />
+            <LabeledGridCell label="Guts" value={ result.realStats.guts } />
+            <LabeledGridCell label="Wit" value={ result.realStats.wit } />
         </div>
 
         <h2 class="text-2xl font-semibold text-center my-4">Results</h2>
         <div class="grid grid-cols-4">
-            <div>
-                <p class="text-center font-bold">Stamina Needed</p>
-                <p class="text-center">{ round(result.requiredStamina) }</p>
-            </div>
-            <div class="items-center">
-                <p class="text-center font-bold">{ hasEnoughStamina() }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Skill proc rate</p>
-                <p class="text-center">{ round(result.skillProcRate, 2) }%</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Rushed rate</p>
-                <p class="text-center">{ round(result.rushedRate, 2) }%</p>
-            </div>
+            <LabeledGridCell label="Stamina Needed" value={ result.requiredStamina } />
+            <p class="text-center font-bold">{hasEnoughStamina()}</p>
+            <LabeledGridCell label="Skill proc rate" value={ result.skillProcRate } decimals={2} valueSuffix="%" />
+            <LabeledGridCell label="Rushed rate" value={ result.rushedRate } decimals={2} valueSuffix="%" />
         </div>
     </div>
 
@@ -149,7 +123,7 @@
 </div>
 
 {#if showDebugData}
-<div class="w-4/5 mx-auto flex flex-col items-center py-6">
+<div class="w-full mx-auto flex flex-col items-center py-6 md:w-4/5">
     <div class="w-4/5 flex flex-col">
         <div class="grid grid-cols-5 mb-4">
             <div>
