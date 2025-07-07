@@ -76,9 +76,9 @@
         <LabeledInputField label="Guts" bind:value={ inputData.stats.guts } />
         <LabeledInputField label="Wit" bind:value={ inputData.stats.wit } />
     </div>
-    <div class="mx-auto w-2/3 mb-6">
+    <div class="mx-auto w-2/5 mb-6">
         <LabeledDropdownCombo label="Track" option1={ surfaces } bind:value1={ inputData.surface } option2={ aptitudes } bind:value2={ inputData.surfaceAptitude } />
-        <LabeledDropdownCombo label="Distance" option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
+        <LabeledDropdownCombo label="Distance" extraLabel={getTrackLength()} option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
         <LabeledDropdownCombo label="Style" option1={ strategies } bind:value1={ inputData.strategy } option2={ aptitudes } bind:value2={ inputData.strategyAptitude } />
         <LabeledDropdownCombo label="Misc" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
     </div>
