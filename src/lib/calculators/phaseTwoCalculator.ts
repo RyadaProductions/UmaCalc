@@ -11,7 +11,7 @@ export function calculatePhaseTwoAccelerationTargetSpeed(
 
 // 2 part equation 
 // if initialSpeed <= targetSpeed
-// 0.006 * sqrt(500 * realPower) * strategyLateAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
+// 0.0006 * sqrt(500 * realPower) * strategyLateAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
 // -0.8
 export function calculatePhaseTwoAccelerationAcceleration(
     initialSpeed: number,

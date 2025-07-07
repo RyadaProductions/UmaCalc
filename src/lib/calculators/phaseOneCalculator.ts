@@ -18,7 +18,7 @@ export function calculatePhaseOneAccelerationTargetSpeed(
 
 // 2 part equation 
 // if initialSpeed <= targetSpeed
-// 0.006 * sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
+// 0.0006 * sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
 // -0.8
 export function calculatePhaseOneAccelerationAcceleration(
     initialSpeed: number,
@@ -33,7 +33,7 @@ export function calculatePhaseOneAccelerationAcceleration(
         return -0.8;
     }
 
-    return 0.006 * Math.sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier;
+    return 0.0006 * Math.sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier;
 }
 
 // targetSpeed - initialSpeed / acceleration
