@@ -14,7 +14,7 @@
     <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.initialSpeed, 3)}</div>
     <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.targetSpeed, 3)}</div>
     <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.acceleration, 3)}</div>
-    <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.timeInSeconds, 3)}</div>
+    <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.duration, 3)}</div>
     <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.distance, 2)}</div>
     <div class="flex-1 text-right pr-4 flex-shrink-0">{round(data.hpConsumption, 2)}</div>
 </div>

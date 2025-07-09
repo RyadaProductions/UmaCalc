@@ -16,7 +16,7 @@
 	import LabeledGridCell from '$lib/components/labeledGridCell.svelte';
 	import DetailedTableGroup from '$lib/components/detailedTableGroup.svelte';
     let result: Result;
-    let showDebugData = false;
+    let showDetailedData = false;
 
     let inputData: InputData = {
         stats: {
@@ -133,12 +133,12 @@
     </div>
 
     <label class="my-4">
-        <input type="checkbox" bind:checked={ showDebugData }/>
-        Show debug data
+        <input type="checkbox" bind:checked={ showDetailedData }/>
+        Show detailed data
     </label>
 </div>
 
-{#if showDebugData}
+{#if showDetailedData}
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
     <div class="w-full flex flex-col gap-2 md:w-4/5">
         <div class="grid grid-cols-5">

@@ -1,5 +1,7 @@
+import type { DistanceAptitudeModifiers, PhaseData, Stats, StrategyModifiers, TrackConditionModifiers } from "$lib/types";
+
 // phaseZeroAccelerationInitialSpeed + phaseZeroAccelerationAcceleration * phaseZeroAccelerationTimeInSeconds
-export function calculatePhaseOneAccelerationInitialSpeed(
+function calculatePhaseOneAccelerationInitialSpeed(
     phaseZeroInitialSpeed: number,
     phaseZeroAcceleration: number,
     phaseZeroTimeInSeconds: number
@@ -8,7 +10,7 @@ export function calculatePhaseOneAccelerationInitialSpeed(
 }
 
 // baseSpeed * strategyMiddleSpeedModifier + ((realWit / 5500) * log10(realWit * 0.1) - 0.65 / 2) * 0.01 * baseSpeed
-export function calculatePhaseOneAccelerationTargetSpeed(
+function calculatePhaseOneAccelerationTargetSpeed(
     baseSpeed: number,
     realWit: number,
     strategyMiddleSpeedModifier: number
@@ -20,7 +22,7 @@ export function calculatePhaseOneAccelerationTargetSpeed(
 // if initialSpeed <= targetSpeed
 // 0.0006 * sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
 // -0.8
-export function calculatePhaseOneAccelerationAcceleration(
+function calculatePhaseOneAccelerationAcceleration(
     initialSpeed: number,
     targetSpeed: number,
     realPower: number,
@@ -37,7 +39,7 @@ export function calculatePhaseOneAccelerationAcceleration(
 }
 
 // targetSpeed - initialSpeed / acceleration
-export function calculatePhaseOneAccelerationTimeInSeconds(
+function calculatePhaseOneAccelerationTimeInSeconds(
     initialSpeed: number,
     targetSpeed: number,
     acceleration: number
@@ -46,7 +48,7 @@ export function calculatePhaseOneAccelerationTimeInSeconds(
 }
 
 // (initialSpeed + targetSpeed) / 2 * timeInSeconds
-export function calculatePhaseOneAccelerationDistanceInMeters(
+function calculatePhaseOneAccelerationDistanceInMeters(
     initialSpeed: number,
     targetSpeed: number,
     timeInSeconds: number
@@ -55,7 +57,7 @@ export function calculatePhaseOneAccelerationDistanceInMeters(
 }
 
 // 20 * fieldConditionHPConsumptionCoefficient * ((targetSpeed - baseSpeed + 12) ^ 3 - (initialSpeed - baseSpeed + 12) ^ 3) / (3 * acceleration) / 144
-export function calculatePhaseOneAccelerationHitPointsConsumption(
+function calculatePhaseOneAccelerationHitPointsConsumption(
     initialSpeed: number,
     targetSpeed: number,
     acceleration: number,
@@ -68,28 +70,28 @@ export function calculatePhaseOneAccelerationHitPointsConsumption(
     return twenty * fieldConditionHPConsumptionCoefficient * ((targetSpeed - baseSpeed + twelve) ** 3 - (initialSpeed - baseSpeed + twelve) ** 3) / (3 * acceleration) / onehundredAndFortyFour;
 }
 
-// phaseOneSteadyDistanceInMeters / phaseOneSteadyInitialSpeed
-export function calculatePhaseOneSteadyTimeInSeconds(
-    phaseOneSteadyDistanceInMeters: number,
-    phaseOneSteadyInitialSpeed: number
-): number {
-    return phaseOneSteadyDistanceInMeters / phaseOneSteadyInitialSpeed;
-}
-
-// raceDistanceInMeters / 2 - PhaseOneAccelerationDistanceInMeters
-export function calculatePhaseOneSteadyDistanceInMeters(
-    raceDistanceInMeters: number,
-    phaseOneAccelerationDistanceInMeters: number
-): number {
-    return raceDistanceInMeters / 2 - phaseOneAccelerationDistanceInMeters;
-}
-
-// 20 * fieldConditionHPConsumptionCoefficient * (initialSpeed - baseSpeed + 12) ^ 2 / 144 * timeInSeconds)
-export function calculatePhaseOneSteadyHitPointsConsumption(
-    initialSpeed: number,
+export function calculatePhaseOneAccelerationData(
     baseSpeed: number,
-    fieldConditionHPConsumptionCoefficient: number,
-    timeInSeconds: number
-): number {
-    return 20 * fieldConditionHPConsumptionCoefficient * (initialSpeed - baseSpeed + 12) ** 2 / 144 * timeInSeconds;
+    realStats: Stats,
+    phaseZeroAccelerationData: PhaseData,
+    strategyModifiers: StrategyModifiers,
+    distanceAptitudeModifiers: DistanceAptitudeModifiers,
+    surfaceAptitudeModifier: number,
+    conditionModifiers: TrackConditionModifiers
+): PhaseData {
+    const initialSpeed = calculatePhaseOneAccelerationInitialSpeed(phaseZeroAccelerationData.initialSpeed, phaseZeroAccelerationData.acceleration, phaseZeroAccelerationData.duration);
+    const targetSpeed = calculatePhaseOneAccelerationTargetSpeed(baseSpeed, realStats.wit, strategyModifiers.speedCorrection.middle);
+    const acceleration = calculatePhaseOneAccelerationAcceleration(initialSpeed, targetSpeed, realStats.power, strategyModifiers.accelerationCorrection.middle, distanceAptitudeModifiers.acceleration, surfaceAptitudeModifier);
+    const duration = calculatePhaseOneAccelerationTimeInSeconds(initialSpeed, targetSpeed, acceleration);
+    const distance = calculatePhaseOneAccelerationDistanceInMeters(initialSpeed, targetSpeed, duration);
+    const hpConsumption = calculatePhaseOneAccelerationHitPointsConsumption(initialSpeed, targetSpeed, acceleration, baseSpeed, conditionModifiers.hpConsumptionCoefficient);
+
+    return {
+        initialSpeed: initialSpeed,
+        targetSpeed: targetSpeed,
+        acceleration: acceleration,
+        duration: duration,
+        distance: distance,
+        hpConsumption: hpConsumption
+    };
 }

@@ -59,7 +59,7 @@ export interface PhaseData {
     initialSpeed: number;
     targetSpeed: number;
     acceleration: number;
-    timeInSeconds: number;
+    duration: number;
     distance: number;
     hpConsumption: number;
 }

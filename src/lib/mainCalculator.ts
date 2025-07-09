@@ -14,58 +14,20 @@ import {
     getSurfaceAptitudeModifier, 
     getWeatherModifier as getConditionModifiers 
 } from "./modifierData";
-import {
-    calculatePhaseZeroAccelerationAcceleration,
-    calculatePhaseZeroAccelerationDistanceInMeters,
-    calculatePhaseZeroAccelerationHitPointsConsumption,
-    calculatePhaseZeroAccelerationInitialSpeed,
-    calculatePhaseZeroAccelerationTargetSpeed,
-    calculatePhaseZeroAccelerationTimeInSeconds,
-    calculatePhaseZeroSteadyDistanceInMeters,
-    calculatePhaseZeroSteadyHitPointsConsumption,
-    calculatePhaseZeroSteadyTime
-} from "./calculators/phaseZeroCalculator";
+import { calculatePhaseZeroAccelerationData } from './calculators/phaseZeroAccelerationCalculator'
+import { calculatePhaseZeroSteadyData } from "./calculators/phaseZeroSteadyCalculator";
 import { calculateStartingDashData } from "./calculators/startingDashCalculator";
 import { calculateRealStats } from "./calculators/statsCalculator";
+import { calculatePhaseOneSteadyData } from "./calculators/phaseOneSteadyCalculator";
+import { calculatePhaseTwoAndThreeSteadyContinuedData, calculatePhaseTwoAndThreeSteadyInitialData } from "./calculators/phaseTwoAndThreeSteadyCalculator";
 import { 
-    calculatePhaseOneAccelerationAcceleration,
-    calculatePhaseOneAccelerationDistanceInMeters,
-    calculatePhaseOneAccelerationHitPointsConsumption,
-    calculatePhaseOneAccelerationInitialSpeed, 
-    calculatePhaseOneAccelerationTargetSpeed, 
-    calculatePhaseOneAccelerationTimeInSeconds,
-    calculatePhaseOneSteadyDistanceInMeters,
-    calculatePhaseOneSteadyHitPointsConsumption,
-    calculatePhaseOneSteadyTimeInSeconds
-} from "./calculators/phaseOneCalculator";
-import { 
-    calculatePhaseTwoAccelerationAcceleration, 
-    calculatePhaseTwoAccelerationDistanceInMeters, 
-    calculatePhaseTwoAccelerationHitPointsConsumption, 
-    calculatePhaseTwoAccelerationTargetSpeed, 
-    calculatePhaseTwoAccelerationTimeInSeconds, 
-    calculatePhaseTwoAndThreeSteadyDistanceInMeters, 
-    calculatePhaseTwoAndThreeSteadyHitPointsConsumption, 
-    calculatePhaseTwoAndThreeSteadyTimeInSeconds 
-} from "./calculators/phaseTwoCalculator";
-import { 
-    calculateLastSpurtAccelerationAcceleration, 
-    calculateLastSpurtAccelerationDistanceInMeters, 
-    calculateLastSpurtAccelerationHitPointsConsumption, 
-    calculateLastSpurtAccelerationInitialSpeed, 
-    calculateLastSpurtAccelerationTargetSpeed, 
-    calculateLastSpurtAccelerationTimeInSeconds, 
     calculateLastSpurtDistance, 
-    calculateLastSpurtHitPointsConsumptionCoefficient, 
-    calculateLastSpurtSteadyDistanceInMeters, 
-    calculateLastSpurtSteadyHitPointsConsumption, 
-    calculateLastSpurtSteadyTimeInSeconds, 
+    calculateLastSpurtHitPointsConsumptionCoefficient,
     calculateRemainingHitPointsBeforeLastSpurt
 } from "./calculators/lastSpurtCalculator";
-import { 
-    calculateHitPointsZeroDecelerationDistanceInMeters, 
-    calculateHitPointsZeroDecelerationTimeInSeconds,
-} from "./calculators/hitPointsZeroCalculator";
+import { calculateLastSpurtSteadyData } from './calculators/lastSpurtSteadyCalculator'
+import { calculateIdealLastSpurtAccelerationData, calculateLastSpurtAccelerationContinuedData, calculateLastSpurtAccelerationInitialData } from "./calculators/lastSpurtAccelerationCalculator"
+import { calculateHitPointsZeroDecelerationData } from "./calculators/hitPointsZeroCalculator";
 import { 
     calculateRequiredStamina, 
     calculateTargetHitPointsForLastSpurt 
@@ -75,6 +37,9 @@ import {
     calculateSkillProcRate,
     calculateBaseSpeed
 } from "./calculators/miscCalculator";
+import { calculatePhaseOneAccelerationData } from "./calculators/phaseOneAccelerationCalculator";
+import { calculatePhaseTwoAccelerationContinuedData, calculatePhaseTwoAccelerationInitialData } from "./calculators/phaseTwoAccelerationCalculator";
+import { calculateIdealLastSpurtSteadyData } from "./calculators/idealLastSpurtSteadyCalculator";
 
 export function getTrackLength(distance: number) {
     return distanceMap[distance];
@@ -125,6 +90,8 @@ export function calculate(
     const skillProcRate = calculateSkillProcRate(realStats.wit);
     const rushedRate = calculateRushedRate(realStats.wit);
 
+    const lastSpurtHitPointsConsumptionCoefficient = calculateLastSpurtHitPointsConsumptionCoefficient(realStats.guts);
+
     // - detailed breakdown
     // - starting dash
     const startingDashData = calculateStartingDashData(
@@ -137,346 +104,187 @@ export function calculate(
     );
     
     // - phase zero acceleration
-    const phaseZeroAccelerationInitialSpeed = calculatePhaseZeroAccelerationInitialSpeed(baseSpeed);
-    const phaseZeroAccelerationTargetSpeed = calculatePhaseZeroAccelerationTargetSpeed(
-        baseSpeed, 
-        realStats.wit, 
-        strategyModifiers.speedCorrection.early
-    );
-    const phaseZeroAccelerationAcceleration = calculatePhaseZeroAccelerationAcceleration(
+    const phaseZeroAccelerationData = calculatePhaseZeroAccelerationData(
+        baseSpeed,
+        realStats.wit,
+        strategyModifiers.speedCorrection.early,
         realStats.power,
         strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
-    );
-    const phaseZeroAccelerationTimeInSeconds = calculatePhaseZeroAccelerationTimeInSeconds(
-        phaseZeroAccelerationInitialSpeed,
-        phaseZeroAccelerationTargetSpeed,
-        phaseZeroAccelerationAcceleration,
-        raceDistanceInMeters,
-        startingDashData.distance
-    );
-    const phaseZeroAccelerationDistanceInMeters = calculatePhaseZeroAccelerationDistanceInMeters(
-        phaseZeroAccelerationInitialSpeed,
-        phaseZeroAccelerationAcceleration,
-        phaseZeroAccelerationTimeInSeconds
-    );
-    const phaseZeroAccelerationHitPointsConsumption = calculatePhaseZeroAccelerationHitPointsConsumption(
-        phaseZeroAccelerationInitialSpeed,
-        phaseZeroAccelerationAcceleration,
-        phaseZeroAccelerationTimeInSeconds,
-        baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient
-    );
-
-    // - phase zero steady
-    const phaseZeroSteadyInitialSpeed = phaseZeroAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
-    const phaseZeroSteadyTargetSpeed = phaseZeroAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
-    const phaseZeroSteadyAcceleration = 0; // No acceleration in steady state
-
-    const phaseZeroSteadyDistanceInMeters = calculatePhaseZeroSteadyDistanceInMeters(
+        surfaceAptitudeModifier,
         raceDistanceInMeters,
         startingDashData.distance,
-        phaseZeroAccelerationDistanceInMeters
-    );
-    const phaseZeroSteadyTimeInSeconds = calculatePhaseZeroSteadyTime(
-        phaseZeroSteadyDistanceInMeters,
-        phaseZeroSteadyInitialSpeed
-    ); 
-    const phaseZeroSteadyHitPointsConsumption = calculatePhaseZeroSteadyHitPointsConsumption(
-        phaseZeroSteadyInitialSpeed,
+        conditionModifiers
+    )
+
+    // - phase zero steady
+    const phaseZeroSteadyData = calculatePhaseZeroSteadyData(
         baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
-        phaseZeroSteadyTimeInSeconds
-    ); 
+        raceDistanceInMeters,
+        phaseZeroAccelerationData,
+        startingDashData,
+        conditionModifiers
+    );
 
     // - phase one acceleration
-    const phaseOneAccelerationInitialSpeed = calculatePhaseOneAccelerationInitialSpeed(
-        phaseZeroAccelerationInitialSpeed,
-        phaseZeroAccelerationAcceleration,
-        phaseZeroAccelerationTimeInSeconds
-    );
-    const phaseOneAccelerationTargetSpeed = calculatePhaseOneAccelerationTargetSpeed(
+    const phaseOneAccelerationData = calculatePhaseOneAccelerationData(
         baseSpeed,
-        realStats.wit,
-        strategyModifiers.speedCorrection.middle
-    );
-    const phaseOneAccelerationAcceleration = calculatePhaseOneAccelerationAcceleration(
-        phaseOneAccelerationInitialSpeed,
-        phaseOneAccelerationTargetSpeed,
-        realStats.power,
-        strategyModifiers.accelerationCorrection.middle,
-        distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
-    );
-    const phaseOneAccelerationTimeInSeconds = calculatePhaseOneAccelerationTimeInSeconds(
-        phaseOneAccelerationInitialSpeed,
-        phaseOneAccelerationTargetSpeed,
-        phaseOneAccelerationAcceleration
-    );
-    const phaseOneAccelerationDistanceInMeters = calculatePhaseOneAccelerationDistanceInMeters(
-        phaseOneAccelerationInitialSpeed,
-        phaseOneAccelerationTargetSpeed,
-        phaseOneAccelerationTimeInSeconds
-    );
-    const phaseOneAccelerationHitPointsConsumption = calculatePhaseOneAccelerationHitPointsConsumption(
-        phaseOneAccelerationInitialSpeed,
-        phaseOneAccelerationTargetSpeed,
-        phaseOneAccelerationAcceleration,
-        baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient
+        realStats,
+        phaseZeroAccelerationData,
+        strategyModifiers,
+        distanceAptitudeModifiers,
+        surfaceAptitudeModifier,
+        conditionModifiers
     );
 
     // - phase one steady
-    const phaseOneSteadyInitialSpeed = phaseOneAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
-    const phaseOneSteadyTargetSpeed = phaseOneAccelerationTargetSpeed; // The same as acceleration target speed as we entered steady state
-    const phaseOneSteadyAcceleration = 0; // No acceleration in steady state
-
-    const phaseOneSteadyDistanceInMeters = calculatePhaseOneSteadyDistanceInMeters(
-        raceDistanceInMeters,
-        phaseOneAccelerationDistanceInMeters,
-    );
-
-    const phaseOneSteadyTimeInSeconds = calculatePhaseOneSteadyTimeInSeconds(
-        phaseOneSteadyDistanceInMeters,
-        phaseOneSteadyInitialSpeed
-    );
-    const phaseOneSteadyHitPointsConsumption = calculatePhaseOneSteadyHitPointsConsumption(
-        phaseOneSteadyInitialSpeed,
+    const phaseOneSteadyData = calculatePhaseOneSteadyData(
         baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
-        phaseOneSteadyTimeInSeconds
+        raceDistanceInMeters,
+        phaseOneAccelerationData,
+        conditionModifiers
     );
 
     // - phase two acceleration
-    const phaseTwoAccelerationInitialSpeed = phaseOneSteadyTargetSpeed; // The same as phase one steady target speed
-    const phaseTwoAccelerationTargetSpeed = calculatePhaseTwoAccelerationTargetSpeed(
+    let phaseTwoAccelerationData = calculatePhaseTwoAccelerationInitialData(
         baseSpeed,
-        realStats.speed,
-        realStats.wit,
-        strategyModifiers.speedCorrection.late,
-        distanceAptitudeModifiers.speed
-    );
-    const phaseTwoAccelerationAcceleration = calculatePhaseTwoAccelerationAcceleration(
-        phaseTwoAccelerationInitialSpeed,
-        phaseTwoAccelerationTargetSpeed,
-        realStats.power,
-        strategyModifiers.accelerationCorrection.late,
-        distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
+        realStats,
+        strategyModifiers,
+        distanceAptitudeModifiers,
+        surfaceAptitudeModifier,
+        phaseOneSteadyData
     );
 
     // - phase two and three steady
-    const phaseTwoAndThreeSteadyInitialSpeed = phaseTwoAccelerationTargetSpeed; // The same as phase two acceleration target speed
-    const phaseTwoAndThreeSteadyTargetSpeed = phaseTwoAccelerationTargetSpeed; // The same as phase two acceleration target speed
-    const phaseTwoAndThreeSteadyAcceleration = 0; // No acceleration in steady state
+    let phaseTwoAndThreeSteadyData = calculatePhaseTwoAndThreeSteadyInitialData(phaseTwoAccelerationData);
 
     // - last spurt acceleration
-    const lastSpurtHitPointsConsumptionCoefficient = calculateLastSpurtHitPointsConsumptionCoefficient(realStats.guts);
-    const lastSpurtAccelerationTargetSpeed = calculateLastSpurtAccelerationTargetSpeed(
+    let lastSpurtAccelerationData = calculateLastSpurtAccelerationInitialData(
         baseSpeed,
-        realStats.speed,
-        strategyModifiers.speedCorrection.late,
-        distanceAptitudeModifiers.speed
+        realStats,
+        strategyModifiers,
+        distanceAptitudeModifiers
     );
-    const lastSpurtAccelerationAcceleration = calculateLastSpurtAccelerationAcceleration(
-        realStats.power,
-        strategyModifiers.accelerationCorrection.late,
-        distanceAptitudeModifiers.acceleration,
-        surfaceAptitudeModifier
-    );
+
     // Last Spurt Distance is in an awkward spot
     // We have to do this here, as this requires data from the starting dash till Phase One Steady
     const lastSpurtDistance = calculateLastSpurtDistance(
         raceDistanceInMeters,
         hitPointsWithRecovery,
         startingDashData.hpConsumption,
-        phaseZeroAccelerationHitPointsConsumption,
-        phaseZeroSteadyHitPointsConsumption,
-        phaseOneAccelerationHitPointsConsumption,
-        phaseOneSteadyHitPointsConsumption,
+        phaseZeroAccelerationData.hpConsumption,
+        phaseZeroSteadyData.hpConsumption,
+        phaseOneAccelerationData.hpConsumption,
+        phaseOneSteadyData.hpConsumption,
         conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
-        phaseTwoAndThreeSteadyInitialSpeed,
-        lastSpurtAccelerationTargetSpeed,
+        phaseTwoAndThreeSteadyData.initialSpeed,
+        lastSpurtAccelerationData.targetSpeed,
         baseSpeed,
     );
-
-    // - last spurt steady
-    const lastSpurtSteadyInitialSpeed = lastSpurtAccelerationTargetSpeed; // The same as last spurt acceleration target speed
-    const lastSpurtSteadyTargetSpeed = lastSpurtAccelerationTargetSpeed; // The same as last spurt acceleration target speed
-    const lastSpurtSteadyAcceleration = 0; // No acceleration in steady state
 
     // - phase two acceleration continued
     // We need to calculate the last spurt distance first to see if we actually have a phase 2
-    const PhaseTwoAccelerationTimeInSeconds = calculatePhaseTwoAccelerationTimeInSeconds(
+    phaseTwoAccelerationData = calculatePhaseTwoAccelerationContinuedData(
+        phaseTwoAccelerationData,
+        baseSpeed,
         raceDistanceInMeters,
         lastSpurtDistance,
-        phaseTwoAccelerationTargetSpeed,
-        phaseTwoAccelerationInitialSpeed,
-        phaseTwoAccelerationAcceleration
-    );
-    const phaseTwoAccelerationDistanceInMeters = calculatePhaseTwoAccelerationDistanceInMeters(
-        phaseTwoAccelerationInitialSpeed,
-        phaseTwoAccelerationTargetSpeed,
-        PhaseTwoAccelerationTimeInSeconds
-    );
-    const phaseTwoAccelerationHitPointsConsumption = calculatePhaseTwoAccelerationHitPointsConsumption(
-        phaseTwoAccelerationInitialSpeed,
-        phaseTwoAccelerationAcceleration,
-        PhaseTwoAccelerationTimeInSeconds,
-        baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
+        conditionModifiers,
         lastSpurtHitPointsConsumptionCoefficient
     );
 
     // - phase two and three steady continued
-    const phaseTwoAndThreeSteadyDistanceInMeters = calculatePhaseTwoAndThreeSteadyDistanceInMeters(
+    phaseTwoAndThreeSteadyData = calculatePhaseTwoAndThreeSteadyContinuedData(
+        phaseTwoAndThreeSteadyData,
+        baseSpeed,
         raceDistanceInMeters,
         lastSpurtDistance,
-        phaseTwoAccelerationDistanceInMeters
-    );
-    const phaseTwoAndThreeSteadyTimeInSeconds = calculatePhaseTwoAndThreeSteadyTimeInSeconds(
-        phaseTwoAndThreeSteadyDistanceInMeters,
-        phaseTwoAndThreeSteadyTargetSpeed
-    );
-    const phaseTwoAndThreeSteadyHitPointsConsumption = calculatePhaseTwoAndThreeSteadyHitPointsConsumption(
-        phaseTwoAndThreeSteadyInitialSpeed,
-        baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
-        lastSpurtHitPointsConsumptionCoefficient,
-        phaseTwoAndThreeSteadyTimeInSeconds
+        phaseTwoAccelerationData,
+        conditionModifiers,
+        lastSpurtHitPointsConsumptionCoefficient
     );
 
     // - last spurt acceleration continued
     // This needs the time spend in phase two acceleration
-    const lastSpurtAccelerationInitialspeed = calculateLastSpurtAccelerationInitialSpeed(
-        phaseTwoAccelerationDistanceInMeters,
-        phaseOneSteadyInitialSpeed,
-        phaseTwoAndThreeSteadyInitialSpeed
-    );
-    const lastSpurtAccelerationTimeInSeconds = calculateLastSpurtAccelerationTimeInSeconds(
-        lastSpurtAccelerationTargetSpeed,
-        lastSpurtAccelerationInitialspeed,
-        lastSpurtAccelerationAcceleration
-    );
-    const lastSpurtAccelerationDistanceInMeters = calculateLastSpurtAccelerationDistanceInMeters(
-        lastSpurtAccelerationInitialspeed,
-        lastSpurtAccelerationTargetSpeed,
-        lastSpurtAccelerationTimeInSeconds
-    );
-    const lastSpurtAccelerationHitPointsConsumption = calculateLastSpurtAccelerationHitPointsConsumption(
-        lastSpurtAccelerationInitialspeed,
-        lastSpurtAccelerationAcceleration,
+    lastSpurtAccelerationData = calculateLastSpurtAccelerationContinuedData(
+        lastSpurtAccelerationData,
         baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
+        realStats,
+        strategyModifiers,
+        distanceAptitudeModifiers,
+        surfaceAptitudeModifier,
+        conditionModifiers,
         lastSpurtHitPointsConsumptionCoefficient,
-        lastSpurtAccelerationTimeInSeconds
+        phaseOneSteadyData,
+        phaseTwoAccelerationData,
+        phaseTwoAndThreeSteadyData
     );
 
-    // - last spurt steady continued
+    // Remaining hitpoints before we start the last spurt
     const remainingHitPointsBeforeLastSpurt = calculateRemainingHitPointsBeforeLastSpurt(
         hitPointsWithRecovery,
         startingDashData.hpConsumption,
-        phaseZeroAccelerationHitPointsConsumption,
-        phaseZeroSteadyHitPointsConsumption,
-        phaseOneAccelerationHitPointsConsumption,
-        phaseOneSteadyHitPointsConsumption,
-        phaseTwoAccelerationHitPointsConsumption,
-        phaseTwoAndThreeSteadyHitPointsConsumption,
-        lastSpurtAccelerationHitPointsConsumption
+        phaseZeroAccelerationData.hpConsumption,
+        phaseZeroSteadyData.hpConsumption,
+        phaseOneAccelerationData.hpConsumption,
+        phaseOneSteadyData.hpConsumption,
+        phaseTwoAccelerationData.hpConsumption,
+        phaseTwoAndThreeSteadyData.hpConsumption,
+        lastSpurtAccelerationData.hpConsumption
     );
 
-    const targetLastSpurtSteadyHitPointsConsumption = calculateLastSpurtSteadyHitPointsConsumption(
-        conditionModifiers.hpConsumptionCoefficient,
-        lastSpurtHitPointsConsumptionCoefficient,
-        lastSpurtSteadyInitialSpeed,
+    // - last spurt steady
+    const lastSpurtSteadyData = calculateLastSpurtSteadyData(
         baseSpeed,
         raceDistanceInMeters,
-        phaseTwoAccelerationDistanceInMeters,
-        phaseTwoAndThreeSteadyDistanceInMeters,
-        lastSpurtAccelerationDistanceInMeters
-    );
-
-    // min(
-    //  20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (lastSpurtSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * (raceLengthInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndTheeSteadyDistanceInMeters + LastSpurtAccelerationDistanceInMeters)) / lastSpurtSteadyInitialSpeed,
-    //  remainingHitPointsBeforeLastSpurt
-    // )
-    const lastSpurtSteadyHitPointsConsumption = Math.min(
-        targetLastSpurtSteadyHitPointsConsumption, 
-        remainingHitPointsBeforeLastSpurt
-    );
-
-    // This requires the hitpointsconsumption
-    const lastSpurtSteadyTimeInSeconds = calculateLastSpurtSteadyTimeInSeconds(
-        lastSpurtSteadyHitPointsConsumption,
-        conditionModifiers.hpConsumptionCoefficient,
         lastSpurtHitPointsConsumptionCoefficient,
-        lastSpurtSteadyInitialSpeed,
-        baseSpeed
+        remainingHitPointsBeforeLastSpurt,
+        phaseTwoAccelerationData,
+        phaseTwoAndThreeSteadyData,
+        lastSpurtAccelerationData,
+        conditionModifiers
     );
-    const lastSpurtSteadyDistanceInMeters = calculateLastSpurtSteadyDistanceInMeters(
-        lastSpurtSteadyInitialSpeed,
-        lastSpurtSteadyTimeInSeconds
-    );
-    
+
     // - hit points zero deceleration
-    const hitPointsZeroDecelerationInitialSpeed = lastSpurtSteadyTargetSpeed; // Starting to descelerate from top speed
-    const hitPointsZeroDecelerationTargetSpeed = 0; // No formula exists for this.
-    const hitPointsZeroDecelerationAcceleration = -1.2; // CONSTANT
-
-    const hitPointsZeroDecelerationDistanceInMeters = calculateHitPointsZeroDecelerationDistanceInMeters(
+    const hitPointsZeroDecelerationData = calculateHitPointsZeroDecelerationData(
         raceDistanceInMeters,
-        phaseTwoAccelerationDistanceInMeters,
-        phaseTwoAndThreeSteadyDistanceInMeters,
-        lastSpurtAccelerationDistanceInMeters,
-        lastSpurtSteadyDistanceInMeters
+        phaseTwoAccelerationData,
+        phaseTwoAndThreeSteadyData,
+        lastSpurtAccelerationData,
+        lastSpurtSteadyData
     );
-    const hitPointsZeroDecelerationTimeInSeconds = calculateHitPointsZeroDecelerationTimeInSeconds(
-        hitPointsZeroDecelerationInitialSpeed,
-        hitPointsZeroDecelerationAcceleration,
-        hitPointsZeroDecelerationDistanceInMeters
-    );
-    const hitPointsZeroDecelerationHitPointsConsumption = 0; // No hitpoints can be consumed as we have ran out
 
-    // -- We need to calculate the ideal last spurt values
+    // - ideal last spurt acceleration
     // This recalculation is based of starting the last spurt directly from the phase two acceleration phase
-    const idealLastSpurtAccelerationInitialSpeed = phaseOneSteadyInitialSpeed; // ideally we want to start directly from phase 1 steady state
-    const idealLastSpurtAccelerationTargetSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
-    const idealLastSpurtAccelerationAcceleration = lastSpurtAccelerationAcceleration; // We can reuse the calculation from the current last spurt
-    const idealLastSpurtSteadyInitialSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
-    const idealLastSpurtSteadyTargetSpeed = lastSpurtAccelerationTargetSpeed; // We always aim for the same last spurt speed
-    const idealLastSpurtSteadyAcceleration = 0; // Steady state so no acceleration
-
-
-    const idealLastSpurtAccelerationTimeInSeconds = calculateLastSpurtAccelerationTimeInSeconds(
-        idealLastSpurtAccelerationTargetSpeed,
-        idealLastSpurtAccelerationInitialSpeed,
-        idealLastSpurtAccelerationAcceleration
-    );
-
-    const idealLastSpurtAccelerationHitPointsConsumption = calculateLastSpurtAccelerationHitPointsConsumption(
-        phaseTwoAccelerationInitialSpeed,
-        lastSpurtAccelerationAcceleration,
+    const idealLastSpurtAccelerationData = calculateIdealLastSpurtAccelerationData(
         baseSpeed,
-        conditionModifiers.hpConsumptionCoefficient,
+        conditionModifiers,
         lastSpurtHitPointsConsumptionCoefficient,
-        idealLastSpurtAccelerationTimeInSeconds
+        phaseOneSteadyData,
+        phaseTwoAccelerationData,
+        lastSpurtAccelerationData
     );
-    // Need new methods to calculate this as cleanup
-    const idealLastSpurtAccelerationDistanceInMeters = (idealLastSpurtAccelerationInitialSpeed + idealLastSpurtAccelerationTargetSpeed) / 2 * idealLastSpurtAccelerationTimeInSeconds;
-    const idealLastSpurtSteadyDistanceInMeters = raceDistanceInMeters / 3 - idealLastSpurtAccelerationDistanceInMeters;
-    const idealLastSpurtSteadyTimeInSeconds = idealLastSpurtSteadyDistanceInMeters / idealLastSpurtSteadyInitialSpeed;
-    const idealLastSpurtSteadyHitPointsConsumption = 20 * conditionModifiers.hpConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (idealLastSpurtSteadyInitialSpeed - baseSpeed + 12) ** 2 / 144 * idealLastSpurtSteadyTimeInSeconds;
+
+    // - ideal last spurt steady
+   const idealLastSpurtSteadyData = calculateIdealLastSpurtSteadyData(
+        baseSpeed,
+        raceDistanceInMeters,
+        lastSpurtHitPointsConsumptionCoefficient,
+        lastSpurtAccelerationData,
+        idealLastSpurtAccelerationData,
+        conditionModifiers
+    );
+
 
     const targetHitPointsForLastSpurt = calculateTargetHitPointsForLastSpurt(
         startingDashData.hpConsumption,
-        phaseZeroAccelerationHitPointsConsumption,
-        phaseZeroSteadyHitPointsConsumption,
-        phaseOneAccelerationHitPointsConsumption,
-        phaseOneSteadyHitPointsConsumption,
-        idealLastSpurtAccelerationHitPointsConsumption,
-        idealLastSpurtSteadyHitPointsConsumption
+        phaseZeroAccelerationData.hpConsumption,
+        phaseZeroSteadyData.hpConsumption,
+        phaseOneAccelerationData.hpConsumption,
+        phaseOneSteadyData.hpConsumption,
+        idealLastSpurtAccelerationData.hpConsumption,
+        idealLastSpurtSteadyData.hpConsumption
     );
     const requiredStamina = calculateRequiredStamina(
         realStats.stamina,
@@ -500,94 +308,17 @@ export function calculate(
         rushedRate: rushedRate,
         detailedBreakdown: {
             startingDash: startingDashData,
-            phaseZeroAcceleration: {
-                initialSpeed: phaseZeroAccelerationInitialSpeed,
-                targetSpeed: phaseZeroAccelerationTargetSpeed,
-                acceleration: phaseZeroAccelerationAcceleration,
-                timeInSeconds: phaseZeroAccelerationTimeInSeconds,
-                distance: phaseZeroAccelerationDistanceInMeters,
-                hpConsumption: phaseZeroAccelerationHitPointsConsumption
-            },
-            phaseZeroSteady: {
-                initialSpeed: phaseZeroSteadyInitialSpeed,
-                targetSpeed: phaseZeroSteadyTargetSpeed,
-                acceleration: phaseZeroSteadyAcceleration,
-                timeInSeconds: phaseZeroSteadyTimeInSeconds,
-                distance: phaseZeroSteadyDistanceInMeters,
-                hpConsumption: phaseZeroSteadyHitPointsConsumption
-            },
-            phaseOneAcceleration: {
-                initialSpeed: phaseOneAccelerationInitialSpeed,
-                targetSpeed: phaseOneAccelerationTargetSpeed,
-                acceleration: phaseOneAccelerationAcceleration,
-                timeInSeconds: phaseOneAccelerationTimeInSeconds,
-                distance: phaseOneAccelerationDistanceInMeters,
-                hpConsumption: phaseOneAccelerationHitPointsConsumption
-            },
-            phaseOneSteady: {
-                initialSpeed: phaseOneSteadyInitialSpeed,
-                targetSpeed: phaseOneSteadyTargetSpeed,
-                acceleration: phaseOneSteadyAcceleration,
-                timeInSeconds: phaseOneSteadyTimeInSeconds,
-                distance: phaseOneSteadyDistanceInMeters,
-                hpConsumption: phaseOneSteadyHitPointsConsumption
-            },
-            phaseTwoAcceleration: {
-                initialSpeed: phaseTwoAccelerationInitialSpeed,
-                targetSpeed: phaseTwoAccelerationTargetSpeed,
-                acceleration: phaseTwoAccelerationAcceleration,
-                timeInSeconds: PhaseTwoAccelerationTimeInSeconds,
-                distance: phaseTwoAccelerationDistanceInMeters,
-                hpConsumption: phaseTwoAccelerationHitPointsConsumption,
-            },
-            phaseTwoAndThreeSteady: {
-                initialSpeed: phaseTwoAndThreeSteadyInitialSpeed,
-                targetSpeed: phaseTwoAndThreeSteadyTargetSpeed,
-                acceleration: phaseTwoAndThreeSteadyAcceleration,
-                timeInSeconds: phaseTwoAndThreeSteadyTimeInSeconds,
-                distance: phaseTwoAndThreeSteadyDistanceInMeters,
-                hpConsumption: phaseTwoAndThreeSteadyHitPointsConsumption
-            },
-            lastSpurtAcceleration: {
-                initialSpeed: lastSpurtAccelerationInitialspeed,
-                targetSpeed: lastSpurtAccelerationTargetSpeed,
-                acceleration: lastSpurtAccelerationAcceleration,
-                timeInSeconds: lastSpurtAccelerationTimeInSeconds,
-                distance: lastSpurtAccelerationDistanceInMeters,
-                hpConsumption: lastSpurtAccelerationHitPointsConsumption
-            },
-            lastSpurtSteady: {
-                initialSpeed: lastSpurtSteadyInitialSpeed,
-                targetSpeed: lastSpurtSteadyTargetSpeed,
-                acceleration: lastSpurtSteadyAcceleration,
-                timeInSeconds: lastSpurtSteadyTimeInSeconds,
-                distance: lastSpurtSteadyDistanceInMeters,
-                hpConsumption: lastSpurtSteadyHitPointsConsumption
-            },
-            hitPointsZeroDeceleration: {
-                initialSpeed: hitPointsZeroDecelerationInitialSpeed,
-                targetSpeed: hitPointsZeroDecelerationTargetSpeed,
-                acceleration: hitPointsZeroDecelerationAcceleration,
-                timeInSeconds: hitPointsZeroDecelerationTimeInSeconds,
-                distance: hitPointsZeroDecelerationDistanceInMeters,
-                hpConsumption: hitPointsZeroDecelerationHitPointsConsumption
-            },
-            idealLastSpurtAcceleration: {
-                initialSpeed: idealLastSpurtAccelerationInitialSpeed,
-                targetSpeed: idealLastSpurtAccelerationTargetSpeed,
-                acceleration: idealLastSpurtAccelerationAcceleration,
-                timeInSeconds: idealLastSpurtAccelerationTimeInSeconds,
-                distance: idealLastSpurtAccelerationDistanceInMeters,
-                hpConsumption: idealLastSpurtAccelerationHitPointsConsumption
-            },
-            idealLastSpurtSteady: {
-                initialSpeed: idealLastSpurtSteadyInitialSpeed,
-                targetSpeed: idealLastSpurtSteadyTargetSpeed,
-                acceleration: idealLastSpurtSteadyAcceleration,
-                timeInSeconds: idealLastSpurtSteadyTimeInSeconds,
-                distance: idealLastSpurtSteadyDistanceInMeters,
-                hpConsumption: idealLastSpurtSteadyHitPointsConsumption
-            }
+            phaseZeroAcceleration: phaseZeroAccelerationData,
+            phaseZeroSteady: phaseZeroSteadyData,
+            phaseOneAcceleration: phaseOneAccelerationData,
+            phaseOneSteady: phaseOneSteadyData,
+            phaseTwoAcceleration: phaseTwoAccelerationData,
+            phaseTwoAndThreeSteady: phaseTwoAndThreeSteadyData,
+            lastSpurtAcceleration: lastSpurtAccelerationData,
+            lastSpurtSteady: lastSpurtSteadyData,
+            hitPointsZeroDeceleration: hitPointsZeroDecelerationData,
+            idealLastSpurtAcceleration: idealLastSpurtAccelerationData,
+            idealLastSpurtSteady: idealLastSpurtSteadyData
         }
     };
 }

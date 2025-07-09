@@ -70,7 +70,7 @@ export function calculateStartingDashData(
         targetSpeed: targetSpeed,
         acceleration: acceleration,
         distance: distance,
-        timeInSeconds: duration,
+        duration: duration,
         hpConsumption: hpConsumption
     }
 }
