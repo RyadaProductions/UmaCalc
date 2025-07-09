@@ -15,25 +15,6 @@
     export let value1: string|number;
     export let option2: readonly (string|number)[] = [];
     export let value2: string|number;
-
-    let grade = '';
-    let gradeClass = '';
-
-    let gradeColors: Record<string, string> = {
-        S: 'text-orange-500',
-        A: 'text-orange-500',
-        B: 'text-pink-500',
-        C: 'text-green-600',
-        D: 'text-blue-500',
-        E: 'text-red-500',
-        F: 'text-gray-500',
-        G: 'text-gray-400'
-    };
-
-    $: {
-        // Calculate grade and color
-        gradeClass = gradeColors[grade] ?? 'text-gray-800';
-    }
 </script>
 
 
