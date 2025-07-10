@@ -40,11 +40,11 @@
             uniqueRecoveryLevelTwoStarsOrBelow: 0,
             uniqueRecoveryLevelThreeStarsOrAbove: 0
         }
-    }
+    };
 
     function getTrackLength(): string {
         return distanceMap[parseInt(inputData.distance)];
-    };
+    }
 
     function onCalculateClicked(): void {
         result = calculate(inputData);
@@ -97,10 +97,10 @@
     </div>
     <h2 class="text-xl font-semibold text-center">Recovery Skills</h2>
     <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-2 md:w-5/6 lg:w-2/3">
-        <LabeledInputField label="Gold skills" showGrade={false} bind:value={ inputData.skills.goldRecovery } />
-        <LabeledInputField label="White skills" showGrade={false} bind:value={ inputData.skills.whiteRecovery } />
-        <LabeledInputField label="unique <= 2* level" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryLevelTwoStarsOrBelow } />
-        <LabeledInputField label="unique >= 3* level" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryLevelThreeStarsOrAbove } />
+        <LabeledInputField label="Gold skills" showGrade={ false } bind:value={ inputData.skills.goldRecovery } />
+        <LabeledInputField label="White skills" showGrade={ false } bind:value={ inputData.skills.whiteRecovery } />
+        <LabeledInputField label="unique <= 2* level" showGrade={ false } max={ 5 } bind:value={ inputData.skills.uniqueRecoveryLevelTwoStarsOrBelow } />
+        <LabeledInputField label="unique >= 3* level" showGrade={ false } max={ 6 } bind:value={ inputData.skills.uniqueRecoveryLevelThreeStarsOrAbove } />
     </div>
 </div>
 
@@ -127,8 +127,8 @@
             <p class="{ getResultColor() } text-center text-2xl font-bold self-center">{ hasEnoughStamina() }</p>
         </div>
         <div class="grid grid-cols-2">
-            <LabeledGridCell label="Skill proc rate" value={ result.skillProcRate } decimals={2} valueSuffix="%" />
-            <LabeledGridCell label="Rushed rate" value={ result.rushedRate } decimals={2} valueSuffix="%" />
+            <LabeledGridCell label="Skill proc rate" value={ result.skillProcRate } decimals={ 2 } valueSuffix="%" />
+            <LabeledGridCell label="Rushed rate" value={ result.rushedRate } decimals={ 2 } valueSuffix="%" />
         </div>
     </div>
 
@@ -141,7 +141,7 @@
 {#if showDetailedData}
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
     <div class="w-full flex flex-col gap-2 md:w-4/5">
-        <div class="grid grid-cols-5">
+        <div class="grid grid-cols-3">
             <div>
                 <p class="text-center font-bold">Base Speed [m/s]</p>
                 <p class="text-center">{ round(result.baseSpeed, 2) }</p>
@@ -154,17 +154,9 @@
                 <p class="text-center font-bold">HP with Recovery</p>
                 <p class="text-center">{ round(result.hitPointsWithRecovery, 2) }</p>
             </div>
-            <div>
-                <p class="text-center font-bold">Last Spurt Distance</p>
-                <p class="text-center">{ round(result.lastSpurtDistance, 2) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Last Spurt HP Coefficient</p>
-                <p class="text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2) }</p>
-            </div>
         </div>
         
-        <div class="grid grid-cols-2">
+        <div class="grid grid-cols-4">
             <div>
                 <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
                 <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
@@ -172,6 +164,14 @@
             <div>
                 <p class="text-center font-bold">Required Stamina</p>
                 <p class="text-center">{ result.requiredStamina }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Last Spurt Distance</p>
+                <p class="text-center">{ round(result.lastSpurtDistance, 2) }</p>
+            </div>
+            <div>
+                <p class="text-center font-bold">Last Spurt HP Coefficient</p>
+                <p class="text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2) }</p>
             </div>
         </div>
     </div>

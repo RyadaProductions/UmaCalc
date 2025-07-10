@@ -22,13 +22,14 @@ function calculateDistanceInMeters(
 
 export function calculateHitPointsZeroDecelerationData(
     raceDistanceInMeters: number,
+    minimumSpeed: number,
     phaseTwoAccelerationData: PhaseData,
     phaseTwoAndThreeSteadyData: PhaseData,
     lastSpurtAccelerationData: PhaseData,
     lastSpurtSteadyData: PhaseData,
 ): PhaseData {
     const initialSpeed = lastSpurtSteadyData.targetSpeed;
-    const targetSpeed = 0;
+    const targetSpeed = minimumSpeed;
     const acceleration = -1.2;
     const distance = calculateDistanceInMeters(raceDistanceInMeters, phaseTwoAccelerationData.distance, phaseTwoAndThreeSteadyData.distance, lastSpurtAccelerationData.distance, lastSpurtSteadyData.distance);
     const duration = calculateDuration(initialSpeed, acceleration, distance);

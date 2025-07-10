@@ -1,4 +1,4 @@
-import type { PhaseData, TrackConditionModifiers } from "$lib/types";
+import type { PhaseData, Stats, TrackConditionModifiers } from "$lib/types";
 
 // baseSpeed * 0.85
 function calculateInitialSpeed(
@@ -65,9 +65,8 @@ function calculateHitPointsConsumption(
 
 export function calculatePhaseZeroAccelerationData(
     baseSpeed: number,
-    realWit: number,
+    realStats: Stats,
     strategyEarlySpeedCorrection: number,
-    realPower: number,
     earlyStageAccelerationModifier: number,
     distanceAptitudeAccelerationModifier: number,
     surfaceAptitudeModifier: number,
@@ -76,8 +75,8 @@ export function calculatePhaseZeroAccelerationData(
     conditionModifiers: TrackConditionModifiers
 ): PhaseData {
     const initialSpeed = calculateInitialSpeed(baseSpeed);
-    const targetSpeed = calculateTargetSpeed(baseSpeed, realWit, strategyEarlySpeedCorrection);
-    const acceleration = calculateAcceleration(realPower, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
+    const targetSpeed = calculateTargetSpeed(baseSpeed, realStats.wit, strategyEarlySpeedCorrection);
+    const acceleration = calculateAcceleration(realStats.power, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
     const duration = calculateDuration(initialSpeed, targetSpeed, acceleration, raceDistanceInMeters, startingDashDistance);
     const distance = calculateDistanceInMeters(initialSpeed, acceleration, duration);
     const hpConsumption = calculateHitPointsConsumption(initialSpeed, acceleration, duration, baseSpeed, conditionModifiers.hpConsumptionCoefficient);

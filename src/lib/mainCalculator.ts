@@ -35,7 +35,8 @@ import {
 import { 
     calculateRushedRate, 
     calculateSkillProcRate,
-    calculateBaseSpeed
+    calculateBaseSpeed,
+    calculateMinimumSpeed
 } from "./calculators/miscCalculator";
 import { calculatePhaseOneAccelerationData } from "./calculators/phaseOneAccelerationCalculator";
 import { calculatePhaseTwoAccelerationContinuedData, calculatePhaseTwoAccelerationInitialData } from "./calculators/phaseTwoAccelerationCalculator";
@@ -69,6 +70,7 @@ export function calculate(
 
     // - general data
     const baseSpeed = calculateBaseSpeed(raceDistanceInMeters);
+    const minimumSpeed = calculateMinimumSpeed(baseSpeed, realStats.guts);
     const initialHitPoints = calculateInitialHitPoints(
         raceDistanceInMeters,
         realStats.stamina,
@@ -106,9 +108,8 @@ export function calculate(
     // - phase zero acceleration
     const phaseZeroAccelerationData = calculatePhaseZeroAccelerationData(
         baseSpeed,
-        realStats.wit,
+        realStats,
         strategyModifiers.speedCorrection.early,
-        realStats.power,
         strategyModifiers.accelerationCorrection.early,
         distanceAptitudeModifiers.acceleration,
         surfaceAptitudeModifier,
@@ -249,6 +250,7 @@ export function calculate(
     // - hit points zero deceleration
     const hitPointsZeroDecelerationData = calculateHitPointsZeroDecelerationData(
         raceDistanceInMeters,
+        minimumSpeed,
         phaseTwoAccelerationData,
         phaseTwoAndThreeSteadyData,
         lastSpurtAccelerationData,

@@ -3,16 +3,17 @@
      * @prop label  – the label text
      * @prop value  – two-way bound value for text or number
      * @prop showGrade - determines if we should show the grade based on the number
+     * @prop max - the maximum allowed value of the input field
      */
     export let label: string;
     export let value: number;
     export let showGrade: boolean = true;
+    export let max: number = 1200;
 
-    let min = 0;
-    let max = 1200;
+    let min: number = 0;
 
-    let grade = '';
-    let gradeClass = '';
+    let grade: string = '';
+    let gradeClass: string = '';
     
     let inputElement: HTMLInputElement;
 

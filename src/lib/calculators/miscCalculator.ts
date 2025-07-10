@@ -19,3 +19,11 @@ export function calculateBaseSpeed(
 ): number {
     return 20 - (distance - 2000) / 1000;
 }
+
+// MinSpeed=0.85*BaseSpeed+sqrt(200.0*GutsStat)*0.001[m/s] 
+export function calculateMinimumSpeed(
+    baseSpeed: number,
+    realGuts: number
+): number {
+    return 0.85 * baseSpeed + Math.sqrt(200 * realGuts) * 0.001;
+}
