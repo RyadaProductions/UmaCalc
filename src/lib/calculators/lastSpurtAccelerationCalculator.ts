@@ -3,7 +3,7 @@ import type { DistanceAptitudeModifiers, PhaseData, Stats, StrategyModifiers, Tr
 // if phaseTwoAccelerationDistanceInMeters = 0
 // phaseOneSteadyTargetSpeed
 // phaseTwoAndThreeSteadyTargetSpeed
-function calculateLastSpurtAccelerationInitialSpeed(
+function calculateInitialSpeed(
     phaseOneSteadyTargetSpeed: number,
     phaseTwoAccelerationDistanceInMeters: number,
     phaseTwoAndThreeSteadyTargetSpeed: number
@@ -15,7 +15,7 @@ function calculateLastSpurtAccelerationInitialSpeed(
 }
 
 // (baseSpeed * (strategyLateSpeedModifier + 0.01) + sqrt(500 * realSpeed) * distanceAptitudeSpeedModifier * 0.002) * 1.05 + sqrt(500 * realSpeed) * distanceAptitudeSpeedModifier * 0.002
-function calculateLastSpurtAccelerationTargetSpeed(
+function calculateTargetSpeed(
     baseSpeed: number,
     realSpeed: number,
     strategyLateSpeedModifier: number,
@@ -25,7 +25,7 @@ function calculateLastSpurtAccelerationTargetSpeed(
 }
 
 // 0.0006 * sqrt(500 * realPower) * strategyLateAccelerationModifier * distanceAptitudeAccelerationModifier * surtfaceAptitudeModifier
-function calculateLastSpurtAccelerationAcceleration(
+function calculateAcceleration(
     realPower: number,
     strategyLateAccelerationModifier: number,
     distanceAptitudeAccelerationModifier: number,
@@ -35,7 +35,7 @@ function calculateLastSpurtAccelerationAcceleration(
 }
 
 // (lastSpurtAccelerationTargetSpeed - lastSpurtAccelerationInitialSpeed) / lastSpurtAccelerationAcceleration
-function calculateLastSpurtAccelerationTimeInSeconds(
+function calculateDuration(
     lastSpurtAccelerationTargetSpeed: number,
     lastSpurtAccelerationInitialSpeed: number,
     lastSpurtAccelerationAcceleration: number
@@ -44,7 +44,7 @@ function calculateLastSpurtAccelerationTimeInSeconds(
 }
 
 // (lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationTargetSpeed) / 2 * lastSpurtAccelerationTimeInSeconds
-function calculateLastSpurtAccelerationDistanceInMeters(
+function calculateDistanceInMeters(
     lastSpurtAccelerationInitialSpeed: number,
     lastSpurtAccelerationTargetSpeed: number,
     lastSpurtAccelerationTimeInSeconds: number
@@ -53,7 +53,7 @@ function calculateLastSpurtAccelerationDistanceInMeters(
 }
 
 // 20 * fieldConditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * ((lastSpurtAccelerationInitialSpeed + lastSpurtAccelerationAcceleration * lastSpurtAccelerationTimeInSeconds - baseSpeed + 12) ** 3 - (lastSpurtAccelerationInitialSpeed - baseSpeed + 12) ** 3) / (3 * lastSpurtAccelerationAcceleration) / 144
-function calculateLastSpurtAccelerationHitPointsConsumption(
+function calculateHitPointsConsumption(
     baseSpeed: number,
     lastSpurtAccelerationInitialSpeed: number,
     lastSpurtAccelerationAcceleration: number,
@@ -71,7 +71,7 @@ export function calculateLastSpurtAccelerationInitialData(
     distanceAptitudeModifiers: DistanceAptitudeModifiers
 ): PhaseData {
     const initialSpeed = -1;
-    const targetSpeed = calculateLastSpurtAccelerationTargetSpeed(baseSpeed, realStats.speed, strategyModifiers.speedCorrection.late, distanceAptitudeModifiers.speed);
+    const targetSpeed = calculateTargetSpeed(baseSpeed, realStats.speed, strategyModifiers.speedCorrection.late, distanceAptitudeModifiers.speed);
     const acceleration = -1;
     const duration = -1;
     const distance = -1;
@@ -100,12 +100,12 @@ export function calculateLastSpurtAccelerationContinuedData(
     phaseTwoAccelerationData: PhaseData,
     PhaseTwoAndThreeSteadyData: PhaseData,
 ): PhaseData {
-    const initialSpeed = calculateLastSpurtAccelerationInitialSpeed(PhaseOneSteadyData.targetSpeed, phaseTwoAccelerationData.distance, PhaseTwoAndThreeSteadyData.targetSpeed);
+    const initialSpeed = calculateInitialSpeed(PhaseOneSteadyData.targetSpeed, phaseTwoAccelerationData.distance, PhaseTwoAndThreeSteadyData.targetSpeed);
     const targetSpeed = initialData.targetSpeed;
-    const acceleration = calculateLastSpurtAccelerationAcceleration(realStats.power, strategyModifiers.accelerationCorrection.late, distanceAptitudeModifiers.acceleration, surfaceModifier);
-    const duration = calculateLastSpurtAccelerationTimeInSeconds(targetSpeed, initialSpeed, acceleration);
-    const distance = calculateLastSpurtAccelerationDistanceInMeters(initialSpeed, targetSpeed, duration);
-    const hpConsumption = calculateLastSpurtAccelerationHitPointsConsumption(baseSpeed, initialSpeed, acceleration, duration, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient);
+    const acceleration = calculateAcceleration(realStats.power, strategyModifiers.accelerationCorrection.late, distanceAptitudeModifiers.acceleration, surfaceModifier);
+    const duration = calculateDuration(targetSpeed, initialSpeed, acceleration);
+    const distance = calculateDistanceInMeters(initialSpeed, targetSpeed, duration);
+    const hpConsumption = calculateHitPointsConsumption(baseSpeed, initialSpeed, acceleration, duration, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient);
 
     return {
         initialSpeed: initialSpeed,
@@ -128,9 +128,9 @@ export function calculateIdealLastSpurtAccelerationData(
     const initialSpeed = PhaseOneSteadyData.targetSpeed;
     const targetSpeed = lastSpurtAccelerationData.targetSpeed;
     const acceleration = lastSpurtAccelerationData.acceleration;
-    const duration = calculateLastSpurtAccelerationTimeInSeconds(targetSpeed, initialSpeed, acceleration);
-    const distance = calculateLastSpurtAccelerationDistanceInMeters(initialSpeed, targetSpeed, duration);
-    const hpConsumption = calculateLastSpurtAccelerationHitPointsConsumption(baseSpeed, PhaseTwoAccelerationData.initialSpeed, lastSpurtAccelerationData.acceleration, duration, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient);
+    const duration = calculateDuration(targetSpeed, initialSpeed, acceleration);
+    const distance = calculateDistanceInMeters(initialSpeed, targetSpeed, duration);
+    const hpConsumption = calculateHitPointsConsumption(baseSpeed, PhaseTwoAccelerationData.initialSpeed, lastSpurtAccelerationData.acceleration, duration, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient);
 
     return {
         initialSpeed: initialSpeed,

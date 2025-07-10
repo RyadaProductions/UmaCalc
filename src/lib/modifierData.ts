@@ -24,7 +24,7 @@ export function getMoodModifier(
     return moodModifiers[selectedMood];
 }
 
-export function getWeatherModifier(
+export function getConditionModifiers(
     selectedSurface: Surface,
     selectedCondition: Condition,
 ): TrackConditionModifiers {
@@ -44,7 +44,7 @@ export function getStrategyModifiers(
     return strategyModifiers[selectedStrategy];
 }
 
-export function getStrategyAptitudeModifiers(
+export function getStrategyAptitudeModifier(
     strategyAptitude: Aptitude
 ): number {
     return strategyAptitudeModifiers[strategyAptitude];

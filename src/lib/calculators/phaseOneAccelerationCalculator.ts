@@ -1,7 +1,7 @@
 import type { DistanceAptitudeModifiers, PhaseData, Stats, StrategyModifiers, TrackConditionModifiers } from "$lib/types";
 
 // phaseZeroAccelerationInitialSpeed + phaseZeroAccelerationAcceleration * phaseZeroAccelerationTimeInSeconds
-function calculatePhaseOneAccelerationInitialSpeed(
+function calculateInitialSpeed(
     phaseZeroInitialSpeed: number,
     phaseZeroAcceleration: number,
     phaseZeroTimeInSeconds: number
@@ -10,7 +10,7 @@ function calculatePhaseOneAccelerationInitialSpeed(
 }
 
 // baseSpeed * strategyMiddleSpeedModifier + ((realWit / 5500) * log10(realWit * 0.1) - 0.65 / 2) * 0.01 * baseSpeed
-function calculatePhaseOneAccelerationTargetSpeed(
+function calculateTargetSpeed(
     baseSpeed: number,
     realWit: number,
     strategyMiddleSpeedModifier: number
@@ -22,7 +22,7 @@ function calculatePhaseOneAccelerationTargetSpeed(
 // if initialSpeed <= targetSpeed
 // 0.0006 * sqrt(500 * realPower) * strategyMiddleAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
 // -0.8
-function calculatePhaseOneAccelerationAcceleration(
+function calculateAcceleration(
     initialSpeed: number,
     targetSpeed: number,
     realPower: number,
@@ -39,7 +39,7 @@ function calculatePhaseOneAccelerationAcceleration(
 }
 
 // targetSpeed - initialSpeed / acceleration
-function calculatePhaseOneAccelerationTimeInSeconds(
+function calculateDuration(
     initialSpeed: number,
     targetSpeed: number,
     acceleration: number
@@ -48,7 +48,7 @@ function calculatePhaseOneAccelerationTimeInSeconds(
 }
 
 // (initialSpeed + targetSpeed) / 2 * timeInSeconds
-function calculatePhaseOneAccelerationDistanceInMeters(
+function calculateDistanceInMeters(
     initialSpeed: number,
     targetSpeed: number,
     timeInSeconds: number
@@ -57,7 +57,7 @@ function calculatePhaseOneAccelerationDistanceInMeters(
 }
 
 // 20 * fieldConditionHPConsumptionCoefficient * ((targetSpeed - baseSpeed + 12) ^ 3 - (initialSpeed - baseSpeed + 12) ^ 3) / (3 * acceleration) / 144
-function calculatePhaseOneAccelerationHitPointsConsumption(
+function calculateHitPointsConsumption(
     initialSpeed: number,
     targetSpeed: number,
     acceleration: number,
@@ -79,12 +79,12 @@ export function calculatePhaseOneAccelerationData(
     surfaceAptitudeModifier: number,
     conditionModifiers: TrackConditionModifiers
 ): PhaseData {
-    const initialSpeed = calculatePhaseOneAccelerationInitialSpeed(phaseZeroAccelerationData.initialSpeed, phaseZeroAccelerationData.acceleration, phaseZeroAccelerationData.duration);
-    const targetSpeed = calculatePhaseOneAccelerationTargetSpeed(baseSpeed, realStats.wit, strategyModifiers.speedCorrection.middle);
-    const acceleration = calculatePhaseOneAccelerationAcceleration(initialSpeed, targetSpeed, realStats.power, strategyModifiers.accelerationCorrection.middle, distanceAptitudeModifiers.acceleration, surfaceAptitudeModifier);
-    const duration = calculatePhaseOneAccelerationTimeInSeconds(initialSpeed, targetSpeed, acceleration);
-    const distance = calculatePhaseOneAccelerationDistanceInMeters(initialSpeed, targetSpeed, duration);
-    const hpConsumption = calculatePhaseOneAccelerationHitPointsConsumption(initialSpeed, targetSpeed, acceleration, baseSpeed, conditionModifiers.hpConsumptionCoefficient);
+    const initialSpeed = calculateInitialSpeed(phaseZeroAccelerationData.initialSpeed, phaseZeroAccelerationData.acceleration, phaseZeroAccelerationData.duration);
+    const targetSpeed = calculateTargetSpeed(baseSpeed, realStats.wit, strategyModifiers.speedCorrection.middle);
+    const acceleration = calculateAcceleration(initialSpeed, targetSpeed, realStats.power, strategyModifiers.accelerationCorrection.middle, distanceAptitudeModifiers.acceleration, surfaceAptitudeModifier);
+    const duration = calculateDuration(initialSpeed, targetSpeed, acceleration);
+    const distance = calculateDistanceInMeters(initialSpeed, targetSpeed, duration);
+    const hpConsumption = calculateHitPointsConsumption(initialSpeed, targetSpeed, acceleration, baseSpeed, conditionModifiers.hpConsumptionCoefficient);
 
     return {
         initialSpeed: initialSpeed,

@@ -1,6 +1,6 @@
 import type { PhaseData, TrackConditionModifiers } from "$lib/types";
 
-function calculateDistance(
+function calculateDistanceInMeters(
     raceDistanceInMeters: number,
     idealLastSpurtAccelerationDistance: number
 ): number {
@@ -35,7 +35,7 @@ export function calculateIdealLastSpurtSteadyData(
     const initialSpeed = lastSpurtAccelerationData.targetSpeed;
     const targetSpeed = lastSpurtAccelerationData.targetSpeed;
     const acceleration = 0;
-    const distance = calculateDistance(raceDistanceInMeters, idealLastSpurtAccelerationData.distance);
+    const distance = calculateDistanceInMeters(raceDistanceInMeters, idealLastSpurtAccelerationData.distance);
     const duration = calculateDuration(distance, initialSpeed);
     const hpConsumption = calculateHitPointsConsumption(baseSpeed, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient, initialSpeed, duration);
 

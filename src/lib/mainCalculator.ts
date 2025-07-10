@@ -10,9 +10,9 @@ import {
     getDistanceAptitudeModifiers,
     getMoodModifier, 
     getStrategyModifiers, 
-    getStrategyAptitudeModifiers as getStrategyAptitudeModifier, 
+    getStrategyAptitudeModifier, 
     getSurfaceAptitudeModifier, 
-    getWeatherModifier as getConditionModifiers 
+    getConditionModifiers 
 } from "./modifierData";
 import { calculatePhaseZeroAccelerationData } from './calculators/phaseZeroAccelerationCalculator'
 import { calculatePhaseZeroSteadyData } from "./calculators/phaseZeroSteadyCalculator";

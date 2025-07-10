@@ -7,7 +7,7 @@ const startingDashInitialSpeed = 3;
 
 // Calculation for target speed:
 // baseSpeed * 0.85
-function calculateStartingDashTargetSpeed(
+function calculateTargetSpeed(
     baseSpeed: number
 ): number {
     return baseSpeed * 0.85;
@@ -15,7 +15,7 @@ function calculateStartingDashTargetSpeed(
 
 // Calculation for acceleration starting dash:
 // 24 + 0.0006 * sqrt(500 * realPower) * earlyStageAccelerationModifier * distanceAptitudeAccelerationModifier * surfaceAptitudeModifier
-function calculateStartingDashAcceleration(
+function calculateAcceleration(
     realPower: number,
     earlyStageAccelerationModifier: number,
     distanceAptitudeAccelerationModifier: number,
@@ -27,7 +27,7 @@ function calculateStartingDashAcceleration(
 }
 
 // (TargetSpeed - startinDashInitialSpeed) / StartingDashAcceleration
-function calculateStartingDashDuration(
+function calculateDuration(
     startingDashTargetSpeed: number,
     startingDashAcceleration: number
 ): number {
@@ -43,7 +43,7 @@ function calculateDistanceInMeters(
 }
 
 // 20 * FieldConditionHPConsumptionCoefficient * StartingDashDuration
-function calculateStartingDashHitPointsConsumption(
+function calculateHitPointsConsumption(
     startingDashDuration: number,
     fieldConditionHPConsumptionCoefficient: number
 ): number {
@@ -59,11 +59,11 @@ export function calculateStartingDashData(
     conditionModifiers: TrackConditionModifiers
 ): PhaseData {
     const initialSpeed = startingDashInitialSpeed;
-    const targetSpeed = calculateStartingDashTargetSpeed(baseSpeed);
-    const acceleration = calculateStartingDashAcceleration(realPower, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
-    const duration = calculateStartingDashDuration(targetSpeed, acceleration);
+    const targetSpeed = calculateTargetSpeed(baseSpeed);
+    const acceleration = calculateAcceleration(realPower, earlyStageAccelerationModifier, distanceAptitudeAccelerationModifier, surfaceAptitudeModifier);
+    const duration = calculateDuration(targetSpeed, acceleration);
     const distance = calculateDistanceInMeters(targetSpeed, duration);
-    const hpConsumption = calculateStartingDashHitPointsConsumption(duration, conditionModifiers.hpConsumptionCoefficient);
+    const hpConsumption = calculateHitPointsConsumption(duration, conditionModifiers.hpConsumptionCoefficient);
 
     return {
         initialSpeed: initialSpeed,

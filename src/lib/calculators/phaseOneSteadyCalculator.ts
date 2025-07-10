@@ -1,7 +1,7 @@
 import type { PhaseData, TrackConditionModifiers } from "$lib/types";
 
 // phaseOneSteadyDistanceInMeters / phaseOneSteadyInitialSpeed
-function calculatePhaseOneSteadyTimeInSeconds(
+function calculateDuration(
     phaseOneSteadyDistanceInMeters: number,
     phaseOneSteadyInitialSpeed: number
 ): number {
@@ -9,7 +9,7 @@ function calculatePhaseOneSteadyTimeInSeconds(
 }
 
 // raceDistanceInMeters / 2 - PhaseOneAccelerationDistanceInMeters
-function calculatePhaseOneSteadyDistanceInMeters(
+function calculateDistanceInMeters(
     raceDistanceInMeters: number,
     phaseOneAccelerationDistanceInMeters: number
 ): number {
@@ -17,7 +17,7 @@ function calculatePhaseOneSteadyDistanceInMeters(
 }
 
 // 20 * fieldConditionHPConsumptionCoefficient * (initialSpeed - baseSpeed + 12) ^ 2 / 144 * timeInSeconds)
-function calculatePhaseOneSteadyHitPointsConsumption(
+function calculateHitPointsConsumption(
     baseSpeed: number,
     initialSpeed: number,
     timeInSeconds: number,
@@ -35,9 +35,9 @@ export function calculatePhaseOneSteadyData(
     const initialSpeed = phaseOneAccelerationData.targetSpeed;
     const targetSpeed = phaseOneAccelerationData.targetSpeed;
     const acceleration = 0;
-    const distance = calculatePhaseOneSteadyDistanceInMeters(raceDistanceInMeters, phaseOneAccelerationData.distance);
-    const duration = calculatePhaseOneSteadyTimeInSeconds(distance, initialSpeed);
-    const hpConsumption = calculatePhaseOneSteadyHitPointsConsumption(baseSpeed, initialSpeed, duration, conditionModifier.hpConsumptionCoefficient);
+    const distance = calculateDistanceInMeters(raceDistanceInMeters, phaseOneAccelerationData.distance);
+    const duration = calculateDuration(distance, initialSpeed);
+    const hpConsumption = calculateHitPointsConsumption(baseSpeed, initialSpeed, duration, conditionModifier.hpConsumptionCoefficient);
 
     return {
         initialSpeed: initialSpeed,

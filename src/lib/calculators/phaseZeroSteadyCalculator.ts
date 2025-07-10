@@ -1,7 +1,7 @@
 import type { PhaseData, TrackConditionModifiers } from "$lib/types";
 
 // phaseZeroSteadyDistanceInMeters / InitialSpeed
-function calculatePhaseZeroSteadyTime(
+function calculateDuration(
     phaseZeroSteadyDistanceInMeters: number,
     initialSpeed: number
 ): number {
@@ -9,7 +9,7 @@ function calculatePhaseZeroSteadyTime(
 }
 
 // max(trackLengthInMeters / 6 - (startingDashDistanceInMeters + phaseZeroAccelerationDistanceInMeters), 0)
-function calculatePhaseZeroSteadyDistanceInMeters(
+function calculateDistanceInMeters(
     trackLengthInMeters: number,
     startingDashDistanceInMeters: number,
     phaseZeroAccelerationDistanceInMeters: number
@@ -18,7 +18,7 @@ function calculatePhaseZeroSteadyDistanceInMeters(
 }
 
 // 20 * fieldConditionHPConsumptionCoefficient * (initialSpeed - baseSpeed + 12) ^ 2 / 144 * timeInSeconds
-function calculatePhaseZeroSteadyHitPointsConsumption(
+function calculateHitPointsConsumption(
     initialSpeed: number,
     baseSpeed: number,
     fieldConditionHPConsumptionCoefficient: number,
@@ -37,9 +37,9 @@ export function calculatePhaseZeroSteadyData(
     const initialSpeed = phaseZeroAccelerationData.targetSpeed;
     const targetSpeed = phaseZeroAccelerationData.targetSpeed;
     const acceleration = 0;
-    const distance = calculatePhaseZeroSteadyDistanceInMeters(raceDistanceInMeters, startingDashData.distance, phaseZeroAccelerationData.distance);
-    const duration = calculatePhaseZeroSteadyTime(distance, initialSpeed);
-    const hpConsumption = calculatePhaseZeroSteadyHitPointsConsumption(initialSpeed, baseSpeed, conditionModifiers.hpConsumptionCoefficient, duration);
+    const distance = calculateDistanceInMeters(raceDistanceInMeters, startingDashData.distance, phaseZeroAccelerationData.distance);
+    const duration = calculateDuration(distance, initialSpeed);
+    const hpConsumption = calculateHitPointsConsumption(initialSpeed, baseSpeed, conditionModifiers.hpConsumptionCoefficient, duration);
 
     return {
         initialSpeed: initialSpeed,

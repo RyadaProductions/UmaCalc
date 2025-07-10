@@ -1,7 +1,7 @@
 import type { PhaseData, TrackConditionModifiers } from "$lib/types";
 
 // max(raceDistanceInMeters / 3 - lastSpurtDistance - phaseTwoAccelerationDistanceInMeters, 0)
-function calculatePhaseTwoAndThreeSteadyDistanceInMeters(
+function calculateDistanceInMeters(
     raceDistanceInMeters: number,
     lastSpurtDistance: number,
     phaseTwoAccelerationDistanceInMeters: number
@@ -10,7 +10,7 @@ function calculatePhaseTwoAndThreeSteadyDistanceInMeters(
 }
 
 // phaseTwoAndThreeSteadyDistanceInMeters / phaseTwoAndThreeSteadyTargetSpeed
-function calculatePhaseTwoAndThreeSteadyTimeInSeconds(
+function calculateDuration(
     phaseTwoAndThreeSteadyDistanceInMeters: number,
     phaseTwoAndThreeSteadyTargetSpeed: number
 ): number {
@@ -18,7 +18,7 @@ function calculatePhaseTwoAndThreeSteadyTimeInSeconds(
 }
 
 // 20 * fieldconditionHPConsumptionCoefficient * lastSpurtHitPointsConsumptionCoefficient * (phaseTwoAndThreeSteadyInitialSpeed - baseSpeed + 12) ^ 2 / 144 * phaseTwoAndThreeSteadyTimeInSeconds
-function calculatePhaseTwoAndThreeSteadyHitPointsConsumption(
+function calculateHitPointsConsumption(
     baseSpeed: number,
     phaseTwoAndThreeSteadyInitialSpeed: number,
     fieldConditionHPConsumptionCoefficient: number,
@@ -60,9 +60,9 @@ export function calculatePhaseTwoAndThreeSteadyContinuedData(
     const initialSpeed = initialData.initialSpeed;
     const targetSpeed = initialData.targetSpeed;
     const acceleration = initialData.acceleration;
-    const distance = calculatePhaseTwoAndThreeSteadyDistanceInMeters(raceDistanceInMeters, lastSpurtDistance, phaseTwoAccelerationdata.distance);
-    const duration = calculatePhaseTwoAndThreeSteadyTimeInSeconds(distance, targetSpeed);
-    const hpConsumption = calculatePhaseTwoAndThreeSteadyHitPointsConsumption(baseSpeed, initialSpeed, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient, duration);
+    const distance = calculateDistanceInMeters(raceDistanceInMeters, lastSpurtDistance, phaseTwoAccelerationdata.distance);
+    const duration = calculateDuration(distance, targetSpeed);
+    const hpConsumption = calculateHitPointsConsumption(baseSpeed, initialSpeed, conditionModifiers.hpConsumptionCoefficient, lastSpurtHitPointsConsumptionCoefficient, duration);
     
     return {
         initialSpeed: initialSpeed,

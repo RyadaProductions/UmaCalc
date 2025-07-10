@@ -1,7 +1,7 @@
 import type { PhaseData } from "$lib/types";
 
 // (-hitPointsZeroDescelerationInitialSpeed + sqrt(hitPointsZeroDescelerationInitialSpeed ^ 2 + 2 * hitPointsZeroDescelerationAcceleration * hitPointsZeroDescelerationDistanceInMeters)) / hitPointsZeroDescelerationAcceleration
-export function calculateHitPointsZeroDecelerationTimeInSeconds(
+function calculateDuration(
     hitPointsZeroDescelerationInitialSpeed: number,
     hitPointsZeroDescelerationAcceleration: number,
     hitPointsZeroDescelerationDistanceInMeters: number,
@@ -10,7 +10,7 @@ export function calculateHitPointsZeroDecelerationTimeInSeconds(
 }
 
 // raceDistanceInMeters / 3 - (phaseTwoAccelerationDistanceInMeters + phaseTwoAndThreeSteadyDistanceInMeters + lastSpurtAccelerationDistanceInMeters + lastSpurtSteadyDistanceInMeters)
-export function calculateHitPointsZeroDecelerationDistanceInMeters(
+function calculateDistanceInMeters(
     raceDistanceInMeters: number,
     phaseTwoAccelerationDistanceInMeters: number,
     phaseTwoAndThreeSteadyDistanceInMeters: number,
@@ -30,8 +30,8 @@ export function calculateHitPointsZeroDecelerationData(
     const initialSpeed = lastSpurtSteadyData.targetSpeed;
     const targetSpeed = 0;
     const acceleration = -1.2;
-    const distance = calculateHitPointsZeroDecelerationDistanceInMeters(raceDistanceInMeters, phaseTwoAccelerationData.distance, phaseTwoAndThreeSteadyData.distance, lastSpurtAccelerationData.distance, lastSpurtSteadyData.distance);
-    const duration = calculateHitPointsZeroDecelerationTimeInSeconds(initialSpeed, acceleration, distance);
+    const distance = calculateDistanceInMeters(raceDistanceInMeters, phaseTwoAccelerationData.distance, phaseTwoAndThreeSteadyData.distance, lastSpurtAccelerationData.distance, lastSpurtSteadyData.distance);
+    const duration = calculateDuration(initialSpeed, acceleration, distance);
     const hpConsumption = 0;
 
     return {
