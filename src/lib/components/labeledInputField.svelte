@@ -63,8 +63,8 @@
         <div class="flex items-baseline justify-center space-x-1 pl-2 md:pl-0">
             {#if showGrade}<span class="{gradeClass} text-xl font-bold">{grade}</span>{/if}
             <input bind:this={ inputElement } 
-                class="w-12 appearance-none bg-transparent text-center text-sm font-semibold focus:outline-none no-spinner" 
-                type="text"
+                class="w-12 bg-transparent text-center text-sm font-semibold focus:outline-none no-spinner" 
+                type="number"
                 inputmode="numeric"
                 pattern="[0-9]*"
                 name="speed"

@@ -27,3 +27,16 @@
     --font-dynamic-splash: "DynamicSplash", "sans-serif";
     --font-uma-small: "Uma-Small", "sans-serif";
 }
+
+@layer components {
+  .no-spinner {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .no-spinner::-webkit-outer-spin-button,
+  .no-spinner::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+}

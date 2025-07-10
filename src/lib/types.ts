@@ -50,8 +50,8 @@ export interface InputData {
     skills: {
         goldRecovery: number;
         whiteRecovery: number;
-        uniqueRecoveryTwoStarsOrBelow: number;
-        uniqueRecoveryThreeStarsOrAbove: number;
+        uniqueRecoveryLevelTwoStarsOrBelow: number;
+        uniqueRecoveryLevelThreeStarsOrAbove: number;
     };
 }
 

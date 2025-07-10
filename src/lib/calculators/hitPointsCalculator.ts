@@ -24,17 +24,19 @@ export function calculateRecoverySkillHitPoints(
     return goldSkills * 550 + whiteSkills * 150;
 }
 
-// 350 * 1.02 ^ (uniquesAtOrBelowTwoStars - 1) + 550 * 1.02 ^ (uniquesAtOrAboveThreeStars - 1)
+// 350 * 1.02 ^ (uniqueLevelTwoStarsOrBelow - 1) + 550 * 1.02 ^ (uniqueLevelArOrAboveThreeStars - 1)
 export function calculateUniqueRecoverySkillHitPoints(
-    uniquesAtOrBelowTwoStars: number,
-    uniquesAtOrAboveThreeStars: number
+    uniqueLevelTwoStarsOrBelow: number,
+    uniqueLevelArOrAboveThreeStars: number
 ): number {
     let total = 0;
-    if (uniquesAtOrBelowTwoStars > 0) {
-        total += 350 * Math.pow(1.02, uniquesAtOrBelowTwoStars - 1);
+    if (uniqueLevelTwoStarsOrBelow > 0) {
+        total += 350 * Math.pow(1.02, uniqueLevelTwoStarsOrBelow - 1);
     }
-    if (uniquesAtOrAboveThreeStars > 0) {
-        total += 550 * Math.pow(1.02, uniquesAtOrAboveThreeStars - 1);
+    if (uniqueLevelArOrAboveThreeStars > 0) {
+        total += 550 * Math.pow(1.02, uniqueLevelArOrAboveThreeStars - 1);
     }
     return total;
 }
+
+// TODO: rework calculations to use fractional values instead of calculating it from 350 and 550 and dividing by 10000

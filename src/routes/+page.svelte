@@ -37,8 +37,8 @@
         skills: {
             goldRecovery: 0,
             whiteRecovery: 0,
-            uniqueRecoveryTwoStarsOrBelow: 0,
-            uniqueRecoveryThreeStarsOrAbove: 0
+            uniqueRecoveryLevelTwoStarsOrBelow: 0,
+            uniqueRecoveryLevelThreeStarsOrAbove: 0
         }
     }
 
@@ -99,8 +99,8 @@
     <div class="mx-auto w-full grid grid-cols-4 gap-2 mb-2 md:w-5/6 lg:w-2/3">
         <LabeledInputField label="Gold skills" showGrade={false} bind:value={ inputData.skills.goldRecovery } />
         <LabeledInputField label="White skills" showGrade={false} bind:value={ inputData.skills.whiteRecovery } />
-        <LabeledInputField label="2* or below uniques" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryTwoStarsOrBelow } />
-        <LabeledInputField label="3* or above uniques" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryThreeStarsOrAbove } />
+        <LabeledInputField label="unique <= 2* level" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryLevelTwoStarsOrBelow } />
+        <LabeledInputField label="unique >= 3* level" showGrade={false} bind:value={ inputData.skills.uniqueRecoveryLevelThreeStarsOrAbove } />
     </div>
 </div>
 
@@ -192,15 +192,16 @@
             </div>
 
             <DetailedTableGroup label="Starting Dash" data={ result.detailedBreakdown.startingDash } />
-            <DetailedTableGroup label="phase 0 Acceleration" data={ result.detailedBreakdown.phaseZeroAcceleration } />
-            <DetailedTableGroup label="phase 0 Steady" data={ result.detailedBreakdown.phaseZeroSteady } />
-            <DetailedTableGroup label="phase 1 Acceleration" data={ result.detailedBreakdown.phaseOneAcceleration } />
-            <DetailedTableGroup label="phase 1 Steady" data={ result.detailedBreakdown.phaseOneSteady } />
-            <DetailedTableGroup label="phase 2 Acceleration" data={ result.detailedBreakdown.phaseTwoAcceleration } />
-            <DetailedTableGroup label="phase 2, 3 Steady" data={ result.detailedBreakdown.phaseTwoAndThreeSteady } />
+            <DetailedTableGroup label="Early Acceleration" data={ result.detailedBreakdown.phaseZeroAcceleration } />
+            <DetailedTableGroup label="Early Steady" data={ result.detailedBreakdown.phaseZeroSteady } />
+            <DetailedTableGroup label="Middle Acceleration" data={ result.detailedBreakdown.phaseOneAcceleration } />
+            <DetailedTableGroup label="Middle Steady" data={ result.detailedBreakdown.phaseOneSteady } />
+            <DetailedTableGroup label="Late Acceleration" data={ result.detailedBreakdown.phaseTwoAcceleration } />
+            <DetailedTableGroup label="Late Steady" data={ result.detailedBreakdown.phaseTwoAndThreeSteady } />
             <DetailedTableGroup label="Last Spurt Acceleration" data={ result.detailedBreakdown.lastSpurtAcceleration } />
             <DetailedTableGroup label="Last Spurt Steady" data={ result.detailedBreakdown.lastSpurtSteady } />
             <DetailedTableGroup label="HP0 / Deceleration" data={ result.detailedBreakdown.hitPointsZeroDeceleration } />
+            <br/>
             <DetailedTableGroup label="Ideal Last Spurt Acceleration" data={ result.detailedBreakdown.idealLastSpurtAcceleration } />
             <DetailedTableGroup label="Ideal Last Spurt Steady" data={ result.detailedBreakdown.idealLastSpurtSteady } />
         </div>

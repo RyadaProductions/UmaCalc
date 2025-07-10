@@ -79,8 +79,8 @@ export function calculate(
         input.skills.whiteRecovery
     );
     const uniqueRecoveryHitPoints = calculateUniqueRecoverySkillHitPoints(
-        input.skills.uniqueRecoveryTwoStarsOrBelow,
-        input.skills.uniqueRecoveryThreeStarsOrAbove
+        input.skills.uniqueRecoveryLevelTwoStarsOrBelow,
+        input.skills.uniqueRecoveryLevelThreeStarsOrAbove
     );
     const hitPointsWithRecovery = calculateHitPointsWithRecovery(
         initialHitPoints,
