@@ -89,7 +89,7 @@ export function calculate(
         recoveryHitPoints,
         uniqueRecoveryHitPoints 
     );
-    const skillProcRate = calculateSkillProcRate(realStats.wit);
+    const skillProcRate = calculateSkillProcRate(input.stats.wit);
     const rushedRate = calculateRushedRate(realStats.wit);
 
     const lastSpurtHitPointsConsumptionCoefficient = calculateLastSpurtHitPointsConsumptionCoefficient(realStats.guts);
