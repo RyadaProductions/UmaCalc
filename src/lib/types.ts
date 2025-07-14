@@ -37,6 +37,13 @@ export interface Stats {
     wit: number;
 }
 
+export interface Skills {
+    goldRecovery: number;
+    whiteRecovery: number;
+    uniqueRecoveryLevelTwoStarsOrBelow: number;
+    uniqueRecoveryLevelThreeStarsOrAbove: number;
+}
+
 export interface InputData {
     stats: Stats;
     surface: Surface;
@@ -47,12 +54,7 @@ export interface InputData {
     strategyAptitude: Aptitude;
     mood: Mood;
     condition: Condition;
-    skills: {
-        goldRecovery: number;
-        whiteRecovery: number;
-        uniqueRecoveryLevelTwoStarsOrBelow: number;
-        uniqueRecoveryLevelThreeStarsOrAbove: number;
-    };
+    skills: Skills;
 }
 
 export interface PhaseData {
@@ -62,6 +64,21 @@ export interface PhaseData {
     duration: number;
     distance: number;
     hpConsumption: number;
+}
+
+export interface DetailedBreakdown {
+    startingDash: PhaseData;
+    phaseZeroAcceleration: PhaseData;
+    phaseZeroSteady: PhaseData;
+    phaseOneAcceleration: PhaseData;
+    phaseOneSteady: PhaseData;
+    phaseTwoAcceleration: PhaseData;
+    phaseTwoAndThreeSteady: PhaseData;
+    lastSpurtAcceleration: PhaseData;
+    lastSpurtSteady: PhaseData;
+    hitPointsZeroDeceleration: PhaseData;
+    idealLastSpurtAcceleration: PhaseData;
+    idealLastSpurtSteady: PhaseData;
 }
 
 export interface Result {
@@ -75,18 +92,5 @@ export interface Result {
     requiredStamina: number;
     skillProcRate: number;
     rushedRate: number;
-    detailedBreakdown: {
-        startingDash: PhaseData;
-        phaseZeroAcceleration: PhaseData;
-        phaseZeroSteady: PhaseData;
-        phaseOneAcceleration: PhaseData;
-        phaseOneSteady: PhaseData;
-        phaseTwoAcceleration: PhaseData;
-        phaseTwoAndThreeSteady: PhaseData;
-        lastSpurtAcceleration: PhaseData;
-        lastSpurtSteady: PhaseData;
-        hitPointsZeroDeceleration: PhaseData;
-        idealLastSpurtAcceleration: PhaseData;
-        idealLastSpurtSteady: PhaseData;
-    }
+    detailedBreakdown: DetailedBreakdown;
 }
