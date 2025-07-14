@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Result } from "$lib/types";
-	import { round } from "$lib/utils";
+	import LabeledGridCell from "./labeledGridCell.svelte";
 
     interface Props {
         result: Result;
@@ -14,37 +14,16 @@
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
     <div class="w-full flex flex-col gap-2 md:w-4/5">
         <div class="grid grid-cols-3">
-            <div>
-                <p class="text-center font-bold">Base Speed [m/s]</p>
-                <p class="text-center">{ round(result.baseSpeed, 2) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Initial HP</p>
-                <p class="text-center">{ round(result.initialHitPoints, 2) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">HP with Recovery</p>
-                <p class="text-center">{ round(result.hitPointsWithRecovery, 2) }</p>
-            </div>
+            <LabeledGridCell label="Base Speed [m/s]" value={ result.baseSpeed } decimals={ 2 } />
+            <LabeledGridCell label="Initial HP" value={ result.initialHitPoints } decimals={ 2 } />
+            <LabeledGridCell label="HP with Recovery" value={ result.hitPointsWithRecovery } decimals={ 2 } />
         </div>
         
         <div class="grid grid-cols-4">
-            <div>
-                <p class="text-center font-bold">Target hitpoints for Last Spurt</p>
-                <p class="text-center">{ round(result.targetHitPointsForLastSpurt, 2) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Required Stamina</p>
-                <p class="text-center">{ result.requiredStamina }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Last Spurt Distance</p>
-                <p class="text-center">{ round(result.lastSpurtDistance, 2) }</p>
-            </div>
-            <div>
-                <p class="text-center font-bold">Last Spurt HP Coefficient</p>
-                <p class="text-center">{ round(result.lastSpurtHitPointsConsumptionCoefficient, 2) }</p>
-            </div>
+            <LabeledGridCell label="Target hitpoints for Last Spurt" value={ result.targetHitPointsForLastSpurt } decimals={ 2 } />
+            <LabeledGridCell label="Required Stamina" value={ result.requiredStamina } />
+            <LabeledGridCell label="Last Spurt Distance" value={ result.lastSpurtDistance } decimals={ 2 } />
+            <LabeledGridCell label="Last Spurt HP Coefficient" value={ result.lastSpurtHitPointsConsumptionCoefficient } decimals={ 2 } />
         </div>
     </div>
 </div>
