@@ -2,6 +2,7 @@ import {
     type TrackConditionModifiers,
     type DistanceAptitudeModifiers,
     type StrategyModifiers,
+    type InputData,
 } from "./types";
 
 export const aptitudes = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'] as const;
@@ -134,4 +135,28 @@ export const strategyModifiers: Record<Strategy, StrategyModifiers> = {
             late: 0.997
         }
     },
+};
+
+export const DEFAULT_INPUT: InputData = {
+    stats: {
+        speed: 1200,
+        stamina: 800,
+        power: 1000,
+        guts: 400,
+        wit: 1000
+    },
+    surface: 'Turf',
+    surfaceAptitude: 'A',
+    distance: '2000',
+    distanceAptitude: 'A',
+    strategy: 'Front',
+    strategyAptitude: 'A',
+    mood: 'Great',
+    condition: 'Firm',
+    skills: {
+        goldRecovery: 0,
+        whiteRecovery: 0,
+        uniqueRecoveryLevelTwoStarsOrBelow: 0,
+        uniqueRecoveryLevelThreeStarsOrAbove: 0
+    }
 };

@@ -6,8 +6,9 @@
         strategies,
         surfaces, 
         distanceMap,
+		DEFAULT_INPUT,
     } from '$lib/constants';
-    import { round } from '$lib/utils';
+    import { getResultColor, getTrackLength, hasEnoughStamina, round } from '$lib/utils';
 
 	import type { InputData, Result } from '$lib/types';
 	import { calculate } from '$lib/mainCalculator';
@@ -18,61 +19,9 @@
     let result: Result;
     let showDetailedData = false;
 
-    let inputData: InputData = {
-        stats: {
-            speed: 1200,
-            stamina: 800,
-            power: 1000,
-            guts: 400,
-            wit: 1000
-        },
-        surface: 'Turf',
-        surfaceAptitude: 'A',
-        distance: '2000',
-        distanceAptitude: 'A',
-        strategy: 'Front',
-        strategyAptitude: 'A',
-        mood: 'Great',
-        condition: 'Firm',
-        skills: {
-            goldRecovery: 0,
-            whiteRecovery: 0,
-            uniqueRecoveryLevelTwoStarsOrBelow: 0,
-            uniqueRecoveryLevelThreeStarsOrAbove: 0
-        }
-    };
+    let inputData = { ...DEFAULT_INPUT }; 
 
-    function getTrackLength(): string {
-        return distanceMap[parseInt(inputData.distance)];
-    }
-
-    function onCalculateClicked(): void {
-        result = calculate(inputData);
-    }
-
-    function hasEnoughStamina(): string {
-        if (result.realStats.stamina + 1 < result.requiredStamina) {
-            return 'Not enough stamina/guts';
-        }
-
-        if (result.realStats.stamina / result.requiredStamina < 1.1 && result.requiredStamina >= 0) {
-            return 'Borderline';
-        }
-
-        return 'You have enough stamina!';
-    }
-
-    function getResultColor(): string {
-        if (result.realStats.stamina + 1 < result.requiredStamina) {
-            return 'text-red-600';
-        }
-
-        if (result.realStats.stamina / result.requiredStamina < 1.1 && result.requiredStamina >= 0) {
-            return 'text-orange-400';
-        }
-
-        return 'text-green-600';
-    }
+    $: result = calculate(inputData);
 </script>
 
 <svelte:head>
@@ -91,7 +40,7 @@
     </div>
     <div class="mx-auto w-full mb-2 md:w-5/6 lg:w-2/3">
         <LabeledDropdownCombo label="Track" option1={ surfaces } bind:value1={ inputData.surface } option2={ aptitudes } bind:value2={ inputData.surfaceAptitude } />
-        <LabeledDropdownCombo label="Distance" extraLabel={ getTrackLength() } option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
+        <LabeledDropdownCombo label="Distance" extraLabel={ getTrackLength(inputData) } option1={ Object.keys(distanceMap) } bind:value1={ inputData.distance } option2={ aptitudes } bind:value2={ inputData.distanceAptitude } />
         <LabeledDropdownCombo label="Style" option1={ strategies } bind:value1={ inputData.strategy } option2={ aptitudes } bind:value2={ inputData.strategyAptitude } />
         <LabeledDropdownCombo label="Mood/Condition" option1={ moods } bind:value1={ inputData.mood } option2={ conditions } bind:value2={ inputData.condition } />
     </div>
@@ -102,10 +51,6 @@
         <LabeledInputField label="unique <= 2* level" showGrade={ false } max={ 5 } bind:value={ inputData.skills.uniqueRecoveryLevelTwoStarsOrBelow } />
         <LabeledInputField label="unique >= 3* level" showGrade={ false } max={ 6 } bind:value={ inputData.skills.uniqueRecoveryLevelThreeStarsOrAbove } />
     </div>
-</div>
-
-<div class="w-full mx-auto mb-6 px-2 md:w-4/5">
-    <input type="button" value="Calculate" on:click={ onCalculateClicked } class="block mx-auto w-full bg-amber-400 font-semibold py-2 rounded md:w-5/6 lg:w-2/3 hover:cursor-pointer" />
 </div>
 
 {#if result}
@@ -124,7 +69,7 @@
         <h2 class="text-2xl font-semibold text-center">Results</h2>
         <div class="grid grid-cols-2">
             <LabeledGridCell label="Stamina Needed" value={ result.requiredStamina } />
-            <p class="{ getResultColor() } text-center text-2xl font-bold self-center">{ hasEnoughStamina() }</p>
+            <p class="{ getResultColor(result) } text-center text-2xl font-bold self-center">{ hasEnoughStamina(result) }</p>
         </div>
         <div class="grid grid-cols-2">
             <LabeledGridCell label="Skill proc rate" value={ result.skillProcRate } decimals={ 2 } valueSuffix="%" />
