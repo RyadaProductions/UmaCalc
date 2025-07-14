@@ -2,8 +2,15 @@
 	import type { PhaseData } from "$lib/types";
 	import { round } from "$lib/utils";
 
-    export let label: string;
-    export let data: PhaseData;
+    interface Props {
+        label: string;
+        data: PhaseData;
+    }
+
+    let {
+        label,
+        data
+    }: Props = $props();
 </script>
 
 <div class="flex items-center border-y border-gray-200 py-2">

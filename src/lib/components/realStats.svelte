@@ -2,7 +2,13 @@
 	import type { Stats } from "$lib/types";
 	import LabeledGridCell from "./labeledGridCell.svelte";
 
-    export let stats: Stats;
+    interface Props {
+        stats: Stats;
+    }
+
+    let {
+        stats
+    }: Props = $props();
 </script>
 
 <h2 class="text-2xl font-semibold text-center my-4">Real Stats</h2>

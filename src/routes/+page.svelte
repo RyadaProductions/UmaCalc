@@ -10,6 +10,7 @@
 	import SummaryResult from '$lib/components/summaryResult.svelte';
 	import DetailedTable from '$lib/components/detailedTable.svelte';
 	import DetailedInformation from '$lib/components/detailedInformation.svelte';
+
     let result: Result;
     let showDetailedData = false;
 
@@ -42,8 +43,8 @@
 </div>
 
 {#if showDetailedData}
-<DetailedInformation result={ result } />
-<DetailedTable result={ result } />
+    <DetailedInformation result={ result } />
+    <DetailedTable result={ result } />
 {/if}
 
 {/if}

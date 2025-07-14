@@ -3,7 +3,13 @@
 	import { getResultColor, hasEnoughStamina } from "$lib/utils";
 	import LabeledGridCell from "./labeledGridCell.svelte";
 
-    export let result: Result;
+    interface Props {
+        result: Result;
+    }
+
+    let {
+        result
+    }: Props = $props();
 </script>
 
 <h2 class="text-2xl font-semibold text-center">Results</h2>

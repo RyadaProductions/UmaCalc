@@ -1,10 +1,13 @@
 <script lang="ts">
-  /**  
-   * @prop options  – the list of choices, can be a readonly array
-   * @prop value    – two-way bound selected value  
-   */
-  export let options: readonly (string|number)[] = [];
-  export let value: string|number;
+  interface Props {
+    options: readonly (string|number)[];
+    value: string|number;
+  }
+
+  let {
+    options = [],
+    value = $bindable()
+  }: Props = $props();
 </script>
 
 <select

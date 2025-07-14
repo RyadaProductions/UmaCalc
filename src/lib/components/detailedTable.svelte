@@ -2,7 +2,13 @@
 	import type { Result } from "$lib/types";
 	import DetailedTableGroup from "./detailedTableGroup.svelte";
 
-    export let result: Result;
+    interface Props {
+        result: Result;
+    }
+
+    let {
+        result
+    }: Props = $props();
 </script>
 
 <div class="w-full mx-auto flex flex-col items-center py-6 lg:w-4/5">

@@ -1,20 +1,12 @@
 <script lang="ts">
 	import { gradeColors, thresholds } from "$lib/constants";
-	import { stopPropagation } from "svelte/legacy";
 
-    /**  
-     * @prop label  – the label text
-     * @prop value  – two-way bound value for text or number
-     * @prop showGrade - determines if we should show the grade based on the number
-     * @prop min - the minimum allowed value of the input field
-     * @prop max - the maximum allowed value of the input field
-     */
     interface Props {
-        label: string,
-        value: number,
-        showGrade?: boolean,
-        min?: number,
-        max?: number
+        label: string;
+        value: number;
+        showGrade?: boolean;
+        min?: number;
+        max?: number;
     }
     let {
         label = '',

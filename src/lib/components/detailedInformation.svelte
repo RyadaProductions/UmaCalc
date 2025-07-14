@@ -2,7 +2,13 @@
 	import type { Result } from "$lib/types";
 	import { round } from "$lib/utils";
 
-    export let result: Result;
+    interface Props {
+        result: Result;
+    }
+
+    let {
+        result
+    }: Props = $props();
 </script>
 
 <div class="w-full mx-auto flex flex-col items-center md:w-5/6 lg:w-2/3">
