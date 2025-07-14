@@ -160,3 +160,27 @@ export const DEFAULT_INPUT: InputData = {
         uniqueRecoveryLevelThreeStarsOrAbove: 0
     }
 };
+
+export const thresholds: [number, string][] = [
+    [1100, 'SS'],
+    [1000, 'S'],
+    [800, 'A'],
+    [600, 'B'],
+    [400, 'C'],
+    [300, 'D'],
+    [200, 'E'],
+    [100, 'F'],
+    [0, 'G']
+];
+
+export const gradeColors: Record<string, string> = {
+    SS: 'text-orange-500',
+    S: 'text-orange-500',
+    A: 'text-orange-500',
+    B: 'text-pink-500',
+    C: 'text-green-600',
+    D: 'text-blue-500',
+    E: 'text-red-500',
+    F: 'text-gray-500',
+    G: 'text-gray-400'
+};
