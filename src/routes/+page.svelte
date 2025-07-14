@@ -11,12 +11,10 @@
 	import DetailedTable from '$lib/components/detailedTable.svelte';
 	import DetailedInformation from '$lib/components/detailedInformation.svelte';
 
-    let result: Result;
-    let showDetailedData = false;
+    let showDetailedData = $state(false);
+    let inputData = $state(DEFAULT_INPUT);
 
-    let inputData = { ...DEFAULT_INPUT }; 
-
-    $: result = calculate(inputData);
+    let result: Result = $derived(calculate(inputData));
 </script>
 
 <svelte:head>
