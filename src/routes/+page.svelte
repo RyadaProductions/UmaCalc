@@ -42,7 +42,7 @@
 
 {#if showDetailedData}
     <DetailedInformation result={ result } />
-    <DetailedTable result={ result } />
+    <DetailedTable detailedBreakdown={ result.detailedBreakdown } />
 {/if}
 
 {/if}

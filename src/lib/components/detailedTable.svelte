@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { Result } from "$lib/types";
+	import type { DetailedBreakdown } from "$lib/types";
 	import DetailedTableGroup from "./detailedTableGroup.svelte";
 
     interface Props {
-        result: Result;
+        detailedBreakdown: DetailedBreakdown;
     }
 
     let {
-        result
+        detailedBreakdown
     }: Props = $props();
 </script>
 
@@ -26,19 +26,19 @@
                 <div class="flex-1 text-center pr-4">HP Consumption</div>
             </div>
 
-            <DetailedTableGroup label="Starting Dash" data={ result.detailedBreakdown.startingDash } />
-            <DetailedTableGroup label="Early Acceleration" data={ result.detailedBreakdown.phaseZeroAcceleration } />
-            <DetailedTableGroup label="Early Steady" data={ result.detailedBreakdown.phaseZeroSteady } />
-            <DetailedTableGroup label="Middle Acceleration" data={ result.detailedBreakdown.phaseOneAcceleration } />
-            <DetailedTableGroup label="Middle Steady" data={ result.detailedBreakdown.phaseOneSteady } />
-            <DetailedTableGroup label="Late Acceleration" data={ result.detailedBreakdown.phaseTwoAcceleration } />
-            <DetailedTableGroup label="Late Steady" data={ result.detailedBreakdown.phaseTwoAndThreeSteady } />
-            <DetailedTableGroup label="Last Spurt Acceleration" data={ result.detailedBreakdown.lastSpurtAcceleration } />
-            <DetailedTableGroup label="Last Spurt Steady" data={ result.detailedBreakdown.lastSpurtSteady } />
-            <DetailedTableGroup label="HP0 / Deceleration" data={ result.detailedBreakdown.hitPointsZeroDeceleration } />
+            <DetailedTableGroup label="Starting Dash" data={ detailedBreakdown.startingDash } />
+            <DetailedTableGroup label="Early Acceleration" data={ detailedBreakdown.phaseZeroAcceleration } />
+            <DetailedTableGroup label="Early Steady" data={ detailedBreakdown.phaseZeroSteady } />
+            <DetailedTableGroup label="Middle Acceleration" data={ detailedBreakdown.phaseOneAcceleration } />
+            <DetailedTableGroup label="Middle Steady" data={ detailedBreakdown.phaseOneSteady } />
+            <DetailedTableGroup label="Late Acceleration" data={ detailedBreakdown.phaseTwoAcceleration } />
+            <DetailedTableGroup label="Late Steady" data={ detailedBreakdown.phaseTwoAndThreeSteady } />
+            <DetailedTableGroup label="Last Spurt Acceleration" data={ detailedBreakdown.lastSpurtAcceleration } />
+            <DetailedTableGroup label="Last Spurt Steady" data={ detailedBreakdown.lastSpurtSteady } />
+            <DetailedTableGroup label="HP0 / Deceleration" data={ detailedBreakdown.hitPointsZeroDeceleration } />
             <br/>
-            <DetailedTableGroup label="Ideal Last Spurt Acceleration" data={ result.detailedBreakdown.idealLastSpurtAcceleration } />
-            <DetailedTableGroup label="Ideal Last Spurt Steady" data={ result.detailedBreakdown.idealLastSpurtSteady } />
+            <DetailedTableGroup label="Ideal Last Spurt Acceleration" data={ detailedBreakdown.idealLastSpurtAcceleration } />
+            <DetailedTableGroup label="Ideal Last Spurt Steady" data={ detailedBreakdown.idealLastSpurtSteady } />
         </div>
     </div>
 </div>
