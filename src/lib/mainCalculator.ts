@@ -65,7 +65,8 @@ export function calculate(
         moodModifier,
         conditionModifiers,
         distanceAptitudeModifiers,
-        strategyAptitudeModifier
+        strategyAptitudeModifier,
+        input.skills
     );
 
     // - general data

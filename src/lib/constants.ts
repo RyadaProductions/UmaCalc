@@ -157,7 +157,23 @@ export const DEFAULT_INPUT: InputData = {
         goldRecovery: 0,
         whiteRecovery: 0,
         uniqueRecoveryLevelTwoStarsOrBelow: 0,
-        uniqueRecoveryLevelThreeStarsOrAbove: 0
+        uniqueRecoveryLevelThreeStarsOrAbove: 0,
+        singleCircle: {
+            speed: 0,
+            stamina: 0,
+            power: 0,
+            guts: 0,
+            wit: 0,
+            all: 0
+        },
+        doubleCircle: {
+            speed: 0,
+            stamina: 0,
+            power: 0,
+            guts: 0,
+            wit: 0,
+            all: 0
+        },
     }
 };
 

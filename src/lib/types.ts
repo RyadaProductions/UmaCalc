@@ -42,6 +42,17 @@ export interface Skills {
     whiteRecovery: number;
     uniqueRecoveryLevelTwoStarsOrBelow: number;
     uniqueRecoveryLevelThreeStarsOrAbove: number;
+    singleCircle: GreenSkills;
+    doubleCircle: GreenSkills;
+}
+
+export interface GreenSkills {
+    speed: number;
+    stamina: number;
+    power: number;
+    guts: number;
+    wit: number;
+    all: number;
 }
 
 export interface InputData {

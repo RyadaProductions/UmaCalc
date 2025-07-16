@@ -34,4 +34,24 @@
         <LabeledInputField label="unique <= 2* level" showGrade={ false } max={ 5 } bind:value={ inputData.skills.uniqueRecoveryLevelTwoStarsOrBelow } />
         <LabeledInputField label="unique >= 3* level" showGrade={ false } max={ 6 } bind:value={ inputData.skills.uniqueRecoveryLevelThreeStarsOrAbove } />
     </div>
+    <!-- TODO: Move this into it's own seperate part -->
+    <h2 class="text-xl font-semibold text-center">Condition Skills</h2>
+    <h3 class="text-l font-semibold text-center">Single Circle</h3>
+    <div class="mx-auto w-full grid grid-cols-6 gap-2 mb-2 md:w-5/6 lg:w-2/3">
+        <LabeledInputField label="Speed" showGrade={ false } bind:value={ inputData.skills.singleCircle.speed } />
+        <LabeledInputField label="Stamina" showGrade={ false } bind:value={ inputData.skills.singleCircle.stamina } />
+        <LabeledInputField label="Power" showGrade={ false } bind:value={ inputData.skills.singleCircle.power } />
+        <LabeledInputField label="Guts" showGrade={ false } bind:value={ inputData.skills.singleCircle.guts } />
+        <LabeledInputField label="Wit" showGrade={ false } bind:value={ inputData.skills.singleCircle.wit } />
+        <LabeledInputField label="All" showGrade={ false } bind:value={ inputData.skills.singleCircle.all } />
+    </div>
+    <h3 class="text-l font-semibold text-center">Double Circle</h3>
+    <div class="mx-auto w-full grid grid-cols-6 gap-2 mb-2 md:w-5/6 lg:w-2/3">
+        <LabeledInputField label="Speed" showGrade={ false } bind:value={ inputData.skills.doubleCircle.speed } />
+        <LabeledInputField label="Stamina" showGrade={ false } bind:value={ inputData.skills.doubleCircle.stamina } />
+        <LabeledInputField label="Power" showGrade={ false } bind:value={ inputData.skills.doubleCircle.power } />
+        <LabeledInputField label="Guts" showGrade={ false } bind:value={ inputData.skills.doubleCircle.guts } />
+        <LabeledInputField label="Wit" showGrade={ false } bind:value={ inputData.skills.doubleCircle.wit } />
+        <LabeledInputField label="All" showGrade={ false } bind:value={ inputData.skills.doubleCircle.all } />
+    </div>
 </div>
