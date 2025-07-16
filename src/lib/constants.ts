@@ -21,8 +21,8 @@ export type Distance = typeof distances[number];
 
 export const distanceMap: Record<number, Distance> = {
   1000: 'Sprint', 1200: 'Sprint', 1400: 'Sprint',
-  1500: 'Mile', 1600: 'Mile', 1800: 'Mile',
-  2000: 'Medium', 2200: 'Medium', 2300: 'Medium', 2400: 'Medium',
+  1500: 'Mile', 1600: 'Mile', 1700: 'Mile', 1800: 'Mile',
+  1900: 'Medium', 2000: 'Medium', 2100: 'Medium', 2200: 'Medium', 2400: 'Medium',
   2500: 'Long', 2600: 'Long', 3000: 'Long', 3200: 'Long', 3400: 'Long', 3600: 'Long'
 };
 
