@@ -55,5 +55,5 @@ export function Test(
     const ratioLeft = hpPolicy.hpRatioRemaining();
     const hpLeft = ratioLeft * hpPolicy.maxHp;
 
-    return hpLeft;
+    return hpPolicy.hp;
 }
