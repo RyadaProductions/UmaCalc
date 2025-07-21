@@ -1,5 +1,5 @@
 import { distanceMap } from "./constants";
-import type { InputData, Result } from "./types";
+import type { InputData, PhaseData, Result } from "./types";
 import { 
     calculateHitPointsWithRecovery, 
     calculateInitialHitPoints, 
@@ -36,7 +36,8 @@ import {
     calculateRushedRate, 
     calculateSkillProcRate,
     calculateBaseSpeed,
-    calculateMinimumSpeed
+    calculateMinimumSpeed,
+    calculateProjectedTotal
 } from "./calculators/miscCalculator";
 import { calculatePhaseOneAccelerationData } from "./calculators/phaseOneAccelerationCalculator";
 import { calculatePhaseTwoAccelerationContinuedData, calculatePhaseTwoAccelerationInitialData } from "./calculators/phaseTwoAccelerationCalculator";
@@ -298,6 +299,41 @@ export function calculate(
         uniqueRecoveryHitPoints
     );
 
+    const totalDistance = calculateProjectedTotal(
+        startingDashData.distance,
+        phaseZeroAccelerationData.distance,
+        phaseZeroSteadyData.distance,
+        phaseOneAccelerationData.distance,
+        phaseOneSteadyData.distance,
+        phaseTwoAccelerationData.distance,
+        phaseTwoAndThreeSteadyData.distance,
+        lastSpurtAccelerationData.distance,
+        lastSpurtSteadyData.distance,
+        hitPointsZeroDecelerationData.distance
+    );
+
+    const totalDuration = calculateProjectedTotal(
+        startingDashData.duration,
+        phaseZeroAccelerationData.duration,
+        phaseZeroSteadyData.duration,
+        phaseOneAccelerationData.duration,
+        phaseOneSteadyData.duration,
+        phaseTwoAccelerationData.duration,
+        phaseTwoAndThreeSteadyData.duration,
+        lastSpurtAccelerationData.duration,
+        lastSpurtSteadyData.duration,
+        hitPointsZeroDecelerationData.duration
+    );
+
+    const totalProjectionData: PhaseData = {
+        acceleration: 0,
+        distance: totalDistance,
+        duration: totalDuration,
+        hpConsumption: 0,
+        initialSpeed: 0,
+        targetSpeed: 0
+    };
+
     return {
         realStats: realStats,
         baseSpeed: baseSpeed,
@@ -320,6 +356,7 @@ export function calculate(
             lastSpurtAcceleration: lastSpurtAccelerationData,
             lastSpurtSteady: lastSpurtSteadyData,
             hitPointsZeroDeceleration: hitPointsZeroDecelerationData,
+            totalProjection: totalProjectionData,
             idealLastSpurtAcceleration: idealLastSpurtAccelerationData,
             idealLastSpurtSteady: idealLastSpurtSteadyData
         }

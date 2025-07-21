@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DetailedBreakdown } from "$lib/types";
+	import type { DetailedBreakdown, PhaseData } from "$lib/types";
 	import DetailedTableGroup from "./detailedTableGroup.svelte";
 
     interface Props {
@@ -36,6 +36,7 @@
             <DetailedTableGroup label="Last Spurt Acceleration" data={ detailedBreakdown.lastSpurtAcceleration } />
             <DetailedTableGroup label="Last Spurt Steady" data={ detailedBreakdown.lastSpurtSteady } />
             <DetailedTableGroup label="HP0 / Deceleration" data={ detailedBreakdown.hitPointsZeroDeceleration } />
+            <DetailedTableGroup label="Total Projection" data={ detailedBreakdown.totalProjection } />
             <br/>
             <DetailedTableGroup label="Ideal Last Spurt Acceleration" data={ detailedBreakdown.idealLastSpurtAcceleration } />
             <DetailedTableGroup label="Ideal Last Spurt Steady" data={ detailedBreakdown.idealLastSpurtSteady } />

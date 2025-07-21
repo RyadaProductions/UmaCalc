@@ -88,6 +88,7 @@ export interface DetailedBreakdown {
     lastSpurtAcceleration: PhaseData;
     lastSpurtSteady: PhaseData;
     hitPointsZeroDeceleration: PhaseData;
+    totalProjection: PhaseData;
     idealLastSpurtAcceleration: PhaseData;
     idealLastSpurtSteady: PhaseData;
 }

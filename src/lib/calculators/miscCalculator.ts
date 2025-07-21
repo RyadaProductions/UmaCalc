@@ -27,3 +27,18 @@ export function calculateMinimumSpeed(
 ): number {
     return 0.85 * baseSpeed + Math.sqrt(200 * realGuts) * 0.001;
 }
+
+export function calculateProjectedTotal(
+    startingDash: number,
+    phaseZeroAcceleration: number,
+    phaseZeroSteady: number,
+    phaseOneAcceleration: number,
+    phaseOneSteady: number,
+    phaseTwoAcceleration: number,
+    phaseTwoAndThreeSteady: number,
+    lastSpurtAcceleration: number,
+    lastSpurtSteady: number,
+    hitPointsZeroDeceleration: number
+): number {
+    return startingDash + phaseZeroAcceleration + phaseZeroSteady + phaseOneAcceleration + phaseOneSteady + phaseTwoAcceleration + phaseTwoAndThreeSteady + lastSpurtAcceleration + lastSpurtSteady + hitPointsZeroDeceleration;
+}
