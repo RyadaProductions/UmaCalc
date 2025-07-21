@@ -96,6 +96,7 @@ export interface DetailedBreakdown {
 export interface Result {
     realStats: Stats;
     baseSpeed: number;
+    remainingHP: number;
     initialHitPoints: number;
     hitPointsWithRecovery: number;
     lastSpurtDistance: number;

@@ -42,6 +42,7 @@ import {
 import { calculatePhaseOneAccelerationData } from "./calculators/phaseOneAccelerationCalculator";
 import { calculatePhaseTwoAccelerationContinuedData, calculatePhaseTwoAccelerationInitialData } from "./calculators/phaseTwoAccelerationCalculator";
 import { calculateIdealLastSpurtSteadyData } from "./calculators/idealLastSpurtSteadyCalculator";
+import { Test } from "./simulator/mainSimulator";
 
 export function getTrackLength(distance: number) {
     return distanceMap[distance];
@@ -334,9 +335,12 @@ export function calculate(
         targetSpeed: 0
     };
 
+    const remainingHP = Test(input);
+
     return {
         realStats: realStats,
         baseSpeed: baseSpeed,
+        remainingHP: remainingHP,
         initialHitPoints: initialHitPoints,
         hitPointsWithRecovery: hitPointsWithRecovery,
         lastSpurtDistance: lastSpurtDistance,

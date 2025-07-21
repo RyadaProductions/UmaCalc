@@ -1,0 +1,3 @@
+[submodule "src/lib/uma-skill-tools"]
+	path = src/lib/uma-skill-tools
+	url = https://github.com/RyadaProductions/uma-skill-tools.git
